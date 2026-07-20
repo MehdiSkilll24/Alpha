@@ -1,10 +1,51 @@
-import torch.nn as nn, torch
-
-VOCAB_SIZE = 128 #placeholder cst
-d_model = 512
+import torch.nn as nn
+import torch
+d_model = 256
 num_heads = 8
-seq_len = 3
-d_ff = 2048
+d_ff = 1024
+
+class RoPE(nn.Module):
+    def __init__(self, dim, max_seq_len=1024):
+        super().__init__()
+
+        theta = 10000
+
+        freqs = 1.0 / (theta ** (torch.arange(0, dim, 2).float() / dim))
+
+        positions = torch.arange(max_seq_len)
+
+        angles = torch.outer(positions, freqs)
+
+        self.register_buffer(
+            "cos", 
+            angles.cos()
+        )
+
+        self.register_buffer(
+            "sin", 
+            angles.sin()
+        )
+    
+    def rotate_half(self, x):
+        x1 = x[..., ::2]
+        x2 = x[..., 1::2]
+
+        return torch.stack(
+            (-x2,x1),
+            dim=-1
+        ).flatten(-2)
+    
+    def forward(self, x):
+        
+        seq_len = x.shape[-2]
+        cos = self.cos[:seq_len]
+        sin = self.sin[:seq_len]
+
+        cos = torch.repeat_interleave(cos, 2, dim=-1)
+        sin = torch.repeat_interleave(sin, 2, dim=-1)
+
+        return x*cos + self.rotate_half(x)*sin
+
 class MHA(nn.Module):
     def __init__(self):
         super().__init__()
@@ -13,12 +54,15 @@ class MHA(nn.Module):
         self.V = nn.Linear(d_model, d_model)
         self.W_o = nn.Linear(d_model, d_model)
         self.d_k = d_model // num_heads
+        self.rope = RoPE(self.d_k)
 
     def forward(self, x, kv_input=None, mask=None):
         batch_size = x.size(0)
         # x.shape = (2, 3, 64)  64 dictates that there will be 64 Q, K and V PER TOKEN 
+        
         if kv_input is None:
             kv_input = x
+  
         Q = self.Q(x) # we do q_1 = XWq = 'W_1'*'e1' + ... + 'W_64'*'e64' W_i being the weight at i ... until we comp q_64, if no kv_input, it means we're doing encoding
         K = self.K(kv_input) # ,, ,, 
         V = self.V(kv_input) # ,, ,, 
@@ -28,7 +72,7 @@ class MHA(nn.Module):
         q_seq_length = x.shape[1]
         kv_seq_length = kv_input.shape[1]
 
-        # We then split all this data through different heads so each one goes for a specific context window (varied contexts = better model overall
+        # We then split all this data through different heads so each one goes for a raneg window for each token (split ranges -> specialized heads)
         Q = Q.view(batch_size, q_seq_length, num_heads, self.d_k)
         K = K.view(batch_size, kv_seq_length, num_heads, self.d_k)
         V = V.view(batch_size, kv_seq_length, num_heads, self.d_k)
@@ -39,6 +83,9 @@ class MHA(nn.Module):
         Q = Q.transpose(1,2)                   
         K = K.transpose(1,2)
         V = V.transpose(1,2)
+
+        Q = self.rope(Q)
+        K = self.rope(K)
         
         scores = Q @ K.transpose(-2, -1) / self.d_k**0.5   #we swap d_k with seq_len so we get #seq_len * #seq_len matrix as a result
 
@@ -98,7 +145,7 @@ class DecoderBlock(nn.Module):
         self.mlp = MLP()
 
     def forward(self, x, encoder_output):
-        causal_mask = torch.triu(torch.full((x.shape[1], x.shape[1]), float('-inf')), diagonal=1)
+        causal_mask = torch.triu(torch.full((x.shape[1], x.shape[1]), float('-inf'), device=x.device), diagonal=1)
         normed = self.norm1(x)
         attn_out = self.self_attn(normed, mask = causal_mask)
         x = x + attn_out
@@ -114,17 +161,18 @@ class DecoderBlock(nn.Module):
         return x
     
 class Transformer(nn.Module):
-    def __init__(self):
+    def __init__(self, src_vocab_size, tgt_vocab_size):
         super().__init__()
 
-        self.embedding = nn.Embedding(VOCAB_SIZE, 512)
-        self.encoder = nn.ModuleList([EncoderBlock() for _ in range(6)])
-        self.decoder = nn.ModuleList([DecoderBlock() for _ in range(6)])
-        self.output_proj = nn.Linear(d_model, VOCAB_SIZE)
+        self.src_embedding = nn.Embedding(src_vocab_size, d_model)
+        self.tgt_embedding = nn.Embedding(tgt_vocab_size, d_model)
+        self.encoder = nn.ModuleList([EncoderBlock() for _ in range(3)])
+        self.decoder = nn.ModuleList([DecoderBlock() for _ in range(3)])
+        self.output_proj = nn.Linear(d_model, tgt_vocab_size)
 
     def forward(self, src_tokens, tgt_tokens):
-        src = self.embedding(src_tokens)
-        tgt = self.embedding(tgt_tokens)
+        src = self.src_embedding(src_tokens)
+        tgt = self.tgt_embedding(tgt_tokens)
 
         for block in self.encoder:
             src = block(src)
