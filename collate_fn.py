@@ -1,17 +1,16 @@
-import torch 
+import torch
 
+MAX_LEN = 64  # keeps RoPE's max_seq_len=1024 buffer safely sufficient, prevents outlier-driven OOM
 
 def collate_fn(batch, pad_id=0):
     src_batch = []
     target_batch = []
 
     for src, tgt in batch:
-
-        src_batch.append(src)
-        target_batch.append(tgt)
+        src_batch.append(src[:MAX_LEN])
+        target_batch.append(tgt[:MAX_LEN])
 
     max_src = max(len(sentence) for sentence in src_batch)
-
     max_tgt = max(len(sentence) for sentence in target_batch)
 
     src_batch = [
