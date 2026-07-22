@@ -12,4 +12,4 @@ Epoch 10 | Train Loss: 1.7062 | Train Accuracy: 64.57% | Test Loss: 1.9312 | Tes
 Epoch 11 | Train Loss: 1.6770 | Train Accuracy: 64.97% | Test Loss: 1.9173 | Test Accuracy: 62.34%
 Epoch 12 | Train Loss: 1.6505 | Train Accuracy: 65.35% | Test Loss: 1.9068 | Test Accuracy: 62.30%
 Epoch 13 | Train Loss: 1.6263 | Train Accuracy: 65.68% | Test Loss: 1.8977 | Test Accuracy: 62.57%
-Epoch 13 | Train Loss: 0.0001 | Train Accuracy: 68.78% | Test Loss: 1.8976 | Test Accuracy: 62.58%
+
