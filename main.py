@@ -1,8 +1,5 @@
 import torch.nn as nn
 import torch
-d_model = 256
-num_heads = 8
-d_ff = 1024
 
 class RoPE(nn.Module):
     def __init__(self, dim, max_seq_len=1024):
@@ -47,12 +44,18 @@ class RoPE(nn.Module):
         return x*cos + self.rotate_half(x)*sin
 
 class MHA(nn.Module):
-    def __init__(self):
+    def __init__(self, d_model, num_heads):
         super().__init__()
+        super().__init__()
+
+        self.num_heads = num_heads
+        self.d_model = d_model
+        
         self.Q = nn.Linear(d_model, d_model)
         self.K = nn.Linear(d_model, d_model)
         self.V = nn.Linear(d_model, d_model)
         self.W_o = nn.Linear(d_model, d_model)
+
         self.d_k = d_model // num_heads
         self.rope = RoPE(self.d_k)
 
@@ -73,9 +76,9 @@ class MHA(nn.Module):
         kv_seq_length = kv_input.shape[1]
 
         # We then split all this data through different heads so each one goes for a raneg window for each token (split ranges -> specialized heads)
-        Q = Q.view(batch_size, q_seq_length, num_heads, self.d_k)
-        K = K.view(batch_size, kv_seq_length, num_heads, self.d_k)
-        V = V.view(batch_size, kv_seq_length, num_heads, self.d_k)
+        Q = Q.view(batch_size, q_seq_length, self.num_heads, self.d_k)
+        K = K.view(batch_size, kv_seq_length, self.num_heads, self.d_k)
+        V = V.view(batch_size, kv_seq_length, self.num_heads, self.d_k)
 
         # So we get (batch, heads, seq_len, d_k) last 2 dims are the ones that get multiplied by Pytorch
         # The reason we put seq_len, d_k is because we gotta multiply them indep. of how many heads or batches, what matters is the consistent output per head per batch
@@ -94,14 +97,14 @@ class MHA(nn.Module):
         
         attn_weights = torch.softmax(scores, dim=-1)
         output = attn_weights @ V # contiguous vector of shape (batch, heads, seq, d_k)
-        output = output.transpose(1,2).contiguous().view(batch_size, q_seq_length, d_model) # transposing makes it breaks contiguousy, so we add .contiguous() and then .view() to reshape it with concatenation
+        output = output.transpose(1,2).contiguous().view(batch_size, q_seq_length, self.d_model) # transposing makes it breaks contiguousy, so we add .contiguous() and then .view() to reshape it with concatenation
         output = self.W_o(output) # expressing the new shape correctly accross heads
 
         return output
     
 class MLP(nn.Module):
     
-    def __init__(self):
+    def __init__(self, d_model, d_ff):
         super().__init__()
         self.fc1 = nn.Linear(d_model, d_ff)
         self.relu = nn.ReLU()
@@ -116,12 +119,12 @@ class MLP(nn.Module):
     
 
 class EncoderBlock(nn.Module):
-    def __init__(self):
+    def __init__(self, d_model, num_heads, d_ff):
         super().__init__()
-        self.mha = MHA()
+        self.mha = MHA(d_model, num_heads)
         self.norm1 = nn.LayerNorm(d_model)
         self.norm2 = nn.LayerNorm(d_model)
-        self.mlp = MLP()
+        self.mlp = MLP(d_model, d_ff)
 
     def forward(self, x):
         normed = self.norm1(x)
@@ -135,14 +138,14 @@ class EncoderBlock(nn.Module):
         return x
     
 class DecoderBlock(nn.Module):
-    def __init__(self):
+    def __init__(self, d_model, num_heads, d_ff):
         super().__init__()
-        self.self_attn = MHA()
-        self.cross_attn = MHA()
+        self.self_attn = MHA(d_model, num_heads)
+        self.cross_attn = MHA(d_model, num_heads)
         self.norm1 = nn.LayerNorm(d_model)
         self.norm2 = nn.LayerNorm(d_model)
         self.norm3 = nn.LayerNorm(d_model)
-        self.mlp = MLP()
+        self.mlp = MLP(d_model, d_ff)
 
     def forward(self, x, encoder_output):
         causal_mask = torch.triu(torch.full((x.shape[1], x.shape[1]), float('-inf'), device=x.device), diagonal=1)
@@ -161,13 +164,13 @@ class DecoderBlock(nn.Module):
         return x
     
 class Transformer(nn.Module):
-    def __init__(self, src_vocab_size, tgt_vocab_size):
+    def __init__(self, src_vocab_size, tgt_vocab_size, d_model, num_heads, d_ff):
         super().__init__()
 
         self.src_embedding = nn.Embedding(src_vocab_size, d_model)
         self.tgt_embedding = nn.Embedding(tgt_vocab_size, d_model)
-        self.encoder = nn.ModuleList([EncoderBlock() for _ in range(3)])
-        self.decoder = nn.ModuleList([DecoderBlock() for _ in range(3)])
+        self.encoder = nn.ModuleList([EncoderBlock(d_model, num_heads, d_ff) for _ in range(3)])
+        self.decoder = nn.ModuleList([DecoderBlock(d_model, num_heads, d_ff) for _ in range(3)])
         self.output_proj = nn.Linear(d_model, tgt_vocab_size)
 
     def forward(self, src_tokens, tgt_tokens):
@@ -184,3 +187,5 @@ class Transformer(nn.Module):
 
         logits = self.output_proj(tgt)
         return logits
+
+

@@ -1,0 +1,33 @@
+{
+    "model_name": "Alpha-Transformer",
+    "model_type": "encoder-decoder-transformer",
+
+    "d_model": 256,
+    "num_heads": 8,
+    "d_ff": 1024,
+
+    "num_encoder_layers": 3,
+    "num_decoder_layers": 3,
+
+    "src_vocab_size": 51278,
+    "tgt_vocab_size": 63558,
+
+    "max_seq_length": 64,
+    "rope_max_seq_length": 1024,
+
+    "positional_encoding": "RoPE",
+    "activation": "ReLU",
+    "normalization": "Pre-LayerNorm",
+
+    "num_parameters": 51262022,
+
+    "dataset": "OPUS-100",
+    "task": "English-French machine translation",
+
+    "framework": "PyTorch",
+
+    "pad_token_id": 0,
+    "unk_token_id": 1,
+    "bos_token_id": 2,
+    "eos_token_id": 3
+}

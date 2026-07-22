@@ -10,6 +10,10 @@ from Dataset import TranslationDataset
 import shutil
 import zipfile
 from torch.amp import autocast, GradScaler
+import json
+
+with open("config.json") as f:
+    config = json.load(f)
 
 LR = 3e-4
 BATCH_SIZE = 32
@@ -152,13 +156,20 @@ def train():
     )
 
     model = Transformer(
-        src_vocab_size=len(src_tokenizer),
-        tgt_vocab_size=len(tgt_tokenizer)
+        len(src_tokenizer),
+        len(tgt_tokenizer),
+        config["d_model"],
+        config["num_heads"],
+        config["d_ff"],
+        config["num_encoder_layers"],
+        config["num_decoder_layers"]
     ).to(device)
+    
+    
 
     optimizer = torch.optim.AdamW(model.parameters(), lr=LR)
     scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=0.5, patience=1)
-    scaler = GradScaler("cuda")
+    scaler = GradScaler("cuda", enabled=torch.cuda.is_available())
     criterion = nn.CrossEntropyLoss(ignore_index=0)
 
     #------------
@@ -185,6 +196,8 @@ def train():
         print("No valid checkpoint found — starting fresh from epoch 1.")
 
     quarter = len(loader) // 4
+    x = sum(p.numel() for p in model.parameters())
+    print(x)
     for epoch in range(start_epoch, EPOCHS):
         model.train()
         running_loss = 0
@@ -202,7 +215,7 @@ def train():
 
             optimizer.zero_grad()
 
-            with autocast("cuda"):
+            with autocast("cuda", enabled=torch.cuda.is_available()):
                 logits = model(src, decoder_input)
                 loss = criterion(
                     logits.reshape(-1, logits.size(-1)),
