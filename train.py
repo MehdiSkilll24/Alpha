@@ -21,7 +21,7 @@ with open(config_path) as f:
 
 LR = 3e-4
 BATCH_SIZE = 32
-EPOCHS = 18
+EPOCHS = 16
 
 # Local Colab disk — fast, reliable writes
 LOCAL_DIR = r"C:\Users\mehdi\Desktop\Pythonfiles\Projects\Transformers\Alpha\checkpoints"

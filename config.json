@@ -4,10 +4,10 @@
 
     "d_model": 256,
     "num_heads": 8,
-    "d_ff": 2048,
+    "d_ff": 1024,
 
     "num_encoder_layers": 0,
-    "num_decoder_layers": 14,
+    "num_decoder_layers": 6,
 
     "vocab_size": 93296,
 
