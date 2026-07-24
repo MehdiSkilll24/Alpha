@@ -2,7 +2,7 @@ import re
 from collections import Counter
 
 class Tokenizer:
-    def __init__(self, min_freq = 5):
+    def __init__(self, min_freq =6):
         self.min_freq = min_freq
 
         self.word_to_idx = {}

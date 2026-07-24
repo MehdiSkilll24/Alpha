@@ -3,3 +3,4 @@
 *.safetensors
 *.parquet
 train-00000-of-00001.parquet
+*.parquet

@@ -9,8 +9,7 @@
     "num_encoder_layers": 0,
     "num_decoder_layers": 14,
 
-    "src_vocab_size": 51278,
-    "tgt_vocab_size": 63558,
+    "vocab_size": 93296,
 
     "max_seq_length": 64,
     "rope_max_seq_length": 1024,
@@ -19,7 +18,7 @@
     "activation": "ReLU",
     "normalization": "Pre-LayerNorm",
 
-    "num_parameters": 51262022,
+    "num_parameters": 52599408,
 
     "dataset": "OPUS-100",
     "task": "English-French machine translation",

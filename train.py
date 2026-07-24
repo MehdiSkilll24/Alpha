@@ -11,8 +11,12 @@ import shutil
 import zipfile
 from torch.amp import autocast, GradScaler
 import json
+import time
 
-with open("config.json") as f:
+script_dir = os.path.dirname(os.path.abspath(__file__))
+config_path = os.path.join(script_dir, "config.json")
+
+with open(config_path) as f:
     config = json.load(f)
 
 LR = 3e-4
@@ -23,6 +27,7 @@ EPOCHS = 18
 LOCAL_DIR = r"C:\Users\mehdi\Desktop\Pythonfiles\Projects\Transformers\Alpha\checkpoints"
 # Drive — persistent storage, only written to AFTER a verified local save
 DRIVE_DIR = "/content/drive/MyDrive/Colab Notebooks/Alpha"
+
 
 os.makedirs(LOCAL_DIR, exist_ok=True)
 os.makedirs(DRIVE_DIR, exist_ok=True)
@@ -113,13 +118,13 @@ def train():
         data_files={
 
             "train":
-            r"C:\Users\mehdi\Desktop\Pythonfiles\Projects\Transformers\Alpha\opus100_en-fr_train.parquet",
+            r"C:\Users\mehdi\Desktop\Pythonfiles\Projects\Transformers\opus100_en-fr_train.parquet",
 
             "validation":
-            r"C:\Users\mehdi\Desktop\Pythonfiles\Projects\Transformers\Alpha\opus100_en-fr_validation.parquet",
+            r"C:\Users\mehdi\Desktop\Pythonfiles\Projects\Transformers\opus100_en-fr_validation.parquet",
 
             "test":
-            r"C:\Users\mehdi\Desktop\Pythonfiles\Projects\Transformers\Alpha\opus100_en-fr_test.parquet"
+            r"C:\Users\mehdi\Desktop\Pythonfiles\Projects\Transformers\opus100_en-fr_test.parquet"
         }
     )
 
@@ -127,14 +132,22 @@ def train():
     train_data = dataset["train"]
     test_data = dataset["test"]
 
-    src_tokenizer = Tokenizer()
-    tgt_tokenizer = Tokenizer()
+    tokenizer = Tokenizer()
 
-    src_tokenizer.build_vocab([sample["translation"]["en"] for sample in train_data])
-    tgt_tokenizer.build_vocab([sample["translation"]["fr"] for sample in train_data])
+    combined_texts = (
+    [sample["translation"]["en"] for sample in train_data]
+    + [sample["translation"]["fr"] for sample in train_data]
+    )
 
-    train_dataset = TranslationDataset(train_data, src_tokenizer, tgt_tokenizer)
-    test_dataset = TranslationDataset(test_data, src_tokenizer, tgt_tokenizer)
+    tokenizer.build_vocab(combined_texts)
+    actual_vocab_size = len(tokenizer)
+    print(f"Actual vocab size: {actual_vocab_size}")
+    
+    with open("vocab.json", "w", encoding="utf-8") as f:
+        json.dump(tokenizer.word_to_idx, f, ensure_ascii=False, indent=2)
+
+    train_dataset = TranslationDataset(train_data, tokenizer)
+    test_dataset = TranslationDataset(test_data, tokenizer)
 
     loader = DataLoader(
         train_dataset,
@@ -156,16 +169,15 @@ def train():
     )
 
     model = Transformer(
-        len(src_tokenizer),
-        len(tgt_tokenizer),
+        config["vocab_size"],
+        config["vocab_size"],
         config["d_model"],
         config["num_heads"],
         config["d_ff"],
         config["num_encoder_layers"],
-        config["num_decoder_layers"]
+        config["num_decoder_layers"],
+        model_type=config["model_type"]
     ).to(device)
-    
-    
 
     optimizer = torch.optim.AdamW(model.parameters(), lr=LR)
     scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=0.5, patience=1)
@@ -196,9 +208,9 @@ def train():
         print("No valid checkpoint found — starting fresh from epoch 1.")
 
     quarter = len(loader) // 4
-    x = sum(p.numel() for p in model.parameters())
-    print(x)
+
     for epoch in range(start_epoch, EPOCHS):
+        epoch_start_time = time.time()
         model.train()
         running_loss = 0
         total_correct = 0
@@ -245,8 +257,7 @@ def train():
                     "scheduler_state_dict": scheduler.state_dict(),
                     "epoch": epoch,
                     "batch_idx": batch_idx,
-                    "src_vocab": src_tokenizer.word_to_idx,
-                    "tgt_vocab": tgt_tokenizer.word_to_idx,
+                    "vocab": tokenizer.word_to_idx,
                 }
                 quarter_num = (batch_idx + 1) // quarter
                 save_checkpoint_safely(checkpoint_data, f"checkpoint_epoch{epoch+1}_q{quarter_num}.pt")
@@ -263,13 +274,20 @@ def train():
         print(f"[Eval] Epoch {epoch+1} | Test Loss: {test_loss:.4f} | Test Accuracy: {test_acc:.2%}")
         scheduler.step(test_loss)
         print(optimizer.param_groups[0]['lr'])
+
+        epoch_elapsed = time.time() - epoch_start_time  
+        hours, rem = divmod(epoch_elapsed, 3600)
+        minutes, seconds = divmod(rem, 60)
+        epoch_time_str = f"{int(hours)}h {int(minutes)}m {int(seconds)}s"  
+
         train_loss_last = running_loss / len(loader)
         train_acc_last = total_correct / total_tokens if total_tokens > 0 else 0
 
         results_line = (
             f"Epoch {epoch+1} | "
             f"Train Loss: {train_loss_last:.4f} | Train Accuracy: {train_acc_last:.2%} | "
-            f"Test Loss: {test_loss:.4f} | Test Accuracy: {test_acc:.2%}\n"
+            f"Test Loss: {test_loss:.4f} | Test Accuracy: {test_acc:.2%} | "
+            f"Time: {epoch_time_str}\n"
         )
 
         local_results = os.path.join(LOCAL_DIR, "epoch_results.txt")
