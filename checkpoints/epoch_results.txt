@@ -1,3 +1,4 @@
+encoder-decoder
 Epoch 1 | Train Loss: 3.2261 | Train Accuracy: 45.65% | Test Loss: 2.5484 | Test Accuracy: 52.84%
 Epoch 2 | Train Loss: 2.2906 | Train Accuracy: 56.22% | Test Loss: 2.2619 | Test Accuracy: 56.78%
 Epoch 3 | Train Loss: 2.0476 | Train Accuracy: 59.21% | Test Loss: 2.1393 | Test Accuracy: 58.47%(first)
@@ -15,3 +16,34 @@ Epoch 13 | Train Loss: 1.6263 | Train Accuracy: 65.68% | Test Loss: 1.8977 | Tes
 Epoch 14 | Train Loss: 1.6055 | Train Accuracy: 65.99% | Test Loss: 1.8951 | Test Accuracy: 62.63%
 Epoch 15 | Train Loss: 1.5867 | Train Accuracy: 66.26% | Test Loss: 1.8966 | Test Accuracy: 62.67%
 Epoch 16 | Train Loss: 1.5690 | Train Accuracy: 66.52% | Test Loss: 1.8946 | Test Accuracy: 62.69%
+
+decoder-only
+Epoch 1  | Train Loss: 3.0657 | Train Accuracy: 47.64% | Test Loss: 2.4804 | Test Accuracy: 54.47% | Time: 0h 48m 49s
+Epoch 2  | Train Loss: 2.2764 | Train Accuracy: 57.06% | Test Loss: 2.2428 | Test Accuracy: 57.64% | Time: 0h 47m 49s
+Epoch 3  | Train Loss: 2.0852 | Train Accuracy: 59.49% | Test Loss: 2.1501 | Test Accuracy: 59.14% | Time: 0h 47m 47s
+Epoch 4  | Train Loss: 1.9786 | Train Accuracy: 60.87% | Test Loss: 2.0841 | Test Accuracy: 60.01% | Time: 0h 47m 58s
+Epoch 5  | Train Loss: 1.9066 | Train Accuracy: 61.83% | Test Loss: 2.0469 | Test Accuracy: 60.45% | Time: 0h 48m 24s
+Epoch 6  | Train Loss: 1.8533 | Train Accuracy: 62.54% | Test Loss: 2.0130 | Test Accuracy: 60.79% | Time: 0h 47m 52s
+Epoch 7  | Train Loss: 1.8120 | Train Accuracy: 63.11% | Test Loss: 1.9876 | Test Accuracy: 61.17% | Time: 0h 50m 6s
+Epoch 8  | Train Loss: 1.7776 | Train Accuracy: 63.59% | Test Loss: 1.9635 | Test Accuracy: 61.58% | Time: 0h 48m 4s
+Epoch 9  | Train Loss: 1.7484 | Train Accuracy: 63.99% | Test Loss: 1.9509 | Test Accuracy: 61.99% | Time: 0h 48m 5s
+Epoch 10 | Train Loss: 1.7235 | Train Accuracy: 64.35% | Test Loss: 1.9357 | Test Accuracy: 62.00% | Time: 0h 47m 41s
+
+
+encoder-only + BPE (20~ish Mill params)
+Epoch 1 | Train Loss: 3.2725 | Train Accuracy: 44.62% | Test Loss: 2.6005 | Test Accuracy: 52.64% | Time: 0h 30m 0s
+Epoch 2 | Train Loss: 2.3889 | Train Accuracy: 55.25% | Test Loss: 2.3321 | Test Accuracy: 56.14% | Time: 0h 29m 21s
+Epoch 3 | Train Loss: 2.1809 | Train Accuracy: 57.98% | Test Loss: 2.2184 | Test Accuracy: 57.77% | Time: 0h 31m 37s
+Epoch 4 | Train Loss: 2.0598 | Train Accuracy: 59.60% | Test Loss: 2.1297 | Test Accuracy: 59.27% | Time: 0h 31m 45s
+Epoch 5 | Train Loss: 1.9762 | Train Accuracy: 60.76% | Test Loss: 2.0726 | Test Accuracy: 59.89% | Time: 0h 30m 22s
+Epoch 6 | Train Loss: 1.4253 | Train Accuracy: 61.81% | Test Loss: 2.0433 | Test Accuracy: 60.62% | Time: 0h 22m 3s
+Epoch 7 | Train Loss: 1.8700 | Train Accuracy: 62.27% | Test Loss: 2.0089 | Test Accuracy: 61.04% | Time: 0h 28m 45s
+Epoch 8 | Train Loss: 1.8301 | Train Accuracy: 62.83% | Test Loss: 1.9792 | Test Accuracy: 61.33% | Time: 0h 28m 47s
+Epoch 9 | Train Loss: 1.7980 | Train Accuracy: 63.29% | Test Loss: 1.9577 | Test Accuracy: 61.75% | Time: 0h 28m 47s
+Epoch 10 | Train Loss: 1.7712 | Train Accuracy: 63.68% | Test Loss: 1.9476 | Test Accuracy: 61.93% | Time: 0h 28m 53s
+Epoch 11 | Train Loss: 1.7477 | Train Accuracy: 64.01% | Test Loss: 1.9301 | Test Accuracy: 62.25% | Time: 0h 28m 58s
+Epoch 12 | Train Loss: 1.7277 | Train Accuracy: 64.31% | Test Loss: 1.9200 | Test Accuracy: 62.09% | Time: 0h 28m 55s
+Epoch 13 | Train Loss: 1.7099 | Train Accuracy: 64.56% | Test Loss: 1.9133 | Test Accuracy: 62.30% | Time: 0h 28m 59s
+Epoch 14 | Train Loss: 1.6941 | Train Accuracy: 64.79% | Test Loss: 1.8973 | Test Accuracy: 62.58% | Time: 0h 28m 57s
+Epoch 15 | Train Loss: 1.6798 | Train Accuracy: 65.00% | Test Loss: 1.8957 | Test Accuracy: 62.75% | Time: 0h 30m 17s
+Epoch 16 | Train Loss: 1.6669 | Train Accuracy: 65.18% | Test Loss: 1.8915 | Test Accuracy: 62.74% | Time: 0h 28m 58s
