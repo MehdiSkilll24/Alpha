@@ -2,9 +2,7 @@ import torch
 from main import Transformer
 from tokenizer import Tokenizer
 import json
-
-with open("config.json") as f:
-    config = json.load(f)
+import os
 
 def rebuild_tokenizer(word_to_idx):
     tok = Tokenizer()
@@ -25,18 +23,12 @@ def translate(model, tokenizer, sentence, device, max_len=50):
     ).to(device)
 
     with torch.no_grad():
-
         for _ in range(max_len):
-
             logits = model(src_tensor, decoder_input)
-
             next_token = logits[:, -1, :].argmax(dim=-1).item()
 
             decoder_input = torch.cat(
-                [
-                    decoder_input,
-                    torch.tensor([[next_token]]).to(device)
-                ],
+                [decoder_input, torch.tensor([[next_token]]).to(device)],
                 dim=1
             )
 
@@ -44,29 +36,22 @@ def translate(model, tokenizer, sentence, device, max_len=50):
                 break
 
     output_ids = decoder_input[0].tolist()
-
     return tokenizer.decode(output_ids)
 
 
 def main():
+    script_dir = os.path.dirname(os.path.abspath(__file__))
 
-    device = torch.device(
-        "cuda" if torch.cuda.is_available() else "cpu"
-    )
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-
-    # Load vocabularies
-    with open("vocab.json", "r", encoding="utf-8") as f:
+    with open(os.path.join(script_dir, "vocab.json"), "r", encoding="utf-8") as f:
         vocab = json.load(f)
 
-    # Load config
-    with open("config.json", "r", encoding="utf-8") as f:
+    with open(os.path.join(script_dir, "config.json"), "r", encoding="utf-8") as f:
         config = json.load(f)
 
-    # Rebuild tokenizers
     tokenizer = rebuild_tokenizer(vocab)
 
-    # Build model
     model = Transformer(
         config["vocab_size"],
         config["vocab_size"],
@@ -78,21 +63,20 @@ def main():
         model_type=config.get("model_type", "decoder-only")
     ).to(device)
 
-    x = sum(p.numel() for p in model.parameters())
-    print(f"Total params {x}")
-    
-    #checkpoint = torch.load("checkpoint_latest.pt", map_location=device)
-    #model.load_state_dict(checkpoint["model_state_dict"])
-    #model.eval()
+    #x = sum(p.numel() for p in model.parameters())
+    #print(f"Total params {x}")
 
-    #print("Type an English sentence (or 'quit' to exit):")
-#
-    #while True:
-    #    sentence = input("> ")
-    #    if sentence.lower() == "quit":
-    #        break
-    #    translation = translate(model, tokenizer, sentence, device)
-    #    print(f"Translation: {translation}")
+    checkpoint = torch.load(os.path.join(script_dir, "checkpoints", "checkpoint_latest.pt"), map_location=device)
+    model.load_state_dict(checkpoint["model_state_dict"])
+    model.eval()
+
+    print("Type an English sentence (or 'quit' to exit):")
+    while True:
+        sentence = input("> ")
+        if sentence.lower() == "quit":
+            break
+        translation = translate(model, tokenizer, sentence, device)
+        print(f"Translation: {translation}")
 
 
 if __name__ == "__main__":
