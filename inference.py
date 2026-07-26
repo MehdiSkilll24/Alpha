@@ -86,6 +86,8 @@ def main():
     tgt_vocab_size=config["tgt_vocab_size"],
     d_model=config["d_model"],
     num_heads=config["num_heads"],
+    num_decoder_layers=config["num_encoder_layers"],
+    num_encoder_layers=config["num_decoder_layers"],
     d_ff=config["d_ff"]
     ).to(device)
 
