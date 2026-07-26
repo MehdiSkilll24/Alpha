@@ -5,13 +5,13 @@ from datasets import load_dataset
 import os
 from main import Transformer
 from collate_fn import collate_fn
-from tokenizer import Tokenizer
 from Dataset import TranslationDataset
 import shutil
 import zipfile
 from torch.amp import autocast, GradScaler
 import json
 import time
+from bpe_tokenizer import build_bpe_tokenizer
 
 script_dir = os.path.dirname(os.path.abspath(__file__))
 config_path = os.path.join(script_dir, "config.json")
@@ -132,20 +132,15 @@ def train():
     train_data = dataset["train"]
     test_data = dataset["test"]
 
-    tokenizer = Tokenizer()
-
     combined_texts = (
     [sample["translation"]["en"] for sample in train_data]
     + [sample["translation"]["fr"] for sample in train_data]
     )
 
-    tokenizer.build_vocab(combined_texts)
+    tokenizer = build_bpe_tokenizer(combined_texts, vocab_size=32000, save_path=os.path.join(script_dir, "bpe_tokenizer.json"))
     actual_vocab_size = len(tokenizer)
     print(f"Actual vocab size: {actual_vocab_size}")
     
-    with open("vocab.json", "w", encoding="utf-8") as f:
-        json.dump(tokenizer.word_to_idx, f, ensure_ascii=False, indent=2)
-
     train_dataset = TranslationDataset(train_data, tokenizer)
     test_dataset = TranslationDataset(test_data, tokenizer)
 
@@ -169,8 +164,8 @@ def train():
     )
 
     model = Transformer(
-        config["vocab_size"],
-        config["vocab_size"],
+        actual_vocab_size,
+        actual_vocab_size,
         config["d_model"],
         config["num_heads"],
         config["d_ff"],

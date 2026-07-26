@@ -3,6 +3,9 @@ from main import Transformer
 from tokenizer import Tokenizer
 import json
 import os
+from tokenizers import Tokenizer as HFTokenizer
+from bpe_tokenizer import BPETokenizerWrapper
+
 
 def rebuild_tokenizer(word_to_idx):
     tok = Tokenizer()
@@ -44,17 +47,19 @@ def main():
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    with open(os.path.join(script_dir, "vocab.json"), "r", encoding="utf-8") as f:
-        vocab = json.load(f)
-
     with open(os.path.join(script_dir, "config.json"), "r", encoding="utf-8") as f:
         config = json.load(f)
 
-    tokenizer = rebuild_tokenizer(vocab)
+    
+    hf_tok = HFTokenizer.from_file(os.path.join(script_dir, "bpe_tokenizer.json"))
+    tokenizer = BPETokenizerWrapper(hf_tok)
+
+    actual_vocab_size = len(tokenizer)
+    print(f"BPE vocab size: {actual_vocab_size}")
 
     model = Transformer(
-        config["vocab_size"],
-        config["vocab_size"],
+        actual_vocab_size,
+        actual_vocab_size,
         d_model=config["d_model"],
         num_heads=config["num_heads"],
         d_ff=config["d_ff"],
@@ -63,20 +68,20 @@ def main():
         model_type=config.get("model_type", "decoder-only")
     ).to(device)
 
-    #x = sum(p.numel() for p in model.parameters())
-    #print(f"Total params {x}")
+    x = sum(p.numel() for p in model.parameters())
+    print(f"Total params {x}")
 
-    checkpoint = torch.load(os.path.join(script_dir, "checkpoints", "checkpoint_latest.pt"), map_location=device)
-    model.load_state_dict(checkpoint["model_state_dict"])
-    model.eval()
-
-    print("Type an English sentence (or 'quit' to exit):")
-    while True:
-        sentence = input("> ")
-        if sentence.lower() == "quit":
-            break
-        translation = translate(model, tokenizer, sentence, device)
-        print(f"Translation: {translation}")
+    #checkpoint = torch.load(os.path.join(script_dir, "checkpoints", "checkpoint_latest.pt"), map_location=device)
+    #model.load_state_dict(checkpoint["model_state_dict"])
+    #model.eval()
+#
+    #print("Type an English sentence (or 'quit' to exit):")
+    #while True:
+    #    sentence = input("> ")
+    #    if sentence.lower() == "quit":
+    #        break
+    #    translation = translate(model, tokenizer, sentence, device)
+    #    print(f"Translation: {translation}")
 
 
 if __name__ == "__main__":
