@@ -1,7 +1,8 @@
 from tokenizers import Tokenizer as HFTokenizer
 from tokenizers.models import BPE
 from tokenizers.trainers import BpeTrainer
-from tokenizers.pre_tokenizers import Whitespace
+from tokenizers.pre_tokenizers import ByteLevel
+from tokenizers.decoders import ByteLevel as ByteLevelDecoder
 
 class BPETokenizerWrapper():
     def __init__(self, hf_tokenizer):
@@ -25,7 +26,8 @@ class BPETokenizerWrapper():
 
 def build_bpe_tokenizer(combined_texts, vocab_size=32000, save_path="bpe_tokenizer.json"):
     tokenizer_bpe = HFTokenizer(BPE(unk_token="<unk>"))
-    tokenizer_bpe.pre_tokenizer = Whitespace()
+    tokenizer_bpe.pre_tokenizer = ByteLevel()
+    tokenizer_bpe.decoder = ByteLevelDecoder()
 
     trainer = BpeTrainer(
         vocab_size=vocab_size,

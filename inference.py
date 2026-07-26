@@ -71,10 +71,10 @@ def main():
     x = sum(p.numel() for p in model.parameters())
     print(f"Total params {x}")
 
+
     #checkpoint = torch.load(os.path.join(script_dir, "checkpoints", "checkpoint_latest.pt"), map_location=device)
     #model.load_state_dict(checkpoint["model_state_dict"])
     #model.eval()
-#
     #print("Type an English sentence (or 'quit' to exit):")
     #while True:
     #    sentence = input("> ")
