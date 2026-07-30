@@ -23,21 +23,21 @@ LR = 3e-4
 BATCH_SIZE = 32
 EPOCHS = 16
 
-# Local Colab disk — fast, reliable writes
-LOCAL_DIR = r"C:\Users\mehdi\Desktop\Pythonfiles\Projects\Transformers\Alpha\checkpoints"
-# Drive — persistent storage, only written to AFTER a verified local save
-DRIVE_DIR = "/content/drive/MyDrive/Colab Notebooks/Alpha"
+DATA_DIR = os.path.join(script_dir, "data")
+LOCAL_DIR = os.path.join(script_dir, "checkpoints")
 
+torch.manual_seed(42)
 
+if torch.cuda.is_available():
+    torch.cuda.manual_seed_all(42)
+    
 os.makedirs(LOCAL_DIR, exist_ok=True)
-os.makedirs(DRIVE_DIR, exist_ok=True)
 
 
 def save_checkpoint_safely(checkpoint_data, filename):
     """Save locally first, verify it's a valid file, then copy to Drive.
     Never trust a save until it's been read back successfully."""
     local_path = os.path.join(LOCAL_DIR, filename)
-    drive_path = os.path.join(DRIVE_DIR, filename)
 
     torch.save(checkpoint_data, local_path)
 
@@ -46,15 +46,6 @@ def save_checkpoint_safely(checkpoint_data, filename):
             z.namelist()  # forces a real read, not just open
     except zipfile.BadZipFile:
         print(f"WARNING: {filename} failed integrity check after saving locally — NOT copying to Drive.")
-        return False
-
-    shutil.copy(local_path, drive_path)
-
-    try:
-        with zipfile.ZipFile(drive_path) as z:
-            z.namelist()
-    except zipfile.BadZipFile:
-        print(f"WARNING: {filename} corrupted during copy to Drive — local copy still intact at {local_path}.")
         return False
 
     print(f"Checkpoint verified and saved: {filename}")
@@ -72,6 +63,15 @@ def load_checkpoint_safely(filename):
             print(f"WARNING: {filename} is corrupted, trying next option...")
     return None
 
+def get_gradient_norm(model):
+    total_norm = 0.0
+
+    for p in model.parameters():
+        if p.grad is not None:
+            param_norm = p.grad.detach().data.norm(2)
+            total_norm += param_norm.item() ** 2
+
+    return total_norm ** 0.5
 
 def evaluate(model, loader, criterion, device):
     model.eval()
@@ -108,7 +108,6 @@ def evaluate(model, loader, criterion, device):
 
 
 def train():
-    batch_count = 0
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     torch.backends.cuda.matmul.allow_tf32 = True
     torch.backends.cudnn.allow_tf32 = True
@@ -116,16 +115,11 @@ def train():
     dataset = load_dataset(
         "parquet",
         data_files={
-
-            "train":
-            r"C:\Users\mehdi\Desktop\Pythonfiles\Projects\Transformers\opus100_en-fr_train.parquet",
-
-            "validation":
-            r"C:\Users\mehdi\Desktop\Pythonfiles\Projects\Transformers\opus100_en-fr_validation.parquet",
-
-            "test":
-            r"C:\Users\mehdi\Desktop\Pythonfiles\Projects\Transformers\opus100_en-fr_test.parquet"
+            "train": os.path.join(DATA_DIR, "opus100_en-fr_train.parquet"),
+            "validation": os.path.join(DATA_DIR, "opus100_en-fr_validation.parquet"),
+            "test": os.path.join(DATA_DIR, "opus100_en-fr_test.parquet")
         }
+
     )
 
     train_data = dataset["train"]
@@ -173,42 +167,65 @@ def train():
         model_type=config["model_type"]
     ).to(device)
 
+    total_params = sum(
+    p.numel() for p in model.parameters()
+    )
+
+    experiment_config = {
+        "model_type": config["model_type"],
+        "d_model": config["d_model"],
+        "layers": {
+            "encoder": config["num_encoder_layers"],
+            "decoder": config["num_decoder_layers"]
+        },
+        "vocab_size": actual_vocab_size,
+        "parameters": total_params
+    }
+
+
+    json.dump(
+        experiment_config,
+        open(os.path.join(LOCAL_DIR,"experiment_config.json"),"w"),
+        indent=4
+    )
+
+
+
     optimizer = torch.optim.AdamW(model.parameters(), lr=LR)
     scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=0.5, patience=1)
     scaler = GradScaler("cuda", enabled=torch.cuda.is_available())
     criterion = nn.CrossEntropyLoss(ignore_index=0)
 
     #------------
-    # TRAINING — fresh start, no checkpoint loading this run
+    # TRAINING — fresh , no checkpoint loading this run
     #------------
     start_epoch = 0
     start_batch_idx = 0
-
-    checkpoint = load_checkpoint_safely(r"C:\Users\mehdi\Desktop\Pythonfiles\Projects\Transformers\Alpha\checkpoints\checkpoint_latest.pt")
+    checkpoint = load_checkpoint_safely(os.path.join(LOCAL_DIR, "checkpoint_latest.pt"))
     if checkpoint is not None:
         model.load_state_dict(checkpoint["model_state_dict"])
         optimizer.load_state_dict(checkpoint["optimizer_state_dict"])
         if "scheduler_state_dict" in checkpoint:
             scheduler.load_state_dict(checkpoint["scheduler_state_dict"])
-        start_epoch = checkpoint["epoch"]
-        start_batch_idx = checkpoint["batch_idx"] + 1
+        start_epoch = checkpoint["epoch"] + 1
+        start_batch_idx = 0
 
-        if start_batch_idx >= len(loader):
-            start_epoch += 1
-            start_batch_idx = 0
-
-        print(f"Resuming from epoch {start_epoch+1}, batch {start_batch_idx}")
+        print(f"Resuming from epoch {start_epoch}, batch {start_batch_idx}")
     else:
         print("No valid checkpoint found — starting fresh from epoch 1.")
 
-    quarter = len(loader) // 4
-
     for epoch in range(start_epoch, EPOCHS):
+        if torch.cuda.is_available():
+            torch.cuda.reset_peak_memory_stats()
         epoch_start_time = time.time()
         model.train()
         running_loss = 0
         total_correct = 0
         total_tokens = 0
+
+        tokens_processed = 0
+        gradient_norm_sum = 0
+        gradient_steps = 0
 
         for batch_idx, (src, tgt) in enumerate(loader):
             if epoch == start_epoch and batch_idx < start_batch_idx:
@@ -218,8 +235,9 @@ def train():
             tgt = tgt.to(device, non_blocking=True)
             decoder_input = tgt[:, :-1]
             target = tgt[:, 1:]
-
-            optimizer.zero_grad()
+            tokens_processed += (src != 0).sum().item()
+            tokens_processed += (target != 0).sum().item()
+            optimizer.zero_grad(set_to_none=True)
 
             with autocast("cuda", enabled=torch.cuda.is_available()):
                 logits = model(src, decoder_input)
@@ -229,6 +247,12 @@ def train():
                 )
 
             scaler.scale(loss).backward()
+            scaler.unscale_(optimizer)
+
+            grad_norm = get_gradient_norm(model)
+            gradient_norm_sum += grad_norm
+            gradient_steps += 1
+
             scaler.step(optimizer)
             scaler.update()
 
@@ -242,20 +266,7 @@ def train():
             total_correct += correct
             total_tokens += total
             accuracy = total_correct / total_tokens if total_tokens > 0 else 0
-            batch_count += BATCH_SIZE
 
-            if quarter > 0 and (batch_idx + 1) % quarter == 0:
-                checkpoint_data = {
-                    "model_state_dict": model.state_dict(),
-                    "optimizer_state_dict": optimizer.state_dict(),
-                    "scheduler_state_dict": scheduler.state_dict(),
-                    "epoch": epoch,
-                    "batch_idx": batch_idx,
-                    "vocab": tokenizer.word_to_idx,
-                }
-                quarter_num = (batch_idx + 1) // quarter
-                save_checkpoint_safely(checkpoint_data, f"checkpoint_epoch{epoch+1}_q{quarter_num}.pt")
-                save_checkpoint_safely(checkpoint_data, "checkpoint_latest.pt")
 
             print(
                 f"Batch {batch_idx + 1} | "
@@ -265,11 +276,25 @@ def train():
             )
 
         test_loss, test_acc = evaluate(model, test_loader, criterion, device)
+        accuracy_per_million_params = test_acc / (total_params / 1e6)
         print(f"[Eval] Epoch {epoch+1} | Test Loss: {test_loss:.4f} | Test Accuracy: {test_acc:.2%}")
         scheduler.step(test_loss)
         print(optimizer.param_groups[0]['lr'])
 
         epoch_elapsed = time.time() - epoch_start_time  
+        tokens_per_second = tokens_processed / epoch_elapsed
+
+        avg_gradient_norm = (
+            gradient_norm_sum / gradient_steps
+            if gradient_steps > 0
+            else 0
+        )
+
+        if torch.cuda.is_available():
+            peak_memory = torch.cuda.max_memory_allocated() / (1024 ** 3)
+        else:
+            peak_memory = 0      
+
         hours, rem = divmod(epoch_elapsed, 3600)
         minutes, seconds = divmod(rem, 60)
         epoch_time_str = f"{int(hours)}h {int(minutes)}m {int(seconds)}s"  
@@ -279,15 +304,35 @@ def train():
 
         results_line = (
             f"Epoch {epoch+1} | "
-            f"Train Loss: {train_loss_last:.4f} | Train Accuracy: {train_acc_last:.2%} | "
-            f"Test Loss: {test_loss:.4f} | Test Accuracy: {test_acc:.2%} | "
-            f"Time: {epoch_time_str}\n"
+            f"Total parameters: {total_params/1e6:.2f}M | "
+            f"Test Loss: {test_loss:.4f} | "
+            f"Test Accuracy: {test_acc:.2%} | "
+            f"Accuracy/M params: {accuracy_per_million_params:.4f} | "
+            f"Train Loss: {train_loss_last:.4f} | "
+            f"Train Accuracy: {train_acc_last:.2%} | "
+            f"Time: {epoch_time_str} | "
+            f"Tokens/sec: {tokens_per_second:.2f} | "
+            f"Peak VRAM: {peak_memory:.2f}GB | "
+            f"Grad Norm: {avg_gradient_norm:.4f}\n"
         )
 
         local_results = os.path.join(LOCAL_DIR, "epoch_results.txt")
         with open(local_results, "a") as f:
             f.write(results_line)
-        shutil.copy(local_results, os.path.join(DRIVE_DIR, "epoch_results.txt"))
+
+        checkpoint_data = {
+            "model_state_dict": model.state_dict(),
+            "optimizer_state_dict": optimizer.state_dict(),
+            "scheduler_state_dict": scheduler.state_dict(),
+            "epoch": epoch
+        }
+        save_checkpoint_safely(checkpoint_data, "checkpoint_latest.pt")
+
+    torch.save(
+        model.state_dict(),
+        os.path.join(LOCAL_DIR,"final_model.pt")
+    )
 
 if __name__ == "__main__":
     train()
+    

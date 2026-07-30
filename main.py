@@ -58,7 +58,7 @@ class MHA(nn.Module):
         self.d_k = d_model // num_heads
         self.rope = RoPE(self.d_k)
 
-    def forward(self, x, kv_input=None, mask=None):
+    def forward(self, x, kv_input=None, mask=None,  use_rope = True):
         batch_size = x.size(0)
         
         if kv_input is None:
@@ -78,10 +78,10 @@ class MHA(nn.Module):
         Q = Q.transpose(1,2)                   
         K = K.transpose(1,2)
         V = V.transpose(1,2)
+        if use_rope:
+            Q = self.rope(Q)
+            K = self.rope(K)
 
-        Q = self.rope(Q)
-        K = self.rope(K)
-        
         scores = Q @ K.transpose(-2, -1) / self.d_k**0.5
 
         if mask is not None:
@@ -152,7 +152,7 @@ class DecoderBlock(nn.Module):
 
         if self.has_cross_attn:
             normed2 = self.norm2(x)
-            cross_out = self.cross_attn(normed2, encoder_output)
+            cross_out = self.cross_attn(normed2, encoder_output, use_rope=False)
             x = x + cross_out
             normed3 = self.norm3(x)
         else:
@@ -211,5 +211,6 @@ class Transformer(nn.Module):
                 x = block(x, mask=causal_mask)
 
             tgt = x[:, src_len:, :]
+            
         logits = self.output_proj(tgt)
         return logits

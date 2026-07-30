@@ -3,6 +3,7 @@ from tokenizers.models import BPE
 from tokenizers.trainers import BpeTrainer
 from tokenizers.pre_tokenizers import ByteLevel
 from tokenizers.decoders import ByteLevel as ByteLevelDecoder
+import os
 
 class BPETokenizerWrapper():
     def __init__(self, hf_tokenizer):
@@ -14,7 +15,7 @@ class BPETokenizerWrapper():
         return self.tok.get_vocab_size()
 
     def encode(self, text): 
-        ids = self.tok.encode(text).ids
+        ids = self.tok.encode(text, add_special_tokens=False).ids
         bos = self.word_to_idx["<bos>"]
         eos = self.word_to_idx["<eos>"]
         return [bos] + ids + [eos]
@@ -25,16 +26,19 @@ class BPETokenizerWrapper():
         return self.tok.decode(filtered)
 
 def build_bpe_tokenizer(combined_texts, vocab_size=32000, save_path="bpe_tokenizer.json"):
-    tokenizer_bpe = HFTokenizer(BPE(unk_token="<unk>"))
-    tokenizer_bpe.pre_tokenizer = ByteLevel()
-    tokenizer_bpe.decoder = ByteLevelDecoder()
+    if os.path.exists(save_path):
+        tokenizer_bpe = HFTokenizer.from_file(save_path)
+    else:
+        tokenizer_bpe = HFTokenizer(BPE(unk_token="<unk>"))
+        tokenizer_bpe.pre_tokenizer = ByteLevel()
+        tokenizer_bpe.decoder = ByteLevelDecoder()
 
-    trainer = BpeTrainer(
-        vocab_size=vocab_size,
-        special_tokens=["<pad>", "<unk>", "<bos>", "<eos>"]
-    )
+        trainer = BpeTrainer(
+            vocab_size=vocab_size,
+            special_tokens=["<pad>", "<unk>", "<bos>", "<eos>"]
+        )
 
-    tokenizer_bpe.train_from_iterator(combined_texts, trainer=trainer)
-    tokenizer_bpe.save(save_path)
+        tokenizer_bpe.train_from_iterator(combined_texts, trainer=trainer)
+        tokenizer_bpe.save(save_path)
 
     return BPETokenizerWrapper(tokenizer_bpe) 
