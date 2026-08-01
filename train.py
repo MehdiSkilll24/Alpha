@@ -109,6 +109,7 @@ def evaluate(model, loader, criterion, device):
 
 def train():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    print(torch.cuda.is_available()); print(torch.cuda.get_device_name(0))
     torch.backends.cuda.matmul.allow_tf32 = True
     torch.backends.cudnn.allow_tf32 = True
 
@@ -210,7 +211,7 @@ def train():
         start_epoch = checkpoint["epoch"] + 1
         start_batch_idx = 0
 
-        print(f"Resuming from epoch {start_epoch}, batch {start_batch_idx}")
+        print(f"Resuming from epoch {start_epoch + 1}, batch {start_batch_idx}")
     else:
         print("No valid checkpoint found — starting fresh from epoch 1.")
 

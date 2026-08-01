@@ -1,0 +1,10 @@
+{
+    "model_type": "encoder-decoder-transformer",
+    "d_model": 256,
+    "layers": {
+        "encoder": 3,
+        "decoder": 3
+    },
+    "vocab_size": 32000,
+    "parameters": 30137600
+}

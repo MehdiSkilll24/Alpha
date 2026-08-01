@@ -1,6 +1,6 @@
 import torch
 
-MAX_LEN = 1024 
+MAX_LEN = 512 
 
 def collate_fn(batch, pad_id=0):
     src_batch = []
