@@ -20,7 +20,7 @@ with open(config_path) as f:
     config = json.load(f)
 
 LR = 3e-4
-BATCH_SIZE = 32
+BATCH_SIZE = 16
 EPOCHS = 16
 
 DATA_DIR = os.path.join(script_dir, "data")
@@ -143,7 +143,7 @@ def train():
         batch_size=BATCH_SIZE,
         shuffle=True,
         collate_fn=collate_fn,
-        num_workers=2,
+        num_workers=4,
         pin_memory=True,
         persistent_workers=True
     )
@@ -153,7 +153,7 @@ def train():
         batch_size=BATCH_SIZE,
         shuffle=False,
         collate_fn=collate_fn,
-        num_workers=2,
+        num_workers=4,
         pin_memory=True
     )
 
