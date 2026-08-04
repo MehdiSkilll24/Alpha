@@ -6,7 +6,6 @@ import os
 from main import Transformer
 from collate_fn import collate_fn
 from Dataset import TranslationDataset
-import shutil
 import zipfile
 from torch.amp import autocast, GradScaler
 import json
@@ -240,7 +239,7 @@ def train():
             tokens_processed += (target != 0).sum().item()
             optimizer.zero_grad(set_to_none=True)
 
-            with autocast("cuda", enabled=torch.cuda.is_available()):
+            with autocast("cuda", dtype= torch.bfloat16, enabled=torch.cuda.is_available()):
                 logits = model(src, decoder_input)
                 loss = criterion(
                     logits.reshape(-1, logits.size(-1)),
@@ -273,7 +272,8 @@ def train():
                 f"Batch {batch_idx + 1} | "
                 f"Epoch {epoch+1} | "
                 f"Loss: {running_loss / (batch_idx + 1):.4f} | "
-                f"Accuracy: {accuracy:.2%}"
+                f"Accuracy: {accuracy:.2%} | "
+                f"Grad Norm: {grad_norm:.4f}"
             )
 
         test_loss, test_acc = evaluate(model, test_loader, criterion, device)

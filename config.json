@@ -1,24 +1,24 @@
 {
     "model_name": "Alpha-Transformer",
-    "model_type": "decoder-only",
+    "model_type": "encoder-decoder-transformer",
 
     "d_model": 256,
     "num_heads": 8,
     "d_ff": 1024,
 
-    "num_encoder_layers": 0,
-    "num_decoder_layers": 20,
+    "num_encoder_layers": 3,
+    "num_decoder_layers": 3,
 
     "vocab_size": 32000,  
 
-    "max_seq_length": 64,
+    "max_seq_length": 512,
     "rope_max_seq_length": 1024,
 
     "positional_encoding": "RoPE",
     "activation": "ReLU",
     "normalization": "Pre-LayerNorm",
 
-    "num_parameters": 32211200,
+    "num_parameters": 30000000,
 
     "dataset": "OPUS-100",
     "task": "English-French machine translation",
