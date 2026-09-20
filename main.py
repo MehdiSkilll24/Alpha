@@ -1,5 +1,9 @@
 import torch.nn as nn
 import torch
+import torch.nn.functional as F
+import json
+
+config_path = r"C:\Users\mehdi\Desktop\Pythonfiles\Projects\Transformers\Alpha\config.json"
 
 class RoPE(nn.Module):
     def __init__(self, dim, max_seq_len=1024):
@@ -43,62 +47,48 @@ class RoPE(nn.Module):
 
         return x*cos + self.rotate_half(x)*sin
 
-class MHA(nn.Module):
-    def __init__(self, d_model, num_heads):
-        super().__init__()
+class GQA(nn.Module):
+    def __init__(self, d_model, num_heads, num_kv_heads):
         super().__init__()
 
         self.num_heads = num_heads
         self.d_model = d_model
-        
-        self.Q = nn.Linear(d_model, d_model)
-        self.K = nn.Linear(d_model, d_model)
-        self.V = nn.Linear(d_model, d_model)
+        self.num_kv_heads = num_kv_heads
         self.W_o = nn.Linear(d_model, d_model)
-
+        
         self.d_k = d_model // num_heads
+        self.Q = nn.Linear(d_model, d_model)
+        self.K = nn.Linear(d_model, num_kv_heads * self.d_k)
+        self.V = nn.Linear(d_model, num_kv_heads * self.d_k)
         self.rope = RoPE(self.d_k)
 
-    def forward(self, x, kv_input=None, mask=None):
+    def forward(self, x, mask=None,  use_rope = True):
         batch_size = x.size(0)
-        # x.shape = (2, 3, 64)  64 dictates that there will be 64 Q, K and V PER TOKEN 
-        
-        if kv_input is None:
-            kv_input = x
   
-        Q = self.Q(x) # we do q_1 = XWq = 'W_1'*'e1' + ... + 'W_64'*'e64' W_i being the weight at i ... until we comp q_64, if no kv_input, it means we're doing encoding
-        K = self.K(kv_input) # ,, ,, 
-        V = self.V(kv_input) # ,, ,, 
-        # We do this to ensure all Q,K and V's matrices have access to the input embeddings
+        Q = self.Q(x)
+        K = self.K(x)
+        V = self.V(x)
         
-        # Manual length extraction to avoid mismatch in size from encoder/decoder
-        q_seq_length = x.shape[1]
-        kv_seq_length = kv_input.shape[1]
+        seq_length = x.shape[1]
 
-        # We then split all this data through different heads so each one goes for a raneg window for each token (split ranges -> specialized heads)
-        Q = Q.view(batch_size, q_seq_length, self.num_heads, self.d_k)
-        K = K.view(batch_size, kv_seq_length, self.num_heads, self.d_k)
-        V = V.view(batch_size, kv_seq_length, self.num_heads, self.d_k)
+        Q = Q.view(batch_size, seq_length, self.num_heads, self.d_k)
+        K = K.view(batch_size, seq_length, self.num_kv_heads, self.d_k)
+        V = V.view(batch_size, seq_length, self.num_kv_heads, self.d_k)
 
-        # So we get (batch, heads, seq_len, d_k) last 2 dims are the ones that get multiplied by Pytorch
-        # The reason we put seq_len, d_k is because we gotta multiply them indep. of how many heads or batches, what matters is the consistent output per head per batch
-        # Also, since we're computing relationships between tokens, there must be seq_len and d_k, so we can compare all tokens with all tokens for every head in every batch
         Q = Q.transpose(1,2)                   
         K = K.transpose(1,2)
         V = V.transpose(1,2)
+        if use_rope:
+            Q = self.rope(Q)
+            K = self.rope(K)
 
-        Q = self.rope(Q)
-        K = self.rope(K)
+        Q_len = Q.size(2)
+        K_len = K.size(2)
         
-        scores = Q @ K.transpose(-2, -1) / self.d_k**0.5   #we swap d_k with seq_len so we get #seq_len * #seq_len matrix as a result
-
-        if mask is not None:
-            scores += mask
-        
-        attn_weights = torch.softmax(scores, dim=-1)
-        output = attn_weights @ V # contiguous vector of shape (batch, heads, seq, d_k)
-        output = output.transpose(1,2).contiguous().view(batch_size, q_seq_length, self.d_model) # transposing makes it breaks contiguousy, so we add .contiguous() and then .view() to reshape it with concatenation
-        output = self.W_o(output) # expressing the new shape correctly accross heads
+        output = F.scaled_dot_product_attention(Q, K, V, is_causal= (Q_len == K_len), enable_gqa=True)
+        output = output.transpose(1, 2).contiguous()
+        output = output.view(batch_size, seq_length, self.d_model)
+        output = self.W_o(output)
 
         return output
     
@@ -116,76 +106,49 @@ class MLP(nn.Module):
         x = self.fc2(x)
 
         return x
-    
 
-class EncoderBlock(nn.Module):
-    def __init__(self, d_model, num_heads, d_ff):
+    
+class DecoderBlock(nn.Module):
+    def __init__(self, d_model, num_heads, d_ff, num_kv_heads):
         super().__init__()
-        self.mha = MHA(d_model, num_heads)
+        self.self_attn = GQA(d_model, num_heads, num_kv_heads)
+
         self.norm1 = nn.LayerNorm(d_model)
         self.norm2 = nn.LayerNorm(d_model)
         self.mlp = MLP(d_model, d_ff)
 
     def forward(self, x):
+
         normed = self.norm1(x)
-        attn_out = self.mha(normed)
+        attn_out = self.self_attn(normed)
         x = x + attn_out
 
-        normed2 = self.norm2(x)
-        mlp_out = self.mlp(normed2)
-        x = x + mlp_out
-
-        return x
-    
-class DecoderBlock(nn.Module):
-    def __init__(self, d_model, num_heads, d_ff):
-        super().__init__()
-        self.self_attn = MHA(d_model, num_heads)
-        self.cross_attn = MHA(d_model, num_heads)
-        self.norm1 = nn.LayerNorm(d_model)
-        self.norm2 = nn.LayerNorm(d_model)
-        self.norm3 = nn.LayerNorm(d_model)
-        self.mlp = MLP(d_model, d_ff)
-
-    def forward(self, x, encoder_output):
-        causal_mask = torch.triu(torch.full((x.shape[1], x.shape[1]), float('-inf'), device=x.device), diagonal=1)
-        normed = self.norm1(x)
-        attn_out = self.self_attn(normed, mask = causal_mask)
-        x = x + attn_out
-
-        normed2 = self.norm2(x)
-        cross_out = self.cross_attn(normed2, encoder_output)
-        x = x + cross_out
-
-        normed3 = self.norm3(x)
-        mlp_out = self.mlp(normed3)
+        mlp_out = self.mlp(self.norm2)
         x = x + mlp_out
 
         return x
     
 class Transformer(nn.Module):
-    def __init__(self, src_vocab_size, tgt_vocab_size, d_model, num_heads, d_ff):
+    def __init__(self):
         super().__init__()
 
-        self.src_embedding = nn.Embedding(src_vocab_size, d_model)
-        self.tgt_embedding = nn.Embedding(tgt_vocab_size, d_model)
-        self.encoder = nn.ModuleList([EncoderBlock(d_model, num_heads, d_ff) for _ in range(3)])
-        self.decoder = nn.ModuleList([DecoderBlock(d_model, num_heads, d_ff) for _ in range(3)])
-        self.output_proj = nn.Linear(d_model, tgt_vocab_size)
-
-    def forward(self, src_tokens, tgt_tokens):
-        src = self.src_embedding(src_tokens)
-        tgt = self.tgt_embedding(tgt_tokens)
-
-        for block in self.encoder:
-            src = block(src)
+        with open(config_path, "r", encoding="utf-8") as f:
+            config = json.load(f)
+            
+        self.d_model = config["d_model"]
+        self.vocab_size = config["vocab_size"]
         
-        encoder_output = src
-        
+        self.embedding = nn.Embedding(config["vocab_size"], config["d_model"])
+        self.decoder = nn.ModuleList([DecoderBlock(config["d_model"], config["num_heads"],
+            config["d_ff"],config["num_kv_heads"]) for _ in range(config["num_decoder_layers"])])    
+         
+        self.output_proj = nn.Linear(config["d_model"], config["vocab_size"])
+
+    def forward(self, tokens):
+        x = self.embedding(tokens)
+
         for block in self.decoder:
-            tgt = block(tgt, encoder_output)
+            x = block(x)
 
-        logits = self.output_proj(tgt)
+        logits = self.output_proj(x)
         return logits
-
-
