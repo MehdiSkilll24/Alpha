@@ -129,20 +129,14 @@ class DecoderBlock(nn.Module):
         return x
     
 class Transformer(nn.Module):
-    def __init__(self):
+    def __init__(self, d_model, num_heads, vocab_size, d_ff, num_kv_heads, num_decoder_layers):
         super().__init__()
-
-        with open(config_path, "r", encoding="utf-8") as f:
-            config = json.load(f)
-            
-        self.d_model = config["d_model"]
-        self.vocab_size = config["vocab_size"]
         
-        self.embedding = nn.Embedding(config["vocab_size"], config["d_model"])
-        self.decoder = nn.ModuleList([DecoderBlock(config["d_model"], config["num_heads"],
-            config["d_ff"],config["num_kv_heads"]) for _ in range(config["num_decoder_layers"])])    
+        self.embedding = nn.Embedding(vocab_size, d_model)
+        self.decoder = nn.ModuleList([DecoderBlock(d_model, num_heads,
+            d_ff, num_kv_heads) for _ in range(num_decoder_layers)])
          
-        self.output_proj = nn.Linear(config["d_model"], config["vocab_size"])
+        self.output_proj = nn.Linear(d_model, vocab_size)
 
     def forward(self, tokens):
         x = self.embedding(tokens)

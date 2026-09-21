@@ -1,0 +1,30 @@
+{
+    "model_name": "Alpha-Transformer",
+
+    "d_model": 256,
+    "num_heads": 8,
+    "d_ff": 1024,
+
+    "num_decoder_layers": 3,
+
+    "vocab_size": 32000,
+
+    "max_seq_length": 1024,
+    "rope_max_seq_length": 1024,
+
+    "positional_encoding": "RoPE",
+    "activation": "ReLU",
+    "normalization": "Pre-LayerNorm",
+
+    "num_parameters": 51262022,
+
+    "dataset": "Wikitext103",
+    "task": "Experiment",
+
+    "framework": "PyTorch",
+
+    "pad_token_id": 0,
+    "unk_token_id": 1,
+    "bos_token_id": 2,
+    "eos_token_id": 3
+}
