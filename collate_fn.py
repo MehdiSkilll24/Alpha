@@ -1,20 +1,15 @@
 import torch
+import functools
 
-MAX_LEN = 1024  # keeps RoPE's max_seq_len=1024 buffer safely sufficient, prevents outlier-driven OOM
+MAX_LEN = 1024
 
-def collate_fn(batch, pad_id=0):
-
-    batch = [
-        tokens[:MAX_LEN]
-        for tokens in batch
-    ]
-
+def collate_fn(pad_id):
+    """Returns a collate function with the correct pad_id baked in."""
+    @functools.wraps(collate_fn)
     
-    max_len = max(len(sentence) for sentence in batch)
-
-    batch = [
-        tokens + [pad_id] * (max_len - len(tokens))
-        for tokens in batch
-    ]
-
-    return torch.tensor(batch, dtype=torch.long)
+    def _collate(batch):
+        batch = [tokens[:MAX_LEN] for tokens in batch]
+        max_len = max(len(sentence) for sentence in batch)
+        batch = [tokens + [pad_id] * (max_len - len(tokens)) for tokens in batch]
+        return torch.tensor(batch, dtype=torch.long)
+    return _collate

@@ -123,7 +123,7 @@ class DecoderBlock(nn.Module):
         attn_out = self.self_attn(normed)
         x = x + attn_out
 
-        mlp_out = self.mlp(self.norm2)
+        mlp_out = self.mlp(self.norm2(x))
         x = x + mlp_out
 
         return x

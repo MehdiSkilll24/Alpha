@@ -5,7 +5,7 @@ from datasets import load_dataset
 import os
 from main import Transformer
 from collate_fn import collate_fn
-from tokenizer import Tokenizer
+from bpe import build_bpe_tokenizer
 from Dataset import WikiTextDataset
 import shutil
 import zipfile
@@ -23,6 +23,9 @@ EPOCHS = 18
 LOCAL_DIR = r"C:\Users\mehdi\Desktop\Pythonfiles\Projects\Transformers\Alpha\checkpoints"
 # Drive — persistent storage, only written to AFTER a verified local save
 DRIVE_DIR = "/content/drive/MyDrive/Colab Notebooks/Alpha"
+
+with open("config.json") as f:
+    config = json.load(f)
 
 os.makedirs(LOCAL_DIR, exist_ok=True)
 os.makedirs(DRIVE_DIR, exist_ok=True)
@@ -67,7 +70,7 @@ def load_checkpoint_safely(filename):
     return None
 
 
-def evaluate(model, loader, criterion, device):
+def evaluate(model, loader, criterion, device, pad_id):
     model.eval()
     total_loss = 0
     total_correct = 0
@@ -83,7 +86,7 @@ def evaluate(model, loader, criterion, device):
             logits = model(inputs)
 
             predictions = logits.argmax(dim=-1)
-            mask = targets != 0
+            mask = targets != pad_id
             correct = ((predictions == targets) & mask).sum().item()
             total = mask.sum().item()
 
@@ -113,8 +116,21 @@ def train():
     val_data = dataset["validation"]
     test_data = dataset["test"]
 
-    tokenizer = Tokenizer()
+    combined_texts = dataset["train"]["text"]
+    tokenizer = build_bpe_tokenizer(combined_texts, vocab_size=32000)
 
+    PAD_ID = tokenizer.word_to_idx["<pad>"]
+    BOS_ID = tokenizer.word_to_idx["<bos>"]
+    EOS_ID = tokenizer.word_to_idx["<eos>"]
+    UNK_ID = tokenizer.word_to_idx["<unk>"]
+    actual_vocab_size = len(tokenizer)
+
+    config["pad_token_id"] = PAD_ID
+    config["unk_token_id"] = UNK_ID
+    config["bos_token_id"] = BOS_ID
+    config["eos_token_id"] = EOS_ID
+
+    config["vocab_size"] = actual_vocab_size
 
     train_dataset = WikiTextDataset(train_data, tokenizer)
     test_dataset = WikiTextDataset(test_data, tokenizer)
@@ -124,7 +140,7 @@ def train():
         train_dataset,
         batch_size=BATCH_SIZE,
         shuffle=True,
-        collate_fn=collate_fn,
+        collate_fn=collate_fn(PAD_ID),
         num_workers=2,
         pin_memory=True,
         persistent_workers=True
@@ -134,7 +150,7 @@ def train():
         test_dataset,
         batch_size=BATCH_SIZE,
         shuffle=False,
-        collate_fn=collate_fn,
+        collate_fn=collate_fn(PAD_ID),
         num_workers=2,
         pin_memory=True
     )
@@ -143,7 +159,7 @@ def train():
            val_dataset,
             batch_size=BATCH_SIZE,
             shuffle=False,
-            collate_fn=collate_fn,
+            collate_fn=collate_fn(PAD_ID),
             num_workers=2,
             pin_memory=True
         )
@@ -160,7 +176,7 @@ def train():
     
     optimizer = torch.optim.AdamW(model.parameters(), lr=LR)
     scaler = GradScaler("cuda", enabled=torch.cuda.is_available())
-    criterion = nn.CrossEntropyLoss(ignore_index=0)
+    criterion = nn.CrossEntropyLoss(ignore_index=PAD_ID)
 
     #------------
     # TRAINING — fresh start, no checkpoint loading this run
@@ -219,8 +235,8 @@ def train():
             running_loss += loss.item()
 
             predictions = logits.argmax(dim=-1)
-            mask = target != 0
-            correct = ((predictions == target) & mask).sum().item()
+            mask = targets != PAD_ID
+            correct = ((predictions == targets) & mask).sum().item()
             total = mask.sum().item()
 
             total_correct += correct
@@ -246,7 +262,7 @@ def train():
                 f"Accuracy: {accuracy:.2%}"
             )
 
-        val_loss, val_Acc = evaluate(model, val_loader, criterion, device, running_loss, num_batches_processed)
+        val_loss, val_Acc = evaluate(model, val_loader, criterion, device, PAD_ID)
         perplexity = torch.exp(torch.tensor(val_loss))
         print(f"[Eval] Epoch {epoch+1} | Val loss: {val_loss:.4f} | Val Accuracy: {val_Acc:.2%}")
         print(optimizer.param_groups[0]['lr'])
