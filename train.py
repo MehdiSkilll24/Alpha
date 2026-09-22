@@ -3,6 +3,7 @@ import torch.nn as nn
 from torch.utils.data import DataLoader
 from datasets import load_dataset
 import os
+from pathlib import Path
 from main import Transformer
 from collate_fn import collate_fn
 from bpe import build_bpe_tokenizer
@@ -12,59 +13,73 @@ import zipfile
 from torch.amp import autocast, GradScaler
 import json
 
-with open("config.json") as f:
-    config = json.load(f)
-
 LR = 3e-4
 BATCH_SIZE = 32
 EPOCHS = 18
 
-# Local Colab disk — fast, reliable writes
-LOCAL_DIR = r"C:\Users\mehdi\Desktop\Pythonfiles\Projects\Transformers\Alpha\checkpoints"
-# Drive — persistent storage, only written to AFTER a verified local save
-DRIVE_DIR = "/content/drive/MyDrive/Colab Notebooks/Alpha"
+SCRIPT_DIR = Path(__file__).parent.absolute()
+CONFIG_PATH = SCRIPT_DIR / "config.json"
 
-with open("config.json") as f:
-    config = json.load(f)
 
+# Determine environment and set checkpoint paths
+if os.path.exists("/content/drive"):  # Colab environment
+    LOCAL_DIR = Path("/content/Alpha/checkpoints")
+    DRIVE_DIR = Path("/content/drive/MyDrive/Colab Notebooks/Alpha")
+    print("Running in Colab — using Google Drive for persistent storage")
+else:  # Local machine
+    LOCAL_DIR = SCRIPT_DIR / "checkpoints"
+    DRIVE_DIR = SCRIPT_DIR / "checkpoints"  # Same as local for non-Colab
+    print(f"Running locally — using {LOCAL_DIR} for checkpoints")
+ 
+# Create directories
 os.makedirs(LOCAL_DIR, exist_ok=True)
 os.makedirs(DRIVE_DIR, exist_ok=True)
-
-
+ 
+print(f"Script directory: {SCRIPT_DIR}")
+print(f"Config path: {CONFIG_PATH}")
+print(f"Local checkpoint dir: {LOCAL_DIR}")
+print(f"Drive checkpoint dir: {DRIVE_DIR}\n")
+ 
+# Load config
+with open(CONFIG_PATH) as f:
+    config = json.load(f)
+ 
+ 
 def save_checkpoint_safely(checkpoint_data, filename):
     """Save locally first, verify it's a valid file, then copy to Drive.
     Never trust a save until it's been read back successfully."""
-    local_path = os.path.join(LOCAL_DIR, filename)
-    drive_path = os.path.join(DRIVE_DIR, filename)
-
-    torch.save(checkpoint_data, local_path)
-
+    local_path = LOCAL_DIR / filename
+    drive_path = DRIVE_DIR / filename
+ 
+    torch.save(checkpoint_data, str(local_path))
+ 
     try:
-        with zipfile.ZipFile(local_path) as z:
+        with zipfile.ZipFile(str(local_path)) as z:
             z.namelist()  # forces a real read, not just open
     except zipfile.BadZipFile:
         print(f"WARNING: {filename} failed integrity check after saving locally — NOT copying to Drive.")
         return False
-
-    shutil.copy(local_path, drive_path)
-
+ 
+    shutil.copy(str(local_path), str(drive_path))
+ 
     try:
-        with zipfile.ZipFile(drive_path) as z:
+        with zipfile.ZipFile(str(drive_path)) as z:
             z.namelist()
     except zipfile.BadZipFile:
         print(f"WARNING: {filename} corrupted during copy to Drive — local copy still intact at {local_path}.")
         return False
-
+ 
     print(f"Checkpoint verified and saved: {filename}")
     return True
-
-
+ 
+ 
 def load_checkpoint_safely(filename):
-    if os.path.exists(filename):
+    local_path = LOCAL_DIR / filename
+    if local_path.exists():
         try:
-            with zipfile.ZipFile(filename) as z:
+            with zipfile.ZipFile(str(local_path)) as z:
                 z.namelist()
-            return torch.load(filename, map_location="cpu")
+            return torch.load(str(local_path), map_location="cpu")
         except zipfile.BadZipFile:
             print(f"WARNING: {filename} is corrupted, trying next option...")
     return None
@@ -104,13 +119,40 @@ def evaluate(model, loader, criterion, device, pad_id):
     model.train()
     return avg_loss, accuracy
 
+def load_wikitext_safe():
+    """Load WikiText with explicit error handling and retry logic"""
+    from datasets import load_dataset
+    
+    print("Loading WikiText-103 dataset...")
+    max_retries = 3
+    
+    for attempt in range(max_retries):
+        try:
+            dataset = load_dataset("Salesforce/wikitext", "wikitext-103-v1")
+            print("✓ Dataset loaded successfully\n")
+            return dataset
+        except Exception as e:
+            print(f"Attempt {attempt + 1} failed: {str(e)[:100]}")
+            if attempt < max_retries - 1:
+                print("Retrying with cache flush...\n")
+                # Clear HF cache and retry
+                hf_cache = Path.home() / ".cache" / "huggingface" / "datasets"
+                if hf_cache.exists():
+                    try:
+                        shutil.rmtree(hf_cache, ignore_errors=True)
+                        print(f"Cleared cache at {hf_cache}\n")
+                    except:
+                        pass
+            else:
+                print(f"\n✗ Failed to load dataset after {max_retries} attempts")
+                raise
 
 def train():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     torch.backends.cuda.matmul.allow_tf32 = True
     torch.backends.cudnn.allow_tf32 = True
 
-    dataset = load_dataset("wikitext", "wikitext-103-v1")
+    dataset = load_wikitext_safe()
 
     train_data = dataset["train"]
     val_data = dataset["validation"]
