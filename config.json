@@ -1,8 +1,9 @@
 {
     "model_name": "Alpha-Transformer",
 
-    "d_model": 256,
+    "d_model": 1264,
     "num_heads": 8,
+    "num_kv_heads": 2,
     "d_ff": 1024,
 
     "num_decoder_layers": 3,

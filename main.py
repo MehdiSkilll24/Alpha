@@ -108,14 +108,14 @@ class MLP(nn.Module):
         return x
 
     
-class DecoderBlock(nn.Module):
-    def __init__(self, d_model, num_heads, d_ff, num_kv_heads):
+class MLPChainBlock(nn.Module):
+    def __init__(self, d_model, num_heads, d_ff, num_kv_heads, num_mlps=3):
         super().__init__()
         self.self_attn = GQA(d_model, num_heads, num_kv_heads)
 
         self.norm1 = nn.LayerNorm(d_model)
-        self.norm2 = nn.LayerNorm(d_model)
-        self.mlp = MLP(d_model, d_ff)
+        self.mlps = nn.ModuleList([MLP(d_model, d_ff) for _ in range(num_mlps)])
+        self.mlp_norms = nn.ModuleList([nn.LayerNorm(d_model) for _ in range(num_mlps)])
 
     def forward(self, x):
 
@@ -123,8 +123,9 @@ class DecoderBlock(nn.Module):
         attn_out = self.self_attn(normed)
         x = x + attn_out
 
-        mlp_out = self.mlp(self.norm2(x))
-        x = x + mlp_out
+        for mlp, norm in zip(self.mlps,self.mlp_norms):
+            mlp_out = mlp(norm(x))
+            x = x+ mlp_out
 
         return x
     
@@ -133,8 +134,8 @@ class Transformer(nn.Module):
         super().__init__()
         
         self.embedding = nn.Embedding(vocab_size, d_model)
-        self.decoder = nn.ModuleList([DecoderBlock(d_model, num_heads,
-            d_ff, num_kv_heads) for _ in range(num_decoder_layers)])
+        self.decoder = nn.ModuleList([MLPChainBlock(d_model, num_heads,
+            d_ff, num_kv_heads, num_mlps=3) for _ in range(num_decoder_layers)])
          
         self.output_proj = nn.Linear(d_model, vocab_size)
 

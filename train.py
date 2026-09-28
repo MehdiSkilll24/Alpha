@@ -5,17 +5,31 @@ from datasets import load_dataset
 import os
 from pathlib import Path
 from main import Transformer
-from collate_fn import collate_fn
 from bpe import build_bpe_tokenizer
-from Dataset import WikiTextDataset
+from Dataset import PackedWikiTextDataset
 import shutil
 import zipfile
 from torch.amp import autocast, GradScaler
 import json
-
+import numpy as np
+import random
+import time
 LR = 3e-4
-BATCH_SIZE = 32
-EPOCHS = 18
+BATCH_SIZE = 64
+EPOCHS = 30
+
+def set_seed(seed=42):
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed_all(seed)
+    np.random.seed(seed)
+    random.seed(seed)
+    torch.backends.cudnn.deterministic = True
+    torch.backends.cudnn.benchmark = False
+    torch.backends.cuda.matmul.allow_tf32 = False
+    torch.backends.cudnn.allow_tf32 = False
+
+# Call at start of train.py
+set_seed(42)
 
 SCRIPT_DIR = Path(__file__).parent.absolute()
 CONFIG_PATH = SCRIPT_DIR / "config.json"
@@ -147,19 +161,22 @@ def load_wikitext_safe():
                 print(f"\n✗ Failed to load dataset after {max_retries} attempts")
                 raise
 
+
+
 def train():
+    set_seed(42) # precaution reseed 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    torch.backends.cuda.matmul.allow_tf32 = True
-    torch.backends.cudnn.allow_tf32 = True
-
     dataset = load_wikitext_safe()
-
     train_data = dataset["train"]
     val_data = dataset["validation"]
     test_data = dataset["test"]
 
     combined_texts = dataset["train"]["text"]
     tokenizer = build_bpe_tokenizer(combined_texts, vocab_size=32000)
+    #debug prints
+    print(f"PAD_ID: {tokenizer.word_to_idx['<pad>']}")
+    print(f"BOS_ID: {tokenizer.word_to_idx['<bos>']}")
+    print(f"Vocab size: {len(tokenizer)}")
 
     PAD_ID = tokenizer.word_to_idx["<pad>"]
     BOS_ID = tokenizer.word_to_idx["<bos>"]
@@ -174,34 +191,37 @@ def train():
 
     config["vocab_size"] = actual_vocab_size
 
-    train_dataset = WikiTextDataset(train_data, tokenizer)
-    test_dataset = WikiTextDataset(test_data, tokenizer)
-    val_dataset = WikiTextDataset(val_data, tokenizer)
+    train_dataset = PackedWikiTextDataset(
+    train_data,
+    tokenizer,
+    seq_len=1024
+    )
+
+    val_dataset = PackedWikiTextDataset(
+        val_data,
+        tokenizer,
+        seq_len=1024
+    )
+
+    test_dataset = PackedWikiTextDataset(
+        test_data,
+        tokenizer,
+        seq_len=1024
+    )
 
     loader = DataLoader(
         train_dataset,
         batch_size=BATCH_SIZE,
         shuffle=True,
-        collate_fn=collate_fn(PAD_ID),
-        num_workers=2,
+        num_workers=4,
         pin_memory=True,
         persistent_workers=True
-    )
-
-    test_loader = DataLoader(
-        test_dataset,
-        batch_size=BATCH_SIZE,
-        shuffle=False,
-        collate_fn=collate_fn(PAD_ID),
-        num_workers=2,
-        pin_memory=True
     )
 
     val_loader = DataLoader(
            val_dataset,
             batch_size=BATCH_SIZE,
             shuffle=False,
-            collate_fn=collate_fn(PAD_ID),
             num_workers=2,
             pin_memory=True
         )
@@ -241,10 +261,61 @@ def train():
     else:
         print("No valid checkpoint found — starting fresh from epoch 1.")
 
-    quarter = len(loader) // 4
-    x = sum(p.numel() for p in model.parameters())
-    print(x)
+    total_params = sum(p.numel() for p in model.parameters())
+
+    embedding_params = sum(
+        p.numel() for p in model.embedding.parameters()
+    )
+
+    attention_params = sum(
+        p.numel()
+        for module in model.modules()
+        if module.__class__.__name__ == "GQA"
+        for p in module.parameters()
+    )
+
+    mlp_params = sum(
+        p.numel()
+        for module in model.modules()
+        if module.__class__.__name__ == "MLP"
+        for p in module.parameters()
+    )
+
+    norm_params = sum(
+        p.numel()
+        for module in model.modules()
+        if isinstance(module, nn.LayerNorm)
+        for p in module.parameters()
+    )
+
+    output_params = sum(
+        p.numel()
+        for p in model.output_proj.parameters()
+    )
+
+    print("\n===== MODEL PARAMETERS =====")
+    print(f"Total:      {total_params:,}")
+    print(f"Embedding:  {embedding_params:,}")
+    print(f"Attention:  {attention_params:,}")
+    print(f"MLP:        {mlp_params:,}")
+    print(f"LayerNorm:  {norm_params:,}")
+    print(f"Output:     {output_params:,}")
+    print("============================\n")
+
+    config["num_parameters"] = total_params
+
+    cumulative_tokens = 0
+    cumulative_effective_tokens = 0
+    cumulative_time = 0.0
+
     for epoch in range(start_epoch, EPOCHS):
+        if device.type == "cuda":
+            torch.cuda.reset_peak_memory_stats()
+            torch.cuda.synchronize()
+
+        epoch_start = time.perf_counter()
+        epoch_processed_tokens = 0
+        epoch_effective_tokens = 0
         model.train()
         running_loss = 0
         total_correct = 0
@@ -270,6 +341,8 @@ def train():
                 )
 
             scaler.scale(loss).backward()
+            scaler.unscale_(optimizer)
+            torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
             scaler.step(optimizer)
             scaler.update()
 
@@ -280,22 +353,19 @@ def train():
             mask = targets != PAD_ID
             correct = ((predictions == targets) & mask).sum().item()
             total = mask.sum().item()
+            # Tokens actually processed by the model
+            processed_tokens = inputs.numel()
+
+            # Non-padding tokens contributing to the loss
+            effective_tokens = total
+
+            epoch_processed_tokens += processed_tokens
+            epoch_effective_tokens += effective_tokens
 
             total_correct += correct
             total_tokens += total
             accuracy = total_correct / total_tokens if total_tokens > 0 else 0
 
-            if quarter > 0 and (batch_idx + 1) % quarter == 0:
-                checkpoint_data = {
-                    "model_state_dict": model.state_dict(),
-                    "optimizer_state_dict": optimizer.state_dict(),
-                    "epoch": epoch,
-                    "batch_idx": batch_idx,
-                    "vocab": tokenizer.word_to_idx,
-                }
-                quarter_num = (batch_idx + 1) // quarter
-                save_checkpoint_safely(checkpoint_data, f"checkpoint_epoch{epoch+1}_q{quarter_num}.pt")
-                save_checkpoint_safely(checkpoint_data, "checkpoint_latest.pt")
 
             print(
                 f"Batch {batch_idx + 1} | "
@@ -303,6 +373,33 @@ def train():
                 f"Loss: {running_loss / (num_batches_processed):.4f} | "
                 f"Accuracy: {accuracy:.2%}"
             )
+
+        if device.type == "cuda":
+            torch.cuda.synchronize()
+
+        epoch_time = time.perf_counter() - epoch_start
+
+        cumulative_tokens += epoch_processed_tokens
+        cumulative_effective_tokens += epoch_effective_tokens
+        cumulative_time += epoch_time
+
+        tokens_per_sec = epoch_processed_tokens / epoch_time
+        effective_tokens_per_sec = epoch_effective_tokens / epoch_time
+
+        cumulative_tokens_per_sec = cumulative_tokens / cumulative_time
+
+        if device.type == "cuda":
+            peak_vram = torch.cuda.max_memory_allocated() / (1024 ** 3)
+        else:
+            peak_vram = 0.0
+
+        print(
+            f"\n[Performance] Epoch {epoch+1} | "
+            f"Time: {epoch_time:.2f}s | "
+            f"Tokens/s: {tokens_per_sec:,.0f} | "
+            f"Effective tokens/s: {effective_tokens_per_sec:,.0f} | "
+            f"Peak VRAM: {peak_vram:.2f} GB"
+        )
 
         val_loss, val_Acc = evaluate(model, val_loader, criterion, device, PAD_ID)
         perplexity = torch.exp(torch.tensor(val_loss))
@@ -315,10 +412,25 @@ def train():
             f"Epoch {epoch+1} | "
             f"Train Loss: {train_loss_last:.4f} | "
             f"Train Accuracy: {train_acc_last:.2%} | "
-            f"Perplexity: {perplexity:.4f} | "
+            f"Val Perplexity: {perplexity:.4f} | "
             f"Val Loss: {val_loss:.4f} | "
-            f"Val Accuracy: {val_Acc:.2%}\n"
+            f"Val Accuracy: {val_Acc:.2%} | "
+            f"Epoch Time: {epoch_time:.2f}s | "
+            f"Tokens/s: {tokens_per_sec:.0f} | "
+            f"Effective Tokens/s: {effective_tokens_per_sec:.0f} | "
+            f"Cumulative Tokens: {cumulative_tokens:,} | "
+            f"Cumulative Time: {cumulative_time:.2f}s | "
+            f"Peak VRAM: {peak_vram:.2f}GB\n"
         )
+
+        checkpoint_data = {
+            "model_state_dict": model.state_dict(),
+            "optimizer_state_dict": optimizer.state_dict(),
+            "epoch": epoch,
+            "batch_idx": batch_idx,
+            "vocab": tokenizer.word_to_idx,
+        }
+        save_checkpoint_safely(checkpoint_data, "checkpoint_latest.pt")
 
         local_results = os.path.join(LOCAL_DIR, "epoch_results.txt")
         with open(local_results, "a") as f:
