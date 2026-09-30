@@ -48,8 +48,11 @@ class RoPE(nn.Module):
         return x*cos + self.rotate_half(x)*sin
 
 class GQA(nn.Module):
-    def __init__(self, d_model, num_heads, num_kv_heads):
+    def __init__(self, d_model, num_heads, num_kv_heads, dropout=0.1):
         super().__init__()
+        
+        self.attn_dropout_p = dropout
+        self.resid_dropout = nn.Dropout(dropout)
 
         self.num_heads = num_heads
         self.d_model = d_model
@@ -85,31 +88,35 @@ class GQA(nn.Module):
         Q_len = Q.size(2)
         K_len = K.size(2)
         
-        output = F.scaled_dot_product_attention(Q, K, V, is_causal= (Q_len == K_len), enable_gqa=True)
+        output = F.scaled_dot_product_attention(
+            Q, K, V,
+            dropout_p=self.attn_dropout_p if self.training else 0.0, 
+            is_causal= (Q_len == K_len), enable_gqa=True
+        )
+
         output = output.transpose(1, 2).contiguous()
         output = output.view(batch_size, seq_length, self.d_model)
-        output = self.W_o(output)
+        output = self.resid_dropout(self.W_o(output))
 
         return output
     
 class MLP(nn.Module):
     
-    def __init__(self, d_model, d_ff):
+    def __init__(self, d_model, d_ff, dropout=0.1):
         super().__init__()
-        self.fc1 = nn.Linear(d_model, d_ff)
-        self.relu = nn.ReLU()
-        self.fc2 = nn.Linear(d_ff, d_model)
+        hidden = int(2 * d_ff / 3)
+        hidden = (hidden + 63) // 64 * 64   # 4096 -> 2752
+        self.w_gate = nn.Linear(d_model, hidden, bias=False)
+        self.w_up   = nn.Linear(d_model, hidden, bias=False)
+        self.w_down = nn.Linear(hidden, d_model, bias=False)
+        self.dropout = nn.Dropout(dropout)
 
     def forward(self, x):
-        x = self.fc1(x)
-        x = self.relu(x)
-        x = self.fc2(x)
-
-        return x
+        return self.dropout(self.w_down(F.silu(self.w_gate(x)) * self.w_up(x)))
 
     
 class MLPChainBlock(nn.Module):
-    def __init__(self, d_model, num_heads, d_ff, num_kv_heads, num_mlps=3):
+    def __init__(self, d_model, num_heads, d_ff, num_kv_heads, num_mlps=6):
         super().__init__()
         self.self_attn = GQA(d_model, num_heads, num_kv_heads)
 
@@ -130,12 +137,12 @@ class MLPChainBlock(nn.Module):
         return x
     
 class Transformer(nn.Module):
-    def __init__(self, d_model, num_heads, vocab_size, d_ff, num_kv_heads, num_decoder_layers):
+    def __init__(self, d_model, num_heads, vocab_size, d_ff, num_kv_heads, num_decoder_layers, dropout):
         super().__init__()
-        
         self.embedding = nn.Embedding(vocab_size, d_model)
         self.decoder = nn.ModuleList([MLPChainBlock(d_model, num_heads,
-            d_ff, num_kv_heads, num_mlps=3) for _ in range(num_decoder_layers)])
+            d_ff, num_kv_heads, num_mlps=3, dropout=dropout) for _ in range(num_decoder_layers)])
+        self.final_norm = nn.LayerNorm(d_model)
          
         self.output_proj = nn.Linear(d_model, vocab_size)
 
@@ -145,5 +152,5 @@ class Transformer(nn.Module):
         for block in self.decoder:
             x = block(x)
 
-        logits = self.output_proj(x)
+        logits = self.output_proj(self.final_norm(x))
         return logits

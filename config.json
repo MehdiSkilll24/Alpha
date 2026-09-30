@@ -1,20 +1,22 @@
 {
     "model_name": "Alpha-Transformer",
 
-    "d_model": 1264,
+    "d_model": 1280,
     "num_heads": 8,
     "num_kv_heads": 2,
-    "d_ff": 1024,
+    "d_ff": 4096,
 
-    "num_decoder_layers": 3,
+    "num_decoder_layers": 16,
 
     "vocab_size": 32000,
 
     "max_seq_length": 1024,
     "rope_max_seq_length": 1024,
+    
+    "Dropout": 0.1,
 
     "positional_encoding": "RoPE",
-    "activation": "ReLU",
+    "activation": "SwiGlu",
     "normalization": "Pre-LayerNorm",
 
     "num_parameters": 51262022,

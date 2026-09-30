@@ -1,12 +1,11 @@
 import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader
-from datasets import load_dataset
 import os
 from pathlib import Path
 from main import Transformer
-from bpe import build_bpe_tokenizer
-from Dataset import PackedWikiTextDataset
+from bpe import load_bpe_tokenizer
+from Dataset import PackedBinDataset
 import shutil
 import zipfile
 from torch.amp import autocast, GradScaler
@@ -14,19 +13,30 @@ import json
 import numpy as np
 import random
 import time
+import math
+
 LR = 3e-4
-BATCH_SIZE = 64
-EPOCHS = 30
+MIN_LR = LR * 0.1
+MICRO_BATCH = 8
+GRAD_ACCUM = 8
+SEQ_LEN = 2048
+MAX_STEPS = 10_000      
+WARMUP_STEPS = 30
+EVAL_EVERY = 1300
+EVAL_BATCHES = 200
+SAVE_EVERY = 300
+LOG_EVERY = 10
+SEED = 42
 
 def set_seed(seed=42):
     torch.manual_seed(seed)
     torch.cuda.manual_seed_all(seed)
     np.random.seed(seed)
     random.seed(seed)
-    torch.backends.cudnn.deterministic = True
-    torch.backends.cudnn.benchmark = False
-    torch.backends.cuda.matmul.allow_tf32 = False
-    torch.backends.cudnn.allow_tf32 = False
+    #torch.backends.cudnn.deterministic = True
+    #torch.backends.cudnn.benchmark = False
+    torch.backends.cuda.matmul.allow_tf32 = True
+    torch.backends.cudnn.allow_tf32 = True
 
 # Call at start of train.py
 set_seed(42)
@@ -74,7 +84,9 @@ def save_checkpoint_safely(checkpoint_data, filename):
         print(f"WARNING: {filename} failed integrity check after saving locally — NOT copying to Drive.")
         return False
  
-    shutil.copy(str(local_path), str(drive_path))
+    if LOCAL_DIR.resolve() != DRIVE_DIR.resolve():
+        shutil.copy(str(local_path), str(drive_path))
+
  
     try:
         with zipfile.ZipFile(str(drive_path)) as z:
@@ -88,354 +100,179 @@ def save_checkpoint_safely(checkpoint_data, filename):
  
  
 def load_checkpoint_safely(filename):
-    local_path = LOCAL_DIR / filename
-    if local_path.exists():
+    for d in (LOCAL_DIR, DRIVE_DIR):
+        path = d / filename
+        if not path.exists():
+            continue
         try:
-            with zipfile.ZipFile(str(local_path)) as z:
+            with zipfile.ZipFile(str(path)) as z:
                 z.namelist()
-            return torch.load(str(local_path), map_location="cpu")
+            print(f"Loading checkpoint from {path}")
+            return torch.load(str(path), map_location="cpu")
         except zipfile.BadZipFile:
-            print(f"WARNING: {filename} is corrupted, trying next option...")
+            print(f"WARNING: {path} is corrupted, trying next location...")
     return None
 
 
-def evaluate(model, loader, criterion, device, pad_id):
+def get_lr(step):
+    if step < WARMUP_STEPS:
+        return LR * (step + 1) / WARMUP_STEPS
+    progress = (step - WARMUP_STEPS) / max(1, MAX_STEPS - WARMUP_STEPS)
+    return MIN_LR + 0.5 * (LR - MIN_LR) * (1 + math.cos(math.pi * min(progress, 1.0)))
+
+
+class StepSampler:
+    """Deterministic: the same step always yields the same sequence indices."""
+    def __init__(self, n, per_step, seed):
+        self.n, self.per_step, self.seed = n, per_step, seed
+        self._epoch, self._perm = -1, None
+
+    def indices(self, step):
+        out = []
+        for pos in range(step * self.per_step, (step + 1) * self.per_step):
+            epoch, off = divmod(pos, self.n)
+            if epoch != self._epoch:
+                self._perm = np.random.default_rng([self.seed, epoch]).permutation(self.n)
+                self._epoch = epoch
+            out.append(int(self._perm[off]))
+        return out
+
+
+@torch.no_grad()
+def evaluate(model, dataset, criterion, device, max_batches):
     model.eval()
-    total_loss = 0
-    total_correct = 0
-    total_tokens = 0
-
-    with torch.no_grad():
-        for tokens in loader:
-            tokens = tokens.to(device)
-            inputs = tokens[:, :-1]
-
-            targets = tokens[:, 1:]
-
+    total_loss, total_correct, total_tokens, n = 0.0, 0, 0, 0
+    for b in range(max_batches):
+        start = b * MICRO_BATCH
+        if start + MICRO_BATCH > len(dataset):
+            break
+        tokens = torch.stack([dataset[i] for i in range(start, start + MICRO_BATCH)]).to(device)
+        inputs, targets = tokens[:, :-1], tokens[:, 1:]
+        with autocast("cuda", enabled=device.type == "cuda"):
             logits = model(inputs)
-
-            predictions = logits.argmax(dim=-1)
-            mask = targets != pad_id
-            correct = ((predictions == targets) & mask).sum().item()
-            total = mask.sum().item()
-
-            loss = criterion(
-                logits.reshape(-1, logits.size(-1)),
-                targets.reshape(-1)
-            )
-
-            total_loss += loss.item()
-            total_correct += correct
-            total_tokens += total
-
-    avg_loss = total_loss / len(loader)
-    accuracy = total_correct / total_tokens if total_tokens > 0 else 0
+            loss = criterion(logits.reshape(-1, logits.size(-1)), targets.reshape(-1))
+        total_loss += loss.item(); n += 1
+        total_correct += (logits.argmax(-1) == targets).sum().item()
+        total_tokens += targets.numel()
     model.train()
-    return avg_loss, accuracy
-
-def load_wikitext_safe():
-    """Load WikiText with explicit error handling and retry logic"""
-    from datasets import load_dataset
-    
-    print("Loading WikiText-103 dataset...")
-    max_retries = 3
-    
-    for attempt in range(max_retries):
-        try:
-            dataset = load_dataset("Salesforce/wikitext", "wikitext-103-v1")
-            print("✓ Dataset loaded successfully\n")
-            return dataset
-        except Exception as e:
-            print(f"Attempt {attempt + 1} failed: {str(e)[:100]}")
-            if attempt < max_retries - 1:
-                print("Retrying with cache flush...\n")
-                # Clear HF cache and retry
-                hf_cache = Path.home() / ".cache" / "huggingface" / "datasets"
-                if hf_cache.exists():
-                    try:
-                        shutil.rmtree(hf_cache, ignore_errors=True)
-                        print(f"Cleared cache at {hf_cache}\n")
-                    except:
-                        pass
-            else:
-                print(f"\n✗ Failed to load dataset after {max_retries} attempts")
-                raise
-
+    return total_loss / max(n, 1), total_correct / max(total_tokens, 1)
 
 
 def train():
-    set_seed(42) # precaution reseed 
+    set_seed(SEED)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    dataset = load_wikitext_safe()
-    train_data = dataset["train"]
-    val_data = dataset["validation"]
-    test_data = dataset["test"]
-
-    combined_texts = dataset["train"]["text"]
-    tokenizer = build_bpe_tokenizer(combined_texts, vocab_size=32000)
-    #debug prints
-    print(f"PAD_ID: {tokenizer.word_to_idx['<pad>']}")
-    print(f"BOS_ID: {tokenizer.word_to_idx['<bos>']}")
-    print(f"Vocab size: {len(tokenizer)}")
+    tokenizer = load_bpe_tokenizer(SCRIPT_DIR / "fineweb_bpe.json")
 
     PAD_ID = tokenizer.word_to_idx["<pad>"]
-    BOS_ID = tokenizer.word_to_idx["<bos>"]
-    EOS_ID = tokenizer.word_to_idx["<eos>"]
-    UNK_ID = tokenizer.word_to_idx["<unk>"]
-    actual_vocab_size = len(tokenizer)
-
-    config["pad_token_id"] = PAD_ID
-    config["unk_token_id"] = UNK_ID
-    config["bos_token_id"] = BOS_ID
-    config["eos_token_id"] = EOS_ID
-
-    config["vocab_size"] = actual_vocab_size
-
-    train_dataset = PackedWikiTextDataset(
-    train_data,
-    tokenizer,
-    seq_len=1024
+    config.update(
+        pad_token_id=PAD_ID,
+        unk_token_id=tokenizer.word_to_idx["<unk>"],
+        bos_token_id=tokenizer.word_to_idx["<bos>"],
+        eos_token_id=tokenizer.word_to_idx["<eos>"],
+        vocab_size=len(tokenizer),
     )
+    print(f"Vocab size: {len(tokenizer)}")
 
-    val_dataset = PackedWikiTextDataset(
-        val_data,
-        tokenizer,
-        seq_len=1024
-    )
-
-    test_dataset = PackedWikiTextDataset(
-        test_data,
-        tokenizer,
-        seq_len=1024
-    )
-
-    loader = DataLoader(
-        train_dataset,
-        batch_size=BATCH_SIZE,
-        shuffle=True,
-        num_workers=4,
-        pin_memory=True,
-        persistent_workers=True
-    )
-
-    val_loader = DataLoader(
-           val_dataset,
-            batch_size=BATCH_SIZE,
-            shuffle=False,
-            num_workers=2,
-            pin_memory=True
-        )
+    train_ds = PackedBinDataset(SCRIPT_DIR / "train.bin", seq_len=SEQ_LEN)
+    val_ds = PackedBinDataset(SCRIPT_DIR / "val.bin", seq_len=SEQ_LEN)
+    sampler = StepSampler(len(train_ds), MICRO_BATCH * GRAD_ACCUM, SEED)
 
     model = Transformer(
-        config["d_model"],
-        config["num_heads"],
-        config["vocab_size"],
-        config["d_ff"],
-        config["num_kv_heads"],
-        config["num_decoder_layers"]
+        config["d_model"], config["num_heads"], config["vocab_size"],
+        config["d_ff"], config["num_kv_heads"], config["num_decoder_layers"],
+        dropout=config["Dropout"],
     ).to(device)
-    
-    
-    optimizer = torch.optim.AdamW(model.parameters(), lr=LR)
-    scaler = GradScaler("cuda", enabled=torch.cuda.is_available())
+
+
+    decay = [p for p in model.parameters() if p.ndim >= 2]
+    no_decay = [p for p in model.parameters() if p.ndim < 2]
+    optimizer = torch.optim.AdamW(
+        [{"params": decay, "weight_decay": 0.1},
+         {"params": no_decay, "weight_decay": 0.0}],
+        lr=LR, betas=(0.9, 0.95),
+    )
+
+    scaler = GradScaler("cuda", enabled=device.type == "cuda")
     criterion = nn.CrossEntropyLoss(ignore_index=PAD_ID)
 
-    #------------
-    # TRAINING — fresh start, no checkpoint loading this run
-    #------------
-    start_epoch = 0
-    start_batch_idx = 0
+    arch = {k: config[k] for k in
+            ("d_model", "num_heads", "num_kv_heads", "d_ff", "num_decoder_layers", "vocab_size")}
+    start_step, best_val = 0, float("inf")
 
-    checkpoint = load_checkpoint_safely(r"C:\Users\mehdi\Desktop\Pythonfiles\Projects\Transformers\Alpha\checkpoints\checkpoint_latest.pt")
-    if checkpoint is not None:
-        model.load_state_dict(checkpoint["model_state_dict"])
-        optimizer.load_state_dict(checkpoint["optimizer_state_dict"])
-        start_epoch = checkpoint["epoch"]
-        start_batch_idx = checkpoint["batch_idx"] + 1
-
-        if start_batch_idx >= len(loader):
-            start_epoch += 1
-            start_batch_idx = 0
-
-        print(f"Resuming from epoch {start_epoch+1}, batch {start_batch_idx}")
+    ckpt = load_checkpoint_safely("checkpoint_latest.pt")
+    if ckpt is not None:
+        if ckpt.get("arch") != arch:
+            raise RuntimeError(f"Checkpoint arch {ckpt.get('arch')} != current {arch}. "
+                               "Rename or delete the old checkpoint.")
+        model.load_state_dict(ckpt["model_state_dict"])
+        optimizer.load_state_dict(ckpt["optimizer_state_dict"])
+        scaler.load_state_dict(ckpt["scaler_state_dict"])
+        start_step, best_val = ckpt["step"], ckpt["best_val"]
+        print(f"Resuming at step {start_step}")
     else:
-        print("No valid checkpoint found — starting fresh from epoch 1.")
+        print("No checkpoint found, starting fresh at step 0.")
 
-    total_params = sum(p.numel() for p in model.parameters())
+    print(f"Params: {sum(p.numel() for p in model.parameters()):,}")
+    config["num_parameters"] = sum(p.numel() for p in model.parameters())
 
-    embedding_params = sum(
-        p.numel() for p in model.embedding.parameters()
-    )
+    def make_ckpt(next_step):
+        return {"model_state_dict": model.state_dict(),
+                "optimizer_state_dict": optimizer.state_dict(),
+                "scaler_state_dict": scaler.state_dict(),
+                "step": next_step, "best_val": best_val, "arch": arch}
 
-    attention_params = sum(
-        p.numel()
-        for module in model.modules()
-        if module.__class__.__name__ == "GQA"
-        for p in module.parameters()
-    )
+    model.train()
+    t0, tokens_since = time.perf_counter(), 0
+    tokens_per_step = MICRO_BATCH * GRAD_ACCUM * SEQ_LEN
 
-    mlp_params = sum(
-        p.numel()
-        for module in model.modules()
-        if module.__class__.__name__ == "MLP"
-        for p in module.parameters()
-    )
+    for step in range(start_step, MAX_STEPS):
+        lr = get_lr(step)
+        for g in optimizer.param_groups:
+            g["lr"] = lr
 
-    norm_params = sum(
-        p.numel()
-        for module in model.modules()
-        if isinstance(module, nn.LayerNorm)
-        for p in module.parameters()
-    )
+        idx = sampler.indices(step)
+        optimizer.zero_grad(set_to_none=True)
+        step_loss = 0.0
 
-    output_params = sum(
-        p.numel()
-        for p in model.output_proj.parameters()
-    )
-
-    print("\n===== MODEL PARAMETERS =====")
-    print(f"Total:      {total_params:,}")
-    print(f"Embedding:  {embedding_params:,}")
-    print(f"Attention:  {attention_params:,}")
-    print(f"MLP:        {mlp_params:,}")
-    print(f"LayerNorm:  {norm_params:,}")
-    print(f"Output:     {output_params:,}")
-    print("============================\n")
-
-    config["num_parameters"] = total_params
-
-    cumulative_tokens = 0
-    cumulative_effective_tokens = 0
-    cumulative_time = 0.0
-
-    for epoch in range(start_epoch, EPOCHS):
-        if device.type == "cuda":
-            torch.cuda.reset_peak_memory_stats()
-            torch.cuda.synchronize()
-
-        epoch_start = time.perf_counter()
-        epoch_processed_tokens = 0
-        epoch_effective_tokens = 0
-        model.train()
-        running_loss = 0
-        total_correct = 0
-        total_tokens = 0
-        num_batches_processed = 0
-
-        for batch_idx, tokens in enumerate(loader):
-            if epoch == start_epoch and batch_idx < start_batch_idx:
-                continue
-
-            tokens = tokens.to(device, non_blocking=True)
-            inputs = tokens[:, :-1]
-            targets = tokens[:, 1:]
-            
-            optimizer.zero_grad()
-            
-            with autocast("cuda", enabled=torch.cuda.is_available()):
+        for m in range(GRAD_ACCUM):
+            chunk = idx[m * MICRO_BATCH:(m + 1) * MICRO_BATCH]
+            tokens = torch.stack([train_ds[i] for i in chunk]).to(device, non_blocking=True)
+            inputs, targets = tokens[:, :-1], tokens[:, 1:]
+            with autocast("cuda", enabled=device.type == "cuda"):
                 logits = model(inputs)
-            
-                loss = criterion(
-                    logits.reshape(-1, logits.size(-1)),
-                    targets.reshape(-1)
-                )
+                loss = criterion(logits.reshape(-1, logits.size(-1)), targets.reshape(-1))
+            scaler.scale(loss / GRAD_ACCUM).backward()
+            step_loss += loss.item() / GRAD_ACCUM
 
-            scaler.scale(loss).backward()
-            scaler.unscale_(optimizer)
-            torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
-            scaler.step(optimizer)
-            scaler.update()
+        scaler.unscale_(optimizer)
+        grad_norm = torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
+        scaler.step(optimizer)
+        scaler.update()
+        tokens_since += tokens_per_step
 
-            num_batches_processed += 1
-            running_loss += loss.item()
+        if (step + 1) % LOG_EVERY == 0:
+            dt = time.perf_counter() - t0
+            print(f"step {step+1}/{MAX_STEPS} | loss {step_loss:.4f} | lr {lr:.2e} | "
+                  f"gnorm {grad_norm:.2f} | {tokens_since/dt:,.0f} tok/s")
+            t0, tokens_since = time.perf_counter(), 0
 
-            predictions = logits.argmax(dim=-1)
-            mask = targets != PAD_ID
-            correct = ((predictions == targets) & mask).sum().item()
-            total = mask.sum().item()
-            # Tokens actually processed by the model
-            processed_tokens = inputs.numel()
+        if (step + 1) % EVAL_EVERY == 0 or step + 1 == MAX_STEPS:
+            val_loss, val_acc = evaluate(model, val_ds, criterion, device, EVAL_BATCHES)
+            print(f"[Eval] step {step+1} | val loss {val_loss:.4f} | "
+                  f"ppl {math.exp(val_loss):.2f} | acc {val_acc:.2%}")
+            with open(LOCAL_DIR / "results.txt", "a") as f:
+                f.write(f"step {step+1} | train {step_loss:.4f} | val {val_loss:.4f} | "
+                        f"ppl {math.exp(val_loss):.2f} | acc {val_acc:.2%}\n")
+            if val_loss < best_val:
+                best_val = val_loss
+                save_checkpoint_safely({"model_state_dict": model.state_dict(), "arch": arch,
+                                        "step": step + 1, "val_loss": val_loss},
+                                       "checkpoint_best.pt")
 
-            # Non-padding tokens contributing to the loss
-            effective_tokens = total
-
-            epoch_processed_tokens += processed_tokens
-            epoch_effective_tokens += effective_tokens
-
-            total_correct += correct
-            total_tokens += total
-            accuracy = total_correct / total_tokens if total_tokens > 0 else 0
-
-
-            print(
-                f"Batch {batch_idx + 1} | "
-                f"Epoch {epoch+1} | "
-                f"Loss: {running_loss / (num_batches_processed):.4f} | "
-                f"Accuracy: {accuracy:.2%}"
-            )
-
-        if device.type == "cuda":
-            torch.cuda.synchronize()
-
-        epoch_time = time.perf_counter() - epoch_start
-
-        cumulative_tokens += epoch_processed_tokens
-        cumulative_effective_tokens += epoch_effective_tokens
-        cumulative_time += epoch_time
-
-        tokens_per_sec = epoch_processed_tokens / epoch_time
-        effective_tokens_per_sec = epoch_effective_tokens / epoch_time
-
-        cumulative_tokens_per_sec = cumulative_tokens / cumulative_time
-
-        if device.type == "cuda":
-            peak_vram = torch.cuda.max_memory_allocated() / (1024 ** 3)
-        else:
-            peak_vram = 0.0
-
-        print(
-            f"\n[Performance] Epoch {epoch+1} | "
-            f"Time: {epoch_time:.2f}s | "
-            f"Tokens/s: {tokens_per_sec:,.0f} | "
-            f"Effective tokens/s: {effective_tokens_per_sec:,.0f} | "
-            f"Peak VRAM: {peak_vram:.2f} GB"
-        )
-
-        val_loss, val_Acc = evaluate(model, val_loader, criterion, device, PAD_ID)
-        perplexity = torch.exp(torch.tensor(val_loss))
-        print(f"[Eval] Epoch {epoch+1} | Val loss: {val_loss:.4f} | Val Accuracy: {val_Acc:.2%}")
-        print(optimizer.param_groups[0]['lr'])
-        train_loss_last = running_loss / num_batches_processed
-        train_acc_last = total_correct / total_tokens if total_tokens > 0 else 0
-
-        results_line = (
-            f"Epoch {epoch+1} | "
-            f"Train Loss: {train_loss_last:.4f} | "
-            f"Train Accuracy: {train_acc_last:.2%} | "
-            f"Val Perplexity: {perplexity:.4f} | "
-            f"Val Loss: {val_loss:.4f} | "
-            f"Val Accuracy: {val_Acc:.2%} | "
-            f"Epoch Time: {epoch_time:.2f}s | "
-            f"Tokens/s: {tokens_per_sec:.0f} | "
-            f"Effective Tokens/s: {effective_tokens_per_sec:.0f} | "
-            f"Cumulative Tokens: {cumulative_tokens:,} | "
-            f"Cumulative Time: {cumulative_time:.2f}s | "
-            f"Peak VRAM: {peak_vram:.2f}GB\n"
-        )
-
-        checkpoint_data = {
-            "model_state_dict": model.state_dict(),
-            "optimizer_state_dict": optimizer.state_dict(),
-            "epoch": epoch,
-            "batch_idx": batch_idx,
-            "vocab": tokenizer.word_to_idx,
-        }
-        save_checkpoint_safely(checkpoint_data, "checkpoint_latest.pt")
-
-        local_results = os.path.join(LOCAL_DIR, "epoch_results.txt")
-        with open(local_results, "a") as f:
-            f.write(results_line)
-        shutil.copy(local_results, os.path.join(DRIVE_DIR, "epoch_results.txt"))
+        if (step + 1) % SAVE_EVERY == 0 or step + 1 == MAX_STEPS:
+            save_checkpoint_safely(make_ckpt(step + 1), "checkpoint_latest.pt")
+            if LOCAL_DIR.resolve() != DRIVE_DIR.resolve():
+                shutil.copy(LOCAL_DIR / "results.txt", DRIVE_DIR / "results.txt")
 
 if __name__ == "__main__":
     train()

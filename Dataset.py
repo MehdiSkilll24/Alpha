@@ -1,38 +1,22 @@
-from datasets import load_dataset
-from torch.utils.data import Dataset
+import os
+import numpy as np
 import torch
+from torch.utils.data import Dataset
 
-class PackedWikiTextDataset(Dataset):
-    def __init__(self, dataset, tokenizer, seq_len=1024):
+class PackedBinDataset(Dataset):
+    def __init__(self, path, seq_len=1024):
+        self.path = path
         self.seq_len = seq_len
-
-        all_tokens = []
-
-        for sample in dataset:
-            text = sample["text"]
-
-            if not text.strip():
-                continue
-
-            tokens = tokenizer.encode(text)
-
-            # Optional: separate documents/rows with EOS
-            tokens.append(tokenizer.word_to_idx["<eos>"])
-
-            all_tokens.extend(tokens)
-
-        # Drop incomplete final chunk
-        usable_length = (len(all_tokens) // seq_len) * seq_len
-        all_tokens = all_tokens[:usable_length]
-
-        self.tokens = torch.tensor(all_tokens, dtype=torch.long)
-
-        self.num_sequences = usable_length // seq_len
+        n_tokens = os.path.getsize(path) // 2          # uint16 = 2 bytes
+        self.num_sequences = (n_tokens - 1) // seq_len
+        self.data = None                               # opened lazily, per worker
 
     def __len__(self):
         return self.num_sequences
 
     def __getitem__(self, idx):
+        if self.data is None:
+            self.data = np.memmap(self.path, dtype=np.uint16, mode="r")
         start = idx * self.seq_len
-        end = start + self.seq_len
-        return self.tokens[start:end]
+        chunk = self.data[start : start + self.seq_len + 1]
+        return torch.from_numpy(chunk.astype(np.int64))

@@ -25,7 +25,7 @@ class BPETokenizerWrapper():
         filtered = [i for i in ids if i not in special_ids]
         return self.tok.decode(filtered)
 
-def build_bpe_tokenizer(combined_texts, vocab_size=32000, save_path="bpe_tokenizer.json"):
+def build_bpe_tokenizer(combined_texts, vocab_size=32000, save_path="fineweb_bpe.json"):
     if os.path.exists(save_path):
         tokenizer_bpe = HFTokenizer.from_file(save_path)
     else:
@@ -35,10 +35,16 @@ def build_bpe_tokenizer(combined_texts, vocab_size=32000, save_path="bpe_tokeniz
 
         trainer = BpeTrainer(
             vocab_size=vocab_size,
-            special_tokens=["<pad>", "<unk>", "<bos>", "<eos>"]
+            special_tokens=["<pad>", "<unk>", "<bos>", "<eos>"],
+            initial_alphabet=ByteLevel.alphabet(),
         )
 
         tokenizer_bpe.train_from_iterator(combined_texts, trainer=trainer)
         tokenizer_bpe.save(save_path)
 
     return BPETokenizerWrapper(tokenizer_bpe) 
+
+def load_bpe_tokenizer(path):
+    if not os.path.exists(path):
+        raise FileNotFoundError(f"{path} missing. Run prepare_fineweb.py first.")
+    return BPETokenizerWrapper(HFTokenizer.from_file(str(path)))
