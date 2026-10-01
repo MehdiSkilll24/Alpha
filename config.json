@@ -1,33 +1,22 @@
 {
-    "model_name": "Alpha-Transformer",
-
-    "d_model": 1280,
-    "num_heads": 8,
-    "num_kv_heads": 2,
-    "d_ff": 4096,
-
-    "num_decoder_layers": 16,
-
-    "vocab_size": 32000,
-
-    "max_seq_length": 1024,
-    "rope_max_seq_length": 1024,
-    
-    "Dropout": 0.1,
-
-    "positional_encoding": "RoPE",
-    "activation": "SwiGlu",
-    "normalization": "Pre-LayerNorm",
-
-    "num_parameters": 51262022,
-
-    "dataset": "Wikitext103",
-    "task": "Experiment",
-
-    "framework": "PyTorch",
-
-    "pad_token_id": null,
-    "unk_token_id": null,
-    "bos_token_id": null,
-    "eos_token_id": null
+  "model_name": "Alpha-Transformer",
+  "d_model": 1280,
+  "num_heads": 8,
+  "num_kv_heads": 2,
+  "d_ff": 4096,
+  "num_decoder_layers": 16,
+  "vocab_size": 32000,
+  "max_seq_length": 2048,
+  "rope_max_seq_length": 2048,
+  "positional_encoding": "RoPE",
+  "activation": "SwiGlu",
+  "normalization": "Pre-LayerNorm",
+  "num_parameters": 316706560,
+  "dataset": "fineweb3",
+  "task": "Model creation",
+  "framework": "PyTorch",
+  "pad_token_id": null,
+  "unk_token_id": null,
+  "bos_token_id": null,
+  "eos_token_id": null
 }

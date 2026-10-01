@@ -17,14 +17,15 @@ import math
 
 LR = 3e-4
 MIN_LR = LR * 0.1
-MICRO_BATCH = 8
-GRAD_ACCUM = 8
+MICRO_BATCH = 16
+GRAD_ACCUM = 4
+EVAL_MICRO = 8
 SEQ_LEN = 2048
-MAX_STEPS = 10_000      
-WARMUP_STEPS = 30
-EVAL_EVERY = 1300
+MAX_STEPS = 92000      
+WARMUP_STEPS = 500
+EVAL_EVERY = 1000
 EVAL_BATCHES = 200
-SAVE_EVERY = 300
+SAVE_EVERY = 1000
 LOG_EVERY = 10
 SEED = 42
 
@@ -143,12 +144,12 @@ def evaluate(model, dataset, criterion, device, max_batches):
     model.eval()
     total_loss, total_correct, total_tokens, n = 0.0, 0, 0, 0
     for b in range(max_batches):
-        start = b * MICRO_BATCH
-        if start + MICRO_BATCH > len(dataset):
+        start = b * EVAL_MICRO
+        if start + EVAL_MICRO > len(dataset):
             break
-        tokens = torch.stack([dataset[i] for i in range(start, start + MICRO_BATCH)]).to(device)
+        tokens = torch.stack([dataset[i] for i in range(start, start + EVAL_MICRO)]).to(device)
         inputs, targets = tokens[:, :-1], tokens[:, 1:]
-        with autocast("cuda", enabled=device.type == "cuda"):
+        with autocast("cuda", dtype=torch.bfloat16, enabled=device.type == "cuda"):
             logits = model(inputs)
             loss = criterion(logits.reshape(-1, logits.size(-1)), targets.reshape(-1))
         total_loss += loss.item(); n += 1
@@ -180,8 +181,8 @@ def train():
     model = Transformer(
         config["d_model"], config["num_heads"], config["vocab_size"],
         config["d_ff"], config["num_kv_heads"], config["num_decoder_layers"],
-        dropout=config["Dropout"],
     ).to(device)
+    model.compile()
 
 
     decay = [p for p in model.parameters() if p.ndim >= 2]
@@ -189,10 +190,10 @@ def train():
     optimizer = torch.optim.AdamW(
         [{"params": decay, "weight_decay": 0.1},
          {"params": no_decay, "weight_decay": 0.0}],
-        lr=LR, betas=(0.9, 0.95),
+        lr=LR, betas=(0.9, 0.95), fused=True,
     )
 
-    scaler = GradScaler("cuda", enabled=device.type == "cuda")
+
     criterion = nn.CrossEntropyLoss(ignore_index=PAD_ID)
 
     arch = {k: config[k] for k in
@@ -206,7 +207,6 @@ def train():
                                "Rename or delete the old checkpoint.")
         model.load_state_dict(ckpt["model_state_dict"])
         optimizer.load_state_dict(ckpt["optimizer_state_dict"])
-        scaler.load_state_dict(ckpt["scaler_state_dict"])
         start_step, best_val = ckpt["step"], ckpt["best_val"]
         print(f"Resuming at step {start_step}")
     else:
@@ -218,7 +218,6 @@ def train():
     def make_ckpt(next_step):
         return {"model_state_dict": model.state_dict(),
                 "optimizer_state_dict": optimizer.state_dict(),
-                "scaler_state_dict": scaler.state_dict(),
                 "step": next_step, "best_val": best_val, "arch": arch}
 
     model.train()
@@ -238,16 +237,15 @@ def train():
             chunk = idx[m * MICRO_BATCH:(m + 1) * MICRO_BATCH]
             tokens = torch.stack([train_ds[i] for i in chunk]).to(device, non_blocking=True)
             inputs, targets = tokens[:, :-1], tokens[:, 1:]
-            with autocast("cuda", enabled=device.type == "cuda"):
+            with autocast("cuda", dtype=torch.bfloat16, enabled=device.type == "cuda"):
                 logits = model(inputs)
                 loss = criterion(logits.reshape(-1, logits.size(-1)), targets.reshape(-1))
-            scaler.scale(loss / GRAD_ACCUM).backward()
-            step_loss += loss.item() / GRAD_ACCUM
+            (loss / GRAD_ACCUM).backward() 
+            step_loss += loss.detach() / GRAD_ACCUM
 
-        scaler.unscale_(optimizer)
         grad_norm = torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
-        scaler.step(optimizer)
-        scaler.update()
+        optimizer.step()
+        step_loss = step_loss.item()
         tokens_since += tokens_per_step
 
         if (step + 1) % LOG_EVERY == 0:
