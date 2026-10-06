@@ -1,13 +1,12 @@
 # generate.py
 import argparse
 from pathlib import Path
-
 import torch
 import torch.nn.functional as F
-
 from main import Transformer
 from bpe import load_bpe_tokenizer
 import json
+from rag import rag_prompt
 
 SCRIPT_DIR = Path(__file__).parent.absolute()
 MAX_CTX = 2048  # RoPE table size; the model has never seen positions beyond this
@@ -93,7 +92,7 @@ if __name__ == "__main__":
     model, tok = load_model(a.ckpt, device)
 
     def run(q):
-        p = f"### Instruction:\n{q.strip()}\n\n### Response:\n"
+        p = f"### Instruction:\n{q}\n\n### Response:\n"
         print("\n" + generate(model, tok, p, device, a.max_new, a.temp, a.top_k, a.top_p, a.rep) + "\n")
     if a.prompt:
         run(a.prompt)

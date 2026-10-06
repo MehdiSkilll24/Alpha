@@ -5,8 +5,9 @@ import torch, torch.nn as nn
 from datasets import load_dataset
 from main import Transformer
 from bpe import load_bpe_tokenizer
+import os 
 
-D = Path(__file__).parent.absolute()
+D = Path("/content/drive/MyDrive/Transformers/Alpha") if os.path.exists("/content") else Path(__file__).parent.absolute()
 MAX_LEN, MICRO, ACCUM = 512, 16, 2
 LR, WARMUP, EPOCHS, EVAL_EVERY = 3e-5, 50, 3, 200
 
@@ -67,7 +68,31 @@ if __name__ == "__main__":
     tok = load_bpe_tokenizer(D / "fineweb_bpe.json")
     pad = tok.word_to_idx["<pad>"]
 
-    raw = load_dataset("yahma/alpaca-cleaned")["train"].shuffle(seed=42)
+    alpaca = list(load_dataset("yahma/alpaca-cleaned")["train"])
+    import re
+    MATH = re.compile(r"^(calculate|compute|evaluate|solve|add|subtract|multiply|divide|"
+                  r"find the (sum|product|difference|quotient|result)|"
+                  r"what is the (sum|product|difference|quotient|result)|"
+                  r"what('s| is) [\d\.\-\+\*/%\s]+)", re.I)
+
+    before = len(alpaca)
+    alpaca = [ex for ex in alpaca if ex["input"] or not MATH.match(ex["instruction"].strip())]
+    print(f"removed {before - len(alpaca)} math examples")
+    FACT = re.compile(r"^(who|when|where|which|what is|what was|what are|how many|how much|in which|name the)\b", re.I)
+
+    before = len(alpaca)
+    alpaca = [ex for ex in alpaca
+              if ex["input"] or not FACT.match(ex["instruction"].strip())]
+    print(f"removed {before - len(alpaca)} alpaca examples")
+
+    with open(D / "search_ex.json", encoding="utf-8") as f:
+        search = json.load(f)
+
+    with open(D / "calc_ex.json", encoding="utf-8") as f:
+            calc = json.load(f)
+
+    raw = alpaca + search + calc
+    random.shuffle(raw)
     data = build(raw, tok)
     val, train = data[:1000], data[1000:]
     print(f"train {len(train)} | val {len(val)} examples")
