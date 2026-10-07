@@ -8,7 +8,7 @@ from bpe import load_bpe_tokenizer
 import os 
 
 D = Path("/content/drive/MyDrive/Transformers/Alpha") if os.path.exists("/content") else Path(__file__).parent.absolute()
-MAX_LEN, MICRO, ACCUM = 512, 16, 2
+MAX_LEN, MICRO, ACCUM = 2048, 16, 2
 LR, WARMUP, EPOCHS, EVAL_EVERY = 3e-5, 50, 3, 200
 
 def fmt(ex):
@@ -91,7 +91,11 @@ if __name__ == "__main__":
     with open(D / "calc_ex.json", encoding="utf-8") as f:
             calc = json.load(f)
 
-    raw = alpaca + search + calc
+    with open(D / "rag_ex.json", encoding="utf-8") as f:
+        rag = json.load(f)
+        print(len(rag), "->", len(build(rag, tok)), "survive MAX_LEN")
+
+    raw = alpaca + search + calc + rag
     random.shuffle(raw)
     data = build(raw, tok)
     val, train = data[:1000], data[1000:]

@@ -6,11 +6,12 @@ import torch.nn.functional as F
 from main import Transformer
 from bpe import load_bpe_tokenizer
 import json
-from rag import rag_prompt
-
+from rag import rag_prompt, retrieve
+import re
+from calculator import calc
 SCRIPT_DIR = Path(__file__).parent.absolute()
 MAX_CTX = 2048  # RoPE table size; the model has never seen positions beyond this
-
+CALL = re.compile(r"\s*\[(SEARCH|CALC)\]\s*(.*)", re.S)
 
 def load_model(ckpt_path, device):
     tok = load_bpe_tokenizer(SCRIPT_DIR / "fineweb_bpe.json")
@@ -90,15 +91,29 @@ if __name__ == "__main__":
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model, tok = load_model(a.ckpt, device)
-
-    def run(q):
-        p = f"### Instruction:\n{q}\n\n### Response:\n"
-        print("\n" + generate(model, tok, p, device, a.max_new, a.temp, a.top_k, a.top_p, a.rep) + "\n")
+    def gen(p):
+        return generate(model, tok, p, device, a.max_new, a.temp, a.top_k, a.top_p, a.rep).strip()
+    
+    def answer(q):
+        out = gen(f"### Instruction:\n{q}\n\n### Response:\n")
+        print("FIRST:", repr(out))
+        m = CALL.match(out)
+        if not m:
+            return out
+        cmd, arg = m.group(1), m.group(2).split("\n")[0].strip()
+        if cmd == "SEARCH" and arg:
+            print("PASSAGES:", retrieve(arg))
+            return gen(rag_prompt(arg))
+        if cmd == "CALC" and arg:
+            r = calc(arg)
+            if r is not None:
+                return r
+        return out
     if a.prompt:
-        run(a.prompt)
+        print(answer(a.prompt))
     else:
         while True:
             s = input("prompt> ").strip()
             if s in ("", "quit", "exit"):
                 break
-            run(s)
+            print("\n" + answer(s) + "\n")
