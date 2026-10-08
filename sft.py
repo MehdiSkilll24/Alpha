@@ -6,6 +6,7 @@ from datasets import load_dataset
 from main import Transformer
 from bpe import load_bpe_tokenizer
 import os 
+import re
 
 D = Path("/content/drive/MyDrive/Transformers/Alpha") if os.path.exists("/content") else Path(__file__).parent.absolute()
 MAX_LEN, MICRO, ACCUM = 2048, 16, 2
@@ -69,7 +70,6 @@ if __name__ == "__main__":
     pad = tok.word_to_idx["<pad>"]
 
     alpaca = list(load_dataset("yahma/alpaca-cleaned")["train"])
-    import re
     MATH = re.compile(r"^(calculate|compute|evaluate|solve|add|subtract|multiply|divide|"
                   r"find the (sum|product|difference|quotient|result)|"
                   r"what is the (sum|product|difference|quotient|result)|"
@@ -78,8 +78,8 @@ if __name__ == "__main__":
     before = len(alpaca)
     alpaca = [ex for ex in alpaca if ex["input"] or not MATH.match(ex["instruction"].strip())]
     print(f"removed {before - len(alpaca)} math examples")
-    FACT = re.compile(r"^(who|when|where|which|what is|what was|what are|how many|how much|in which|name the)\b", re.I)
 
+    FACT = re.compile(r"^(who|when|where|which|what is|what was|what are|how many|how much|in which|name the)\b", re.I)
     before = len(alpaca)
     alpaca = [ex for ex in alpaca
               if ex["input"] or not FACT.match(ex["instruction"].strip())]

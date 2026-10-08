@@ -6,7 +6,7 @@ import torch.nn.functional as F
 from main import Transformer
 from bpe import load_bpe_tokenizer
 import json
-from rag import rag_prompt, retrieve
+from rag import build_prompt, web_retrieve
 import re
 from calculator import calc
 SCRIPT_DIR = Path(__file__).parent.absolute()
@@ -101,9 +101,16 @@ if __name__ == "__main__":
         if not m:
             return out
         cmd, arg = m.group(1), m.group(2).split("\n")[0].strip()
+        
         if cmd == "SEARCH" and arg:
-            print("PASSAGES:", retrieve(arg))
-            return gen(rag_prompt(arg))
+            hits = web_retrieve(arg)
+            if not hits:
+                return "Search failed, no results."
+            prompt, ctx = build_prompt(arg, hits)
+            res = gen(prompt)
+            print("PASSAGES:", hits)
+            return res if res.strip().lower() in ctx.lower() else "I couldn't find that."
+            
         if cmd == "CALC" and arg:
             r = calc(arg)
             if r is not None:
