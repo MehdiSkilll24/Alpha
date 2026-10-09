@@ -4,7 +4,7 @@ from pathlib import Path
 from datasets import load_dataset
 from rag import retrieve          # loads your index.pt
 
-D = Path("/content/drive/MyDrive/Transformers/Alpha") if os.path.exists("/content") else Path(__file__).parent.absolute()
+D = Path("/content/drive/MyDrive/Transformers/Alpha/DS_generation") if os.path.exists("/content") else Path(__file__).parent.absolute()
 
 tq = load_dataset("mandarjoshi/trivia_qa", "rc.nocontext", split="train")
 tq = tq.shuffle(seed=42).select(range(20000, 26000))   # different slice from search_ex

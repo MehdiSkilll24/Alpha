@@ -10,12 +10,14 @@ from rag import build_prompt, web_retrieve
 import re
 from calculator import calc
 SCRIPT_DIR = Path(__file__).parent.absolute()
+ROOT = SCRIPT_DIR.parent      
+TOK = ROOT / "jsons" / "fineweb_bpe.json"
 MAX_CTX = 2048  # RoPE table size; the model has never seen positions beyond this
 CALL = re.compile(r"\s*\[(SEARCH|CALC)\]\s*(.*)", re.S)
 
 def load_model(ckpt_path, device):
-    tok = load_bpe_tokenizer(SCRIPT_DIR / "fineweb_bpe.json")
-    with open(SCRIPT_DIR / "config.json", encoding="utf-8") as f:
+    tok = load_bpe_tokenizer(TOK)
+    with open(ROOT / "jsons" / "config.json", encoding="utf-8") as f:
         cfg = json.load(f)
 
     ckpt = torch.load(ckpt_path, map_location="cpu")
@@ -80,7 +82,7 @@ def generate(model, tok, prompt, device, max_new=200, temperature=0.8,
 
 if __name__ == "__main__":
     p = argparse.ArgumentParser()
-    p.add_argument("--ckpt", default=str(SCRIPT_DIR / "checkpoints" / "checkpoint_sft.pt"))
+    p.add_argument("--ckpt", default=str(ROOT / "checkpoints" / "checkpoint_sftv3.pt"))
     p.add_argument("--prompt", default=None)
     p.add_argument("--max_new", type=int, default=200)
     p.add_argument("--temp", type=float, default=0.3)

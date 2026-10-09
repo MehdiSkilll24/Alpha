@@ -3,16 +3,16 @@ import torch
 from sentence_transformers import SentenceTransformer
 import trafilatura
 from ddgs import DDGS
-
+from prompts import INSTR
 dev = "cuda" if torch.cuda.is_available() else "cpu"
 emb = SentenceTransformer("BAAI/bge-small-en-v1.5", device=dev)
 
 def build_prompt(q, hits):
     ctx = "\n\n".join(p for p, _ in hits)
-    return (f"### Instruction:\nAnswer the question using the passages below.\n\n"
+    return (f"### Instruction:{INSTR}\n\n"
             f"### Input:\n{ctx}\n\nQuestion: {q}\n\n### Response:\n"), ctx
 
-def chunk(text, size=300, overlap=30):
+def chunk(text, size=150 , overlap=30):
     w = text.split()
     return [" ".join(w[i:i+size]) for i in range(0, max(1, len(w) - overlap), size - overlap)]
 
