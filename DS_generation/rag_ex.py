@@ -2,7 +2,7 @@
 import json, os
 from pathlib import Path
 from datasets import load_dataset
-from rag import retrieve          # loads your index.pt
+from model.rag_local import retrieve          # loads your index.pt
 
 D = Path("/content/drive/MyDrive/Transformers/Alpha/DS_generation") if os.path.exists("/content") else Path(__file__).parent.absolute()
 

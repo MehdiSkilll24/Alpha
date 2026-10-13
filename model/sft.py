@@ -64,7 +64,7 @@ def evaluate(model, data, pad, dev):
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--base", default=str(CKPT / "checkpoint_latest.pt"))
-    ap.add_argument("--out", default=str(CKPT / "checkpoint_sftv3.pt"))
+    ap.add_argument("--out", default=str(CKPT / "checkpoint_sftv4.pt"))
     a = ap.parse_args()
     Path(a.out).parent.mkdir(parents=True, exist_ok=True)
 
@@ -93,7 +93,6 @@ if __name__ == "__main__":
 
     with open(DATA / "rag_ex.json", encoding="utf-8") as f:
         rag = json.load(f)
-        print(len(rag), "->", len(build(rag, tok)), "survive MAX_LEN")
 
     with open(DATA / "rag_long.json", encoding="utf-8") as f:
         rag_long = json.load(f)
@@ -101,7 +100,11 @@ if __name__ == "__main__":
     with open(DATA / "rag_asqa.json", encoding="utf-8") as f:
         rag_asqa = json.load(f)
 
-    raw = alpaca + search + calc + rag + rag_long * 2 + rag_asqa
+    with open(DATA / "rag_wiki.json", encoding="utf-8") as f:
+        rag_wiki = json.load(f)
+    
+
+    raw = alpaca + search + calc + rag + rag_long * 2 + rag_asqa + rag_wiki
     random.shuffle(raw)
     data = build(raw, tok)
     val, train = data[:1000], data[1000:]

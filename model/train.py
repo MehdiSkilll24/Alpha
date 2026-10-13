@@ -5,7 +5,7 @@ import os
 from pathlib import Path
 from main import Transformer
 from bpe import load_bpe_tokenizer
-from Dataset import PackedBinDataset
+from bge.Dataset import PackedBinDataset
 import shutil
 import zipfile
 from torch.amp import autocast, GradScaler
@@ -160,6 +160,7 @@ def evaluate(model, dataset, criterion, device, max_batches):
 
 
 def train():
+
     set_seed(SEED)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     tokenizer = load_bpe_tokenizer(SCRIPT_DIR / "fineweb_bpe.json")
@@ -221,7 +222,7 @@ def train():
                 "step": next_step, "best_val": best_val, "arch": arch}
 
     model.train()
-    t0, tokens_since = time.perf_counter(), 0
+    t0, tokens_since = time.perf_counter(), 
     tokens_per_step = MICRO_BATCH * GRAD_ACCUM * SEQ_LEN
 
     for step in range(start_step, MAX_STEPS):
@@ -234,14 +235,14 @@ def train():
         step_loss = 0.0
 
         for m in range(GRAD_ACCUM):
-            chunk = idx[m * MICRO_BATCH:(m + 1) * MICRO_BATCH]
+            chunk = idx[m * MICRO_BATCH:(m + 1) * MICRO_BATCH] # take n = MICRO_BATCH sequences for each GRAD_ACCUM
             tokens = torch.stack([train_ds[i] for i in chunk]).to(device, non_blocking=True)
             inputs, targets = tokens[:, :-1], tokens[:, 1:]
             with autocast("cuda", dtype=torch.bfloat16, enabled=device.type == "cuda"):
                 logits = model(inputs)
-                loss = criterion(logits.reshape(-1, logits.size(-1)), targets.reshape(-1))
-            (loss / GRAD_ACCUM).backward() 
-            step_loss += loss.detach() / GRAD_ACCUM
+                loss = criterion(logits.reshape(-1, logits.size(-1)), targets.reshape(-1)) # merge all tokens from the seq and compute loss for each token before avging for the whole seq   
+            (loss / GRAD_ACCUM).backward()
+            step_loss += loss.detach() / GRAD_ACCUM 
 
         grad_norm = torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
         optimizer.step()

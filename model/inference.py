@@ -15,6 +15,15 @@ TOK = ROOT / "jsons" / "fineweb_bpe.json"
 MAX_CTX = 2048  # RoPE table size; the model has never seen positions beyond this
 CALL = re.compile(r"\s*\[(SEARCH|CALC)\]\s*(.*)", re.S)
 
+def grounded(ans, ctx, thr=0.6):
+    words = {w for w in re.findall(r"[a-z0-9]{3,}", ans.lower())}
+    nums = re.findall(r"\d+(?:\.\d+)?", ans)
+    if any(n not in ctx for n in nums): return False
+    if not words:
+        return False
+    c = ctx.lower()
+    return sum(w in c for w in words) / len(words) >= thr
+
 def load_model(ckpt_path, device):
     tok = load_bpe_tokenizer(TOK)
     with open(ROOT / "jsons" / "config.json", encoding="utf-8") as f:
@@ -80,9 +89,10 @@ def generate(model, tok, prompt, device, max_new=200, temperature=0.8,
     return tok.decode(x[0, n_prompt:].tolist())  # <-- check: must accept a list of ints
 
 
+
 if __name__ == "__main__":
     p = argparse.ArgumentParser()
-    p.add_argument("--ckpt", default=str(ROOT / "checkpoints" / "checkpoint_sftv3.pt"))
+    p.add_argument("--ckpt", default=str(ROOT / "checkpoints" / "checkpoint_sftv4.pt"))
     p.add_argument("--prompt", default=None)
     p.add_argument("--max_new", type=int, default=200)
     p.add_argument("--temp", type=float, default=0.3)
@@ -109,9 +119,10 @@ if __name__ == "__main__":
             if not hits:
                 return "Search failed, no results."
             prompt, ctx = build_prompt(arg, hits)
-            res = gen(prompt)
             print("PASSAGES:", hits)
-            return res if res.strip().lower() in ctx.lower() else "I couldn't find that."
+            res = gen(prompt)
+            print("RAW:", repr(res))                 # see what the model wrote before the check
+            return res if grounded(res, ctx) else "I couldn't find that."
             
         if cmd == "CALC" and arg:
             r = calc(arg)
