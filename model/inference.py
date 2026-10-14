@@ -103,32 +103,36 @@ if __name__ == "__main__":
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model, tok = load_model(a.ckpt, device)
-    def gen(p):
-        return generate(model, tok, p, device, a.max_new, a.temp, a.top_k, a.top_p, a.rep).strip()
+    def gen(p, temp=None, rep=None, n=None):
+        return generate(model, tok, p, device,
+            n or a.max_new,
+            a.temp if temp is None else temp,
+            a.top_k, a.top_p,
+            a.rep if rep is None else rep).strip()
     
     def answer(q):
-        out = gen(f"### Instruction:\n{q}\n\n### Response:\n")
-        print("FIRST:", repr(out))
-        m = CALL.match(out)
+        p0 = f"### Instruction:\n{q}\n\n### Response:\n"
+        first = gen(p0, temp=0, rep=1.0, n=48)            # routing: greedy, no penalty
+        print("FIRST:", repr(first))
+        m = CALL.match(first)
         if not m:
-            return out
+            return gen(p0, temp=0.7, rep=1.15)            # direct answer: sampled + penalized
+    
         cmd, arg = m.group(1), m.group(2).split("\n")[0].strip()
-        
-        if cmd == "SEARCH" and arg:
-            hits = web_retrieve(arg)
+        if cmd == "SEARCH":
+            hits = web_retrieve(q)                        # user's text, not the model's copy
             if not hits:
                 return "Search failed, no results."
-            prompt, ctx = build_prompt(arg, hits)
+            prompt, ctx = build_prompt(q, hits)
             print("PASSAGES:", hits)
-            res = gen(prompt)
-            print("RAW:", repr(res))                 # see what the model wrote before the check
+            res = gen(prompt, temp=0, rep=1.0)            # reader: greedy copy
+            print("RAW:", repr(res))
             return res if grounded(res, ctx) else "I couldn't find that."
-            
+    
         if cmd == "CALC" and arg:
             r = calc(arg)
-            if r is not None:
-                return r
-        return out
+            return r if r is not None else "Couldn't parse that expression."
+        return first
     if a.prompt:
         print(answer(a.prompt))
     else:

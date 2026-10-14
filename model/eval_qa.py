@@ -65,9 +65,9 @@ def ci(flags, B=2000, seed=0):             # 95% bootstrap interval for a propor
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
-    ap.add_argument("--sft", required=True)
-    ap.add_argument("--base", required=True)           # checkpoint_latest.pt
-    ap.add_argument("--n", type=int, default=1000)     # must match prefetch.py
+    ap.add_argument("--sft", default="/content/drive/MyDrive/Transformers/Alpha/checkpoints/checkpoint_sftv4.pt")
+    ap.add_argument("--base", default="/content/drive/MyDrive/Transformers/Alpha/checkpoints/checkpoint_latest.pt")
+    ap.add_argument("--n", type=int, default=1000)    # must match prefetch.py
     a = ap.parse_args()
 
     dev = torch.device("cuda" if torch.cuda.is_available() else "cpu")
