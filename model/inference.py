@@ -6,9 +6,10 @@ import torch.nn.functional as F
 from main import Transformer
 from bpe import load_bpe_tokenizer
 import json
-from rag import build_prompt, web_retrieve
+from search import build_prompt, web_retrieve
 import re
 from calculator import calc
+
 SCRIPT_DIR = Path(__file__).parent.absolute()
 ROOT = SCRIPT_DIR.parent      
 TOK = ROOT / "jsons" / "fineweb_bpe.json"
@@ -47,14 +48,16 @@ def load_model(ckpt_path, device):
 
 @torch.no_grad()
 def generate(model, tok, prompt, device, max_new=200, temperature=0.8,
-             top_k=50, top_p=0.95, rep_penalty=1.1):
+             top_k=50, top_p=0.95, rep_penalty=1.1, return_flag=False):
     ids = tok.encode(prompt)[:-1]  # <-- check: must return a list of ints
     n_prompt = len(ids)
+    budget = min(max_new, MAX_CTX - n_prompt)
     ban = [tok.word_to_idx[t] for t in ("<pad>", "<unk>", "<bos>") if t in tok.word_to_idx]
     eos = tok.word_to_idx.get("<eos>")
 
     x = torch.tensor([ids], dtype=torch.long, device=device)
-    for _ in range(max_new):
+    done = False
+    for _ in range(budget):
         ctx = x[:, -MAX_CTX:]  # no KV cache: recompute the window each step
         with torch.autocast("cuda", dtype=torch.bfloat16, enabled=device.type == "cuda"):
             logits = model(ctx)[:, -1, :].float()
@@ -84,11 +87,54 @@ def generate(model, tok, prompt, device, max_new=200, temperature=0.8,
 
         x = torch.cat([x, nxt], dim=1)
         if eos is not None and nxt.item() == eos:
+            done = True
             break
+    text = tok.decode(x[0, n_prompt:].tolist())
+    return (text, done) if return_flag else text  
 
-    return tok.decode(x[0, n_prompt:].tolist())  # <-- check: must accept a list of ints
+def gen(p, temp=None, rep=None, n=None, flag = False):
+        
+        out = generate(model, tok, p, device,         # out is either a tuple of (text, done) or just = text depending if gen's flag true or false (if called as an answer, then it's true)
+                       n or a.max_new,a.temp if temp is None else temp,
+                       a.top_k, a.top_p,a.rep if rep is None else rep,
+                       return_flag=flag)
+        
+        if flag:
+            return out[0].strip(), out[1]
+        return out.strip()
+    
+def answer(q):
+    p0 = f"### Instruction:\n{q}\n\n### Response:\n"
+    first = gen(p0, temp=0, rep=1.0, n=48)        
+    m = CALL.match(first)
+    if not m: # -> means it's a normal model answer
+        for _ in range(3):
+            out, done = gen(p0, temp=0.7, rep=1.15, n=400, flag=True) 
+            if not CALL.match(out):
+                break
+        else:
+            return first
 
+        if not done and "." in out:
+            out = out[:out.rfind(".") + 1]
 
+        return out
+    
+    cmd, arg = m.group(1), m.group(2).split("\n")[0].strip()
+    if cmd == "SEARCH":
+        print("Search mode...\n")
+        web_res = web_retrieve(q)
+        print("raw: ", web_res)                                               # user's text, not the model's copy
+        if not web_res:
+            return "Search failed, no results."
+        prompt, ctx = build_prompt(q, web_res)
+        model_res = gen(prompt, temp=0, rep=1.0)                                    # reader: greedy copy
+        return model_res if grounded(model_res, ctx) else "I couldn't find that."
+
+    if cmd == "CALC" and arg:
+        r = calc(arg)
+        return r if r is not None else "Couldn't parse that expression."
+    return first
 
 if __name__ == "__main__":
     p = argparse.ArgumentParser()
@@ -103,38 +149,11 @@ if __name__ == "__main__":
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model, tok = load_model(a.ckpt, device)
-    def gen(p, temp=None, rep=None, n=None):
-        return generate(model, tok, p, device,
-            n or a.max_new,
-            a.temp if temp is None else temp,
-            a.top_k, a.top_p,
-            a.rep if rep is None else rep).strip()
     
-    def answer(q):
-        p0 = f"### Instruction:\n{q}\n\n### Response:\n"
-        first = gen(p0, temp=0, rep=1.0, n=48)            # routing: greedy, no penalty
-        print("FIRST:", repr(first))
-        m = CALL.match(first)
-        if not m:
-            return gen(p0, temp=0.7, rep=1.15)            # direct answer: sampled + penalized
     
-        cmd, arg = m.group(1), m.group(2).split("\n")[0].strip()
-        if cmd == "SEARCH":
-            hits = web_retrieve(q)                        # user's text, not the model's copy
-            if not hits:
-                return "Search failed, no results."
-            prompt, ctx = build_prompt(q, hits)
-            print("PASSAGES:", hits)
-            res = gen(prompt, temp=0, rep=1.0)            # reader: greedy copy
-            print("RAW:", repr(res))
-            return res if grounded(res, ctx) else "I couldn't find that."
-    
-        if cmd == "CALC" and arg:
-            r = calc(arg)
-            return r if r is not None else "Couldn't parse that expression."
-        return first
     if a.prompt:
-        print(answer(a.prompt))
+        print("model: ", answer(a.prompt))
+
     else:
         while True:
             s = input("prompt> ").strip()

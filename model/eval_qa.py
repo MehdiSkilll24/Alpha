@@ -6,7 +6,7 @@ from pathlib import Path
 from datasets import load_dataset
 import torch
 from inference import load_model, generate
-from rag import build_prompt
+from model.search import build_prompt
 from metrics import em, f1, contains
 
 CALL = re.compile(r"\s*\[(SEARCH|CALC)\]\s*(.*)", re.S)
