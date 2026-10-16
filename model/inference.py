@@ -49,27 +49,29 @@ def load_model(ckpt_path, device):
 @torch.no_grad()
 def generate(model, tok, prompt, device, max_new=200, temperature=0.8,
              top_k=50, top_p=0.95, rep_penalty=1.1, return_flag=False):
-    ids = tok.encode(prompt)[:-1]  # <-- check: must return a list of ints
+    ids = tok.encode(prompt)[:-1][-(MAX_CTX - 1):]   # leave room for >= 1 new token
     n_prompt = len(ids)
     budget = min(max_new, MAX_CTX - n_prompt)
     ban = [tok.word_to_idx[t] for t in ("<pad>", "<unk>", "<bos>") if t in tok.word_to_idx]
     eos = tok.word_to_idx.get("<eos>")
 
-    x = torch.tensor([ids], dtype=torch.long, device=device)
+    x = torch.tensor([ids], dtype=torch.long, device=device)  # full history (rep penalty + decoding)
+    inp, caches = x, None                                     # step 0 feeds the whole prompt (prefill)
     done = False
     for _ in range(budget):
-        ctx = x[:, -MAX_CTX:]  # no KV cache: recompute the window each step
         with torch.autocast("cuda", dtype=torch.bfloat16, enabled=device.type == "cuda"):
-            logits = model(ctx)[:, -1, :].float()
+            logits, caches = model(inp, caches=caches,
+                                   start_pos=x.size(1) - inp.size(1), return_cache=True)
+        logits = logits[:, -1, :].float()
 
         logits[:, ban] = float("-inf")
 
-        if rep_penalty != 1.0:  # penalize tokens already in the recent context
+        if rep_penalty != 1.0:
             seen = torch.unique(x[0, -256:])
             l = logits[0, seen]
             logits[0, seen] = torch.where(l > 0, l / rep_penalty, l * rep_penalty)
 
-        if temperature == 0:  # greedy
+        if temperature == 0:
             nxt = logits.argmax(-1, keepdim=True)
         else:
             logits = logits / temperature
@@ -80,17 +82,19 @@ def generate(model, tok, prompt, device, max_new=200, temperature=0.8,
             if top_p < 1.0:
                 sp, si = probs.sort(descending=True)
                 cum = sp.cumsum(-1)
-                sp[(cum - sp) > top_p] = 0.0  # keep the token that crosses the threshold
+                sp[(cum - sp) > top_p] = 0.0
                 probs = torch.zeros_like(probs).scatter_(1, si, sp)
                 probs /= probs.sum(-1, keepdim=True)
             nxt = torch.multinomial(probs, 1)
 
         x = torch.cat([x, nxt], dim=1)
+        inp = nxt                                 # from now on, feed ONLY the new token
         if eos is not None and nxt.item() == eos:
             done = True
             break
+
     text = tok.decode(x[0, n_prompt:].tolist())
-    return (text, done) if return_flag else text  
+    return (text, done) if return_flag else text
 
 def gen(p, temp=None, rep=None, n=None, flag = False):
         
@@ -149,7 +153,6 @@ if __name__ == "__main__":
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model, tok = load_model(a.ckpt, device)
-    
     
     if a.prompt:
         print("model: ", answer(a.prompt))

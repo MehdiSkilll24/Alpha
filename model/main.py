@@ -21,11 +21,12 @@ class RoPE(nn.Module):
 
         return torch.stack((-x2,x1),dim=-1).flatten(-2)
     
-    def forward(self, x):
-        
+    def forward(self, x, start_pos=0):
+
         seq_len = x.shape[-2]
-        cos = self.cos[:seq_len]
-        sin = self.sin[:seq_len]
+        assert start_pos + seq_len <= self.cos.size(0)
+        cos = self.cos[start_pos : start_pos + seq_len]             # We slice from start pos of the inf token, this way the previous Qs and Ks aren't computed
+        sin = self.sin[start_pos : start_pos + seq_len]             # We slice from start pos of the inf token, this way the previous Qs and Ks aren't computed
 
         cos = torch.repeat_interleave(cos, 2, dim=-1)
         sin = torch.repeat_interleave(sin, 2, dim=-1)
@@ -50,7 +51,7 @@ class GQA(nn.Module):
         self.V = nn.Linear(d_model, num_kv_heads * self.d_k)
         self.rope = RoPE(self.d_k)
 
-    def forward(self, x, mask=None,  use_rope = True):
+    def forward(self, x,  cache=None, start_pos=0, use_rope = True,):
         batch_size = x.size(0)
   
         Q = self.Q(x)
@@ -66,24 +67,35 @@ class GQA(nn.Module):
         Q = Q.transpose(1,2)                   
         K = K.transpose(1,2)
         V = V.transpose(1,2)
-        if use_rope:
-            Q = self.rope(Q)
-            K = self.rope(K)
 
+        if use_rope:
+            Q = self.rope(Q, start_pos)
+            K = self.rope(K, start_pos)
+
+        if cache is not None:
+            K = torch.cat([cache[0], K], dim = 2)
+            V = torch.cat([cache[1], V], dim = 2)
+        new_cache = K, V
+        
         Q_len = Q.size(2)
         K_len = K.size(2)
+
+        if Q_len == K_len:
+            output = F.scaled_dot_product_attention(Q, K, V, is_causal=True, enable_gqa=True)
+
+        elif Q_len == 1:
+            output = F.scaled_dot_product_attention(Q, K, V, enable_gqa=True)
+
+        else:                                    # multi-token chunk on top of a cache
+            mask = torch.ones(Q_len, K_len, dtype=torch.bool, device=Q.device).tril(K_len - Q_len)
+            output = F.scaled_dot_product_attention(Q, K, V, attn_mask=mask, enable_gqa=True)
         
-        output = F.scaled_dot_product_attention(
-            Q, K, V,
-            #dropout_p=self.attn_dropout_p if self.training else 0.0, 
-            is_causal= (Q_len == K_len), enable_gqa=True
-        )
 
         output = output.transpose(1, 2).contiguous()
         output = output.view(batch_size, seq_length, self.d_model)
         output = self.W_o(output)
 
-        return output
+        return output, new_cache
     
 class MLP(nn.Module):
     
@@ -108,16 +120,16 @@ class DecoderBlock(nn.Module):
         self.norm2 = nn.LayerNorm(d_model)
         self.mlp = MLP(d_model, d_ff)
 
-    def forward(self, x):
+    def forward(self, x, cache=None, start_pos=0):
 
         normed = self.norm1(x)
-        attn_out = self.self_attn(normed)
+        attn_out, new_cache = self.self_attn(normed, cache=cache, start_pos=start_pos)
         x = x + attn_out
 
         mlp_out = self.mlp(self.norm2(x))
         x = x + mlp_out
 
-        return x
+        return x, new_cache
     
 class Transformer(nn.Module):
     def __init__(self, d_model, num_heads, vocab_size, d_ff, num_kv_heads, num_decoder_layers):
@@ -139,11 +151,12 @@ class Transformer(nn.Module):
                 nn.init.normal_(p, std=0.02 / math.sqrt(2 * len(self.decoder)))
                 
 
-    def forward(self, tokens):
+    def forward(self, tokens, caches= None, start_pos=0, return_cache=False):
         x = self.embedding(tokens)
-
-        for block in self.decoder:
-            x = block(x)
+        new_caches = []
+        for i, block in enumerate(self.decoder):
+            x, c = block(x, cache=None if caches is None else caches[i], start_pos=start_pos)
+            new_caches.append(c)
 
         logits = self.output_proj(self.final_norm(x))
-        return logits
+        return (logits, new_caches) if return_cache else logits
