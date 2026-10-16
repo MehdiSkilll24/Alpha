@@ -26,12 +26,32 @@ def build(ds, tok):
     enc = lambda s: tok.tok.encode(s, add_special_tokens=False).ids
     out = []
     for ex in ds:
+        if "messages" in ex:
+            item = encode_chat(ex, bos, eos, enc)
+            if item: out.append(item)
+            continue
+
         p = [bos] + enc(fmt(ex))
         a = enc(ex["output"].strip()) + [eos]
         if len(p) + len(a) > MAX_LEN or len(a) < 2:
             continue  # drop, never truncate: a cut answer would lose its <eos>
         out.append((p + a, [-100] * len(p) + a))
     return out
+
+def encode_chat(ex, bos, eos, enc):
+    msgs, sysm = ex["messages"], ""
+    if msgs[0]["role"] == "system":
+        sysm, msgs = msgs[0]["content"], msgs[1:]
+    ids, lab = [bos], [-100]
+    for i in range(0, len(msgs) - 1, 2):
+        head = f"### System:\n{sysm}\n\n" if (i == 0 and sysm) else ""
+        p = enc(f"{head}### Instruction:\n{msgs[i]['content']}\n\n### Response:\n")
+        r = enc(msgs[i + 1]["content"]) + [eos]
+        if len(ids) + len(p) + len(r) > MAX_LEN:
+            break                                      # stop at a turn boundary, never mid-answer
+        ids += p + r
+        lab += [-100] * len(p) + r                     # loss only on assistant text + <eos>
+    return (ids, lab) if len(ids) > 1 else None
 
 def collate(batch, pad):
     n = max(len(x) for x, _ in batch)
@@ -102,9 +122,20 @@ if __name__ == "__main__":
 
     with open(DATA / "rag_wiki.json", encoding="utf-8") as f:
         rag_wiki = json.load(f)
-    
 
-    raw = alpaca + search + calc + rag + rag_long * 2 + rag_asqa + rag_wiki
+    with open(DATA / "chat.json", encoding="utf-8") as f:
+        chat = json.load(f)
+
+    with open(DATA / "identity.json", encoding="utf-8") as f:
+        identity = json.load(f)
+
+    def first_user(ex):
+        return next(m["content"] for m in ex["messages"] if m["role"] == "user").strip()
+
+    chat = [ex for ex in chat if not (MATH.match(first_user(ex)) or FACT.match(first_user(ex)))]
+
+
+    raw = alpaca + search + calc + rag + rag_long * 2 + rag_asqa + rag_wiki + chat + identity * 3
     random.shuffle(raw)
     data = build(raw, tok)
     val, train = data[:1000], data[1000:]
