@@ -16,6 +16,24 @@ TOK = ROOT / "jsons" / "fineweb_bpe.json"
 MAX_CTX = 2048  # RoPE table size; the model has never seen positions beyond this
 CALL = re.compile(r"\s*\[(SEARCH|CALC)\]\s*(.*)", re.S)
 
+SYSTEM = "You are Alpha, a small assistant with tools built by Mehdi."   # "" to disable
+
+def history_ids(tok, hist, user_msg, system="", reserve=400):
+    enc = lambda s: tok.tok.encode(s, add_special_tokens=False).ids
+    bos, eos = tok.word_to_idx["<bos>"], tok.word_to_idx["<eos>"]
+    def build(turns):
+        ids = [bos]
+        for i, (u, a) in enumerate(turns):
+            head = f"### System:\n{system}\n\n" if (i == 0 and system) else ""
+            ids += enc(f"{head}### Instruction:\n{u}\n\n### Response:\n")
+            if a is not None:
+                ids += enc(a) + [eos]
+        return ids
+    turns = list(hist) + [(user_msg, None)]
+    while len(turns) > 1 and len(build(turns)) > MAX_CTX - reserve:
+        turns = turns[1:]                    # drop the oldest turn, never a partial one
+    return build(turns)
+
 def grounded(ans, ctx, thr=0.6):
     words = {w for w in re.findall(r"[a-z0-9]{3,}", ans.lower())}
     nums = re.findall(r"\d+(?:\.\d+)?", ans)
@@ -49,7 +67,7 @@ def load_model(ckpt_path, device):
 @torch.no_grad()
 def generate(model, tok, prompt, device, max_new=200, temperature=0.8,
              top_k=50, top_p=0.95, rep_penalty=1.1, return_flag=False):
-    ids = tok.encode(prompt)[:-1][-(MAX_CTX - 1):]   # leave room for >= 1 new token
+    ids = (tok.encode(prompt)[:-1] if isinstance(prompt, str) else list(prompt))[-(MAX_CTX - 1):]
     n_prompt = len(ids)
     budget = min(max_new, MAX_CTX - n_prompt)
     ban = [tok.word_to_idx[t] for t in ("<pad>", "<unk>", "<bos>") if t in tok.word_to_idx]
@@ -107,13 +125,14 @@ def gen(p, temp=None, rep=None, n=None, flag = False):
             return out[0].strip(), out[1]
         return out.strip()
     
-def answer(q):
+def answer(q, hist):
+    pids = history_ids(tok, hist, q, SYSTEM)
     p0 = f"### Instruction:\n{q}\n\n### Response:\n"
     first = gen(p0, temp=0, rep=1.0, n=48)        
     m = CALL.match(first)
     if not m: # -> means it's a normal model answer
         for _ in range(3):
-            out, done = gen(p0, temp=0.7, rep=1.15, n=400, flag=True) 
+            out, done = gen(pids, temp=0.7, rep=1.15, n=400, flag=True) 
             if not CALL.match(out):
                 break
         else:
@@ -141,6 +160,8 @@ def answer(q):
     return first
 
 if __name__ == "__main__":
+    hist = []
+    FAIL = {"Search failed, no results.", "I couldn't find that.", "Couldn't parse that expression."}
     p = argparse.ArgumentParser()
     p.add_argument("--ckpt", default=str(ROOT / "checkpoints" / "checkpoint_sftv4.pt"))
     p.add_argument("--prompt", default=None)
@@ -155,11 +176,15 @@ if __name__ == "__main__":
     model, tok = load_model(a.ckpt, device)
     
     if a.prompt:
-        print("model: ", answer(a.prompt))
+        print("model: ", answer(a.prompt, []))
 
     else:
         while True:
             s = input("prompt> ").strip()
-            if s in ("", "quit", "exit"):
-                break
-            print("\n" + answer(s) + "\n")
+            if s in ("quit", "exit"): break
+            if s == "": continue
+            if s == "/reset": hist.clear(); print("(history cleared)"); continue
+            reply = answer(s, hist)
+            print("\n" + reply + "\n")
+            if reply and reply not in FAIL:
+                hist.append((s, reply))
