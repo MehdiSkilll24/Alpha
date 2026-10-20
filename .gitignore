@@ -16,3 +16,4 @@ bge/tokenizer.json
 bge/tokenizer_config.json
 *.pt
 *.parquet
+jsons/chat.json
