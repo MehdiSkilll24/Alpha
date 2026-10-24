@@ -163,7 +163,7 @@ if __name__ == "__main__":
     hist = []
     FAIL = {"Search failed, no results.", "I couldn't find that.", "Couldn't parse that expression."}
     p = argparse.ArgumentParser()
-    p.add_argument("--ckpt", default=str(ROOT / "checkpoints" / "checkpoint_sftv4.pt"))
+    p.add_argument("--ckpt", default=str(ROOT / "checkpoints" / "checkpoint_sftv5.pt"))
     p.add_argument("--prompt", default=None)
     p.add_argument("--max_new", type=int, default=200)
     p.add_argument("--temp", type=float, default=0.3)

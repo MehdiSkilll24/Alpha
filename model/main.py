@@ -2,7 +2,6 @@ import torch.nn as nn
 import torch
 import torch.nn.functional as F
 import math
-config_path = r"C:\Users\mehdi\Desktop\Pythonfiles\Projects\Transformers\Alpha\config.json"
 
 class RoPE(nn.Module):
     def __init__(self, dim, max_seq_len=2048):

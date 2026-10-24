@@ -17,3 +17,12 @@ bge/tokenizer_config.json
 *.pt
 *.parquet
 jsons/chat.json
+jsons/routing_v5_dev.json
+jsons/routing_test.json
+jsons/routing_sftv4_test.json
+jsons/routing_fix.json
+jsons/routing_dev.json
+jsons/hits_snippets.json
+jsons/eval_sft_tpl.json
+jsons/eval_sft_raw.json
+jsons/eval_base_tpl.json

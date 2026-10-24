@@ -129,13 +129,16 @@ if __name__ == "__main__":
     with open(DATA / "identity.json", encoding="utf-8") as f:
         identity = json.load(f)
 
+    with open(DATA / "routing_fix.json", encoding="utf-8") as f:
+        routing_fix = json.load(f)
+
     def first_user(ex):
         return next(m["content"] for m in ex["messages"] if m["role"] == "user").strip()
 
     chat = [ex for ex in chat if not (MATH.match(first_user(ex)) or FACT.match(first_user(ex)))]
 
 
-    raw = alpaca + search + calc + rag + rag_long * 2 + rag_asqa + rag_wiki + chat + identity * 3
+    raw = alpaca + search + calc + rag + rag_long * 2 + rag_asqa + rag_wiki + chat + identity * 2 + routing_fix * 2
     random.shuffle(raw)
     data = build(raw, tok)
     val, train = data[:1000], data[1000:]

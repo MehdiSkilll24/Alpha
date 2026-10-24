@@ -1,0 +1,11 @@
+# Model, training, SFT, evaluation
+torch>=2.5          # F.scaled_dot_product_attention(enable_gqa=...) requires PyTorch 2.5+
+numpy
+tokenizers          # byte-level BPE
+datasets            # FineWeb-Edu, TriviaQA, HellaSwag, ARC, MS MARCO, ...
+tqdm
+
+# Tool use: web search (imported by search.py)
+ddgs                # search backends
+wordsegment         # repairs glued words in search snippets
+sentence-transformers   # imported by search.py and used by the local retrieval index (rag_local.py)

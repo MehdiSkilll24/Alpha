@@ -1,7 +1,12 @@
-"""Evaluate the Alpha BASE model: held-out perplexity + zero-shot HellaSwag / ARC-Easy.
+"""Evaluate Alpha: held-out perplexity + zero-shot HellaSwag / ARC-Easy.
 
-Usage:
-    python eval.py --ckpt checkpoints/checkpoint_best.pt --val val.bin
+Base model (raw text):
+    python eval.py --ckpt checkpoints/checkpoint_latest.pt --out eval_base.json
+SFT model, raw text (apples-to-apples forgetting check):
+    python eval.py --ckpt checkpoints/checkpoint_sftv4.pt --out eval_sft_raw.json
+SFT model, instruction format (what it was trained on):
+    python eval.py --ckpt checkpoints/checkpoint_sftv4.pt --template --out eval_sft_tpl.json
+Run the base with --template too, as the control for "did SFT help, or just the format?"
 """
 import argparse
 import json
@@ -14,8 +19,8 @@ import torch.nn.functional as F
 from datasets import load_dataset
 from tqdm import tqdm
 
-from bpe import load_bpe_tokenizer
-from main import Transformer
+from model.bpe import load_bpe_tokenizer
+from model.main import Transformer
 
 SCRIPT_DIR = Path(__file__).parent.absolute()
 ROOT = SCRIPT_DIR.parent                        # .../Alpha
@@ -103,17 +108,28 @@ def run_mc(model, examples, device, max_len, name):
     return {"acc": correct / n, "acc_norm": correct_norm / n, "n": n}
 
 
-def hellaswag(limit):
+def sft_prompt(instruction, inp):
+    """Same layout as fmt() in sft.py for examples WITH an input field."""
+    return f"### Instruction:\n{instruction}\n\n### Input:\n{inp}\n\n### Response:\n"
+
+
+def hellaswag(limit, template):
     ds = load_dataset("Rowan/hellaswag", split="validation")
     if limit:
         ds = ds.select(range(limit))
-    return [
-        (f"{r['activity_label']}: {r['ctx']}", [" " + e.strip() for e in r["endings"]], int(r["label"]))
-        for r in ds
-    ]
+    out = []
+    for r in ds:
+        ctx = f"{r['activity_label']}: {r['ctx']}"
+        ends = [e.strip() for e in r["endings"]]
+        if template:
+            # answers follow "### Response:\n" directly in SFT -> NO leading space
+            out.append((sft_prompt("Complete the sentence.", ctx), ends, int(r["label"])))
+        else:
+            out.append((ctx, [" " + e for e in ends], int(r["label"])))
+    return out
 
 
-def arc_easy(limit):
+def arc_easy(limit, template):
     ds = load_dataset("allenai/ai2_arc", "ARC-Easy", split="test")
     if limit:
         ds = ds.select(range(limit))
@@ -122,20 +138,24 @@ def arc_easy(limit):
         labels = r["choices"]["label"]
         if r["answerKey"] not in labels:
             continue
-        out.append((f"Question: {r['question']}\nAnswer:",
-                    [" " + t for t in r["choices"]["text"]],
-                    labels.index(r["answerKey"])))
+        texts = r["choices"]["text"]
+        gold = labels.index(r["answerKey"])
+        if template:
+            out.append((sft_prompt("Answer the question.", r["question"]), texts, gold))
+        else:
+            out.append((f"Question: {r['question']}\nAnswer:", [" " + t for t in texts], gold))
     return out
 
 
 # ------------------------------------------------------------------- MAIN
 def main():
     p = argparse.ArgumentParser()
-    p.add_argument("--ckpt", default=str(ROOT / "checkpoints" / "checkpoint_latest.pt"),
-                   help="PRETRAINED checkpoint, not an SFT one")
+    p.add_argument("--ckpt", default=str(ROOT / "checkpoints" / "checkpoint_sftv5.pt"))
     p.add_argument("--val", default=str(ROOT / "data" / "val.bin"), help="held-out val.bin (uint16 memmap)")
     p.add_argument("--block", type=int, default=MAX_CTX)
     p.add_argument("--limit", type=int, default=0, help="cap MC examples (0 = all)")
+    p.add_argument("--template", action="store_true",
+                   help="wrap MC examples in the SFT instruction format")
     p.add_argument("--out", default="eval_results.json")
     args = p.parse_args()
     assert args.block <= MAX_CTX, f"--block must be <= {MAX_CTX} (RoPE table size)"
@@ -144,9 +164,10 @@ def main():
     model = load_model(args.ckpt, device)
 
     ppl, nll = perplexity(model, args.val, args.block, device)
-    results = {"perplexity": ppl, "val_loss": nll}
-    results["hellaswag"] = run_mc(model, hellaswag(args.limit), device, args.block, "hellaswag")
-    results["arc_easy"] = run_mc(model, arc_easy(args.limit), device, args.block, "arc_easy")
+    results = {"ckpt": Path(args.ckpt).name, "template": args.template,
+               "perplexity": ppl, "val_loss": nll}
+    results["hellaswag"] = run_mc(model, hellaswag(args.limit, args.template), device, args.block, "hellaswag")
+    results["arc_easy"] = run_mc(model, arc_easy(args.limit, args.template), device, args.block, "arc_easy")
 
     print(json.dumps(results, indent=2))
     with open(args.out, "w") as f:

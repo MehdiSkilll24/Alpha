@@ -1,7 +1,6 @@
 # rag.py
 import time
 import torch
-from sentence_transformers import SentenceTransformer
 from ddgs import DDGS
 from prompts import INSTR
 from pathlib import Path
@@ -9,11 +8,6 @@ import re
 from wordsegment import load, segment, UNIGRAMS
 
 dev = "cuda" if torch.cuda.is_available() else "cpu"
-
-MODEL_PATH = Path(
-    r"C:\Users\mehdi\Desktop\Pythonfiles\Projects\Transformers\Alpha\bge"
-)
-load()
 
 def fix_glue(text):
     def repl(m):
@@ -47,14 +41,14 @@ def junky(c):                                   # mostly table syntax -> skip
 def web_retrieve(q, n_pages=3, max_retries=3):
     # 1. search, with retries
     res = None
-    for attempt in range(max_retries):
+    for attempt in range(max_retries):          # set max_retries = 2
         try:
-            res = list(DDGS().text(q, max_results=n_pages) or [])
-            break
+            res = list(DDGS(timeout=8).text(q, max_results=n_pages, backend="bing,brave,yahoo") or [])
+            if res:
+                break
         except Exception as e:
             print(f"[SEARCH ERROR {attempt + 1}/{max_retries}] {type(e).__name__}: {e}")
-            if attempt < max_retries - 1:
-                time.sleep(2 ** attempt)
+            time.sleep(1 if "No results" in str(e) else 2 ** attempt)   # no-results is fast, retry quickly
 
     if res is None:
         print("[RETRIEVAL FAILED] Search failed after all retries.")
