@@ -18,14 +18,14 @@ cd model && python inference.py --ckpt ../checkpoints/checkpoint_sftv5.pt
 
 ```
 prompt> Hi, who are you ?
-I'm Alpha, a small aid designed to assist with basic tasks.
+I'm Alpha, a small AI assistant specializing in language processing and understanding.
 
 prompt> So what color is purple made of ?
 Search mode...
 In the RYB color model historically used in the arts, purple is a secondary color created by combining red and blue pigments. In the CMYK color model used in modern printing…
 
 prompt> What's 5 - 7 ? 
-[CALC] -2
+-2
 ```
 
 ## Highlights
