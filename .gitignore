@@ -26,3 +26,8 @@ jsons/hits_snippets.json
 jsons/eval_sft_tpl.json
 jsons/eval_sft_raw.json
 jsons/eval_base_tpl.json
+.venv/
+__pycache__/
+checkpoints/
+*.bin
+*.pt

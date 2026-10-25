@@ -111,17 +111,17 @@ if __name__ == "__main__":
     with open(DATA / "calc_ex.json", encoding="utf-8") as f:
         calc = json.load(f)
 
-    with open(DATA / "rag_ex.json", encoding="utf-8") as f:
-        rag = json.load(f)
+    with open(DATA / "reader_triviaqa.json", encoding="utf-8") as f:
+        reader_triviaqa = json.load(f)
 
-    with open(DATA / "rag_long.json", encoding="utf-8") as f:
-        rag_long = json.load(f)
+    with open(DATA / "marco.json", encoding="utf-8") as f:
+        marco = json.load(f)
 
-    with open(DATA / "rag_asqa.json", encoding="utf-8") as f:
-        rag_asqa = json.load(f)
+    with open(DATA / "asqa.json", encoding="utf-8") as f:
+        asqa = json.load(f)
 
-    with open(DATA / "rag_wiki.json", encoding="utf-8") as f:
-        rag_wiki = json.load(f)
+    with open(DATA / "reader_wiki.json", encoding="utf-8") as f:
+        reader_wiki = json.load(f)
 
     with open(DATA / "chat.json", encoding="utf-8") as f:
         chat = json.load(f)
@@ -138,7 +138,7 @@ if __name__ == "__main__":
     chat = [ex for ex in chat if not (MATH.match(first_user(ex)) or FACT.match(first_user(ex)))]
 
 
-    raw = alpaca + search + calc + rag + rag_long * 2 + rag_asqa + rag_wiki + chat + identity * 2 + routing_fix * 2
+    raw = alpaca + search + calc + reader_triviaqa + marco * 2 + asqa + reader_wiki + chat + identity * 2 + routing_fix * 2
     random.shuffle(raw)
     data = build(raw, tok)
     val, train = data[:1000], data[1000:]

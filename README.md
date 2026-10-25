@@ -2,11 +2,37 @@
 
 Alpha is a decoder-only Transformer written from scratch in PyTorch: tokenizer, pretraining on ~12B tokens of FineWeb-Edu, instruction tuning, and a small tool-using assistant on top (web search for facts, a calculator for arithmetic). Every stage has an evaluation, and this README reports the numbers, including the ones that don't flatter the model.
 
+> **Naming:** *Alpha* is the model; *Etra* is the assistant built on it (chat with history, web search, calculator).
+
+## Quickstart
+
+```bash
+git clone -b Etra https://github.com/MehdiSkilll24/Alpha.git && cd Alpha
+pip install torch==2.5.1 --index-url https://download.pytorch.org/whl/cu121   # CUDA 12.1 build
+pip install -r requirements.txt
+hf download MSkilll/Etra --include "checkpoints/checkpoint_sftv5.pt" --local-dir .
+cd model && python inference.py --ckpt ../checkpoints/checkpoint_sftv5.pt
+```
+
+### Example session
+
+```
+prompt> Hi, who are you ?
+I'm Alpha, a small aid designed to assist with basic tasks.
+
+prompt> So what color is purple made of ?
+Search mode...
+In the RYB color model historically used in the arts, purple is a secondary color created by combining red and blue pigments. In the CMYK color model used in modern printing…
+
+prompt> What's 5 - 7 ? 
+[CALC] -2
+```
+
 ## Highlights
 
-- **A strong base for its size.** Trained from scratch (317M parameters, 92k steps, ~12B tokens): perplexity **16.2** on held-out FineWeb-Edu, **38.4%** on HellaSwag and **58.3%** on ARC-Easy, zero-shot.
+- **A reasonable base for its size.** Trained from scratch (317M parameters, 92k steps, ~12B tokens): perplexity **16.2** on held-out FineWeb-Edu, **38.4%** on HellaSwag and **58.3%** on ARC-Easy, zero-shot.
 - **Tool routing works.** The fine-tuned model decides on its own, in its first generated tokens, whether to emit `[SEARCH]`, `[CALC]`, or answer directly. On a 450-prompt held-out routing set, routing accuracy went from **73.3% (v4) to 88.9% (v5)** on the same prompts (+15.6 points, 95% CI +12.0 to +19.3), at the cost of about one perplexity point.
-- **The calculator is never invoked on non-math prompts.** Calc precision is **100%** for both versions, and calc recall rose from 50.7% to 80.7% (routing level; see Limitations for what the calculator can evaluate).
+- **No false calculator calls on the test set.** Calc precision is **100%** for both versions (0 wrong `[CALC]` routes among the 450 test prompts), and calc recall rose from 50.7% to 80.7% (routing level; see Limitations for what the calculator can evaluate).
 - **Search is what makes it useful.** On 968 TriviaQA questions, the base model answering from memory gets **11.9%**; the retrieval-augmented system gets **50.4%** with a search on every question (**38.5%** through the full routed system, which also refuses unsupported answers).
 - **Evaluation you can trust and rerun.** Held-out splits, near-duplicate checks against the training data, paired confidence intervals, frozen search caches, and resumable runs. Everything reproduces offline once the caches are built.
 
@@ -14,7 +40,7 @@ Alpha is a decoder-only Transformer written from scratch in PyTorch: tokenizer, 
 
 | Stage | What it is |
 |---|---|
-| Architecture | Decoder-only, 316.7M parameters: 16 layers, d_model 1280, grouped-query attention (8 query heads, 2 KV heads, head dim 160), RoPE (2048 context), pre-LayerNorm, SwiGLU MLP (d_ff 4096, hidden size 2752), untied output head, 32,000-token vocabulary, no dropout |
+| Architecture | Decoder-only, 316.7M parameters: 16 layers, d_model 1280, grouped-query attention (8 query heads, 2 KV heads, head dim 160), RoPE (2048 context), pre-LayerNorm, SwiGLU MLP (hidden width 2752, about 2/3 of a nominal 4096, rounded to a multiple of 64), untied output head, 32,000-token vocabulary, no dropout |
 | Tokenizer | Byte-level BPE (Hugging Face `tokenizers`) with `<pad> <unk> <bos> <eos>` |
 | Pretraining | FineWeb-Edu `sample-10BT`, 92,000 steps x 131,072 tokens/step (~12B tokens), AdamW (0.9, 0.95) with weight decay 0.1 on weight matrices, cosine LR 3e-4 to 3e-5, bf16, gradient clipping 1.0, one Colab A100. Final validation loss 2.78 (perplexity 16.2) |
 | Instruction tuning | Full fine-tune, 3 epochs, LR 3e-5, loss on answer tokens only. Mix: filtered Alpaca-cleaned, SmolTalk chat, 15k TriviaQA `[SEARCH]` examples, 8k generated `[CALC]` examples, passage-grounded reader data (TriviaQA, MS MARCO, ASQA, Wikipedia), identity data, and (v5) a routing-fix set |
@@ -140,10 +166,7 @@ The grounding check is a precision/coverage trade: it refuses about half of the 
 
 ## How the evaluations work
 
-- **Perplexity and benchmarks (`eval.py`).** Perplexity on a held-out FineWeb-Edu split; HellaSwag and ARC-Easy by zero-shot log-likelihood ranking of the answer choices, with both raw and length-normalised scores (the conventional one is reported for each).
-- **Routing (`build_routing_eval.py`, `eval_routing.py`).** Prompts come from sources the model was not trained on (TriviaQA validation, Natural Questions, Dolly, programmatically generated arithmetic, hand-written prompts). They are deduplicated, checked for near-duplicates against every training file, and split into dev and test. The script reproduces the production first pass exactly (same decoding, same tag parser).
-- **RAG (`prefetch.py`, `eval_trivia_rag.py`).** Search results are cached once; the eval then runs the real production code path offline, comparing closed-book, always-retrieve, and routed systems, and reports where each point is lost (retrieval vs reader vs filter).
-- **Statistics.** Intervals use the normal approximation for rates and a paired bootstrap for model-vs-model differences.
+Held-out splits, near-duplicate checks against the training data, frozen search caches, and paired bootstrap intervals for model-vs-model differences. Per-eval details (`eval.py`/ `eval_routing.py`, `eval_trivia.py`) are in [docs/evaluation.md](docs/evaluation.md).
 
 ## Limitations
 
@@ -165,6 +188,7 @@ These are measured, not hypothetical.
 - **The routing test set was inspected during development**: v4's test failures guided what data v5 added. Dev (89.6%) and test (88.9%) agree, which suggests no large inflation, but treat test as "inspected", not pristine.
 - **The routing eval is partly in-distribution for calc**: the generated calc phrasings in the training fix and the eval share template families, and 22 of the 450 test prompts are near-duplicates of training prompts (v5 accuracy excluding them: 88.3%). The hand-written prompts are the real out-of-distribution check.
 - HellaSwag/ARC use a custom scorer, not identical to `lm-evaluation-harness`; compare with published numbers cautiously.
+- No baseline models (e.g. GPT-2 small/medium) were run through the same scorer, so how Alpha compares at its size is not quantified.
 - TriviaQA is in-distribution for the router and reader (both were trained on TriviaQA-derived data), so routing-to-search on it is not evidence of generalisation, and *contains* is lenient with long answers: counting only the first sentence gives 44.4% for always-retrieve instead of 50.4%.
 - Single training run per version; no seed variance is measured. Intervals are +/-3% at these sample sizes.
 
@@ -183,41 +207,68 @@ These are measured, not hypothetical.
 
 ## Reproducing
 
-Layout used by the scripts:
+Layout (run each script from its own folder; paths between folders use `../`):
 
 ```
 Alpha/
-  model/        # code (main.py, train.py, sft.py, inference.py, search.py, calculator.py, evals)
-  jsons/        # tokenizer, config, SFT datasets
-  checkpoints/  # checkpoint_latest.pt (base), checkpoint_sftv4.pt, checkpoint_sftv5.pt
+  requirements.txt         # run the assistant
+  requirements_train.txt   # data prep, training, evals (includes requirements.txt)
+  model/           # architecture, tokenizer, pretraining, SFT, inference, search, calculator, prompts
+  DS/              # pretraining data: fetchds.py, Dataset.py
+  DS_generation/   # SFT and eval data builders
+  evals/           # eval.py, eval_routing.py, eval_trivia.py
+  data/            # committed result files and the search cache
+  jsons/           # tokenizer, config, SFT datasets
+  checkpoints/     # downloaded from the Hub, not in git
+  docs/            # evaluation details, data sources and licenses
 ```
 
-```bash
-pip install -r requirements.txt
+Setup, once, from the repo root:
 
+```bash
+pip install torch==2.5.1 --index-url https://download.pytorch.org/whl/cu121
+pip install -r requirements_train.txt   # requirements.txt is enough if you only want to chat
+hf download MSkilll/Etra --include "checkpoints/*" --local-dir .
+```
+
+Then:
+
+```bash
 # 1. data + pretraining
+cd DS
 python fetchds.py                  # tokenize FineWeb-Edu into train.bin / val.bin
+cd ../model
 python train.py                    # resumes from checkpoint_latest.pt
 
 # 2. SFT data, then fine-tune
-python search_ex.py; python calc_ex.py; python identity.py; python marcods.py
-python rag_ex.py        # needs the local retrieval index (rag_local.py + index.pt)
-python asqa.py; python rag_wiki.py; python make_chat.py
-python build_routing_fix.py --out ../jsons/routing_fix.json
+cd ../DS_generation
+python search_ex.py; python calc_ex.py; python marcods.py
+python reader_triviaqa.py; python asqa.py; python reader_wiki.py; python make_chat.py
+cd ../model
+python identity.py
 python sft.py --out ../checkpoints/checkpoint_sftv5.pt
 
 # 3. evaluations
+cd ../evals
 python eval.py --ckpt ../checkpoints/checkpoint_sftv5.pt --out eval_sftv5.json
-python build_routing_eval.py --hand routing_prompts.json --train-files ../jsons/*.json
+cd ../DS_generation
+python build_routing_eval.py --hand routing_test.json --train-files ../jsons/*.json 
+cd ../evals
 python eval_routing.py --ckpt ../checkpoints/checkpoint_sftv5.pt --prompts routing_test.json
+cd ../DS_generation
 python prefetch.py
-python eval_trivia_rag.py --sft ../checkpoints/checkpoint_sftv5.pt --base ../checkpoints/checkpoint_latest.pt
+cd ../evals
+python eval_trivia.py --sft ../checkpoints/checkpoint_sftv5.pt --base ../checkpoints/checkpoint_latest.pt
 
 # 4. chat
+cd ../model
 python inference.py --ckpt ../checkpoints/checkpoint_sftv5.pt
 ```
 
-Result files (`eval_*.json`, `routing_*.json`, `trivia_rag_results.json`) and the search cache (`hits_snippets.json`) are committed so the numbers above can be checked without rerunning anything. Model weights (base and fine-tuned checkpoints) are on the Hugging Face Hub: [MSkilll/Etra](https://huggingface.co/MSkilll/Etra/tree/main/checkpoints).
+**Note on `reader_triviaqa.json`.** The committed `jsons/reader_triviaqa.json`, which the released model was trained on, was built by an earlier version of `reader_triviaqa.py` (then `rag_ex.py`) that retrieved 3 passages per question from a local retrieval index, since removed from the repo. The current script uses live web snippets and writes to the same path, so running it **overwrites** the committed file with different data and does not reproduce the data behind the reported numbers. Back the file up first, or restore it afterwards with `git checkout -- jsons/reader_triviaqa.json`. 
+Inference effects are indifferent since the model was trained (and evaluated) on 3 snippets but uses one during inference. This was due to an unstable version yielded by the 3 snippet result.
+
+Result files and the search cache (`hits_snippets.json`) are committed in `data/`, so the numbers above can be checked without rerunning anything. Model weights (base and fine-tuned checkpoints) are on the Hugging Face Hub: [MSkilll/Etra](https://huggingface.co/MSkilll/Etra/tree/main/checkpoints). V5 being the latest version.
 
 ## License and attribution
 
@@ -239,19 +290,4 @@ Result files (`eval_*.json`, `routing_*.json`, `trivia_rag_results.json`) and th
 
 ### Data sources
 
-Licenses as listed on each source's page at the time of writing; check them before relying on this table.
-
-| Data | Used for | License / terms |
-|---|---|---|
-| FineWeb-Edu (`sample-10BT`) | Pretraining | ODC-By 1.0 (plus Common Crawl terms of use) |
-| Alpaca-cleaned | Instruction tuning | CC BY-NC 4.0, following the original Stanford Alpaca data (generated with OpenAI's text-davinci-003, so OpenAI's terms may also apply) |
-| SmolTalk | Chat tuning | Apache 2.0 |
-| TriviaQA | Search and reader data, RAG eval | No license stated on its Hugging Face card; research use |
-| MS MARCO | Reader data | Microsoft's terms (non-commercial research) |
-| ASQA | Reader data | See the dataset card |
-| Wikipedia | Reader data | CC BY-SA |
-| HellaSwag | Evaluation only | MIT |
-| ARC | Evaluation only | CC BY-SA 4.0 |
-| Natural Questions (open), Dolly | Evaluation only | CC BY-SA 3.0 |
-
-I am not a lawyer; this section describes intent and sources, not legal advice.
+Every dataset, what it was used for, and its license: [docs/data-sources.md](docs/data-sources.md). I am not a lawyer; this describes intent and sources, not legal advice.

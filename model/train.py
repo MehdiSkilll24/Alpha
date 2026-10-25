@@ -1,14 +1,13 @@
 import torch
 import torch.nn as nn
-from torch.utils.data import DataLoader
 import os
 from pathlib import Path
 from main import Transformer
 from bpe import load_bpe_tokenizer
-from bge.Dataset import PackedBinDataset
+from DS.Dataset import PackedBinDataset
 import shutil
 import zipfile
-from torch.amp import autocast, GradScaler
+from torch.amp import autocast
 import json
 import numpy as np
 import random

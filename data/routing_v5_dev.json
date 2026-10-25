@@ -1,0 +1,4202 @@
+[
+  {
+    "prompt": "From this paragraph, what are indicators that Singapore's healthcare system performs well?\n\nSingapore has a generally efficient healthcare system, even though health expenditures are relatively low for developed countries. The World Health Organisation ranks Singapore's healthcare system as 6th overall in the world in its World Health Report. Singapore has had the lowest infant mortality rates in the world for the past two decades. In 2019, Singaporeans had the longest life expectancy of any country at 84.8 years. Women can expect to live an average of 87.6 years with 75.8 years in good health. The averages are lower for men. Singapore is ranked 1st on the Global Food Security Index.",
+    "label": "answer",
+    "category": "summarization",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "From the paragraph, the indicators that Singapore's healthcare system performs well are: \n1. The average life expectancy of all adults is 87.6 years. \n2. Women can expect to live an average of 87.6 years",
+    "leaked": null
+  },
+  {
+    "prompt": "What are some of the best movies for kids?",
+    "label": "answer",
+    "category": "brainstorming",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "There are many great movies for kids, some of the best ones include:\n\n1. \"The Lion King\" - This is a classic children's movie that follows the story of a young lion named Lionship as he navigates",
+    "leaked": null
+  },
+  {
+    "prompt": "what is 2607 times 54",
+    "label": "calc",
+    "category": "wh_math",
+    "source": "template",
+    "expected": "140778",
+    "pred": "calc",
+    "raw": "[CALC] 2607 * 54",
+    "leaked": null
+  },
+  {
+    "prompt": "Write a brief poem about cultures",
+    "label": "answer",
+    "category": "creative_writing",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "In the heart of a land of gold and laughter,\nThere are many cultures, each with their own story,\nA tale of love, of hope, and of friendship,\nA tale of unity, of unity, and of love",
+    "leaked": null
+  },
+  {
+    "prompt": "96 - 61 = ?",
+    "label": "calc",
+    "category": "symbolic",
+    "source": "template",
+    "expected": "35",
+    "pred": "calc",
+    "raw": "[CALC] 96 - 61",
+    "leaked": null
+  },
+  {
+    "prompt": "Identify which instrument is string or percussion: Damphu, Dulcimer",
+    "label": "answer",
+    "category": "classification",
+    "source": "dolly",
+    "pred": "search",
+    "raw": "[SEARCH] Which instrument is string or percussion: Damphu, Dulcimer",
+    "leaked": null
+  },
+  {
+    "prompt": "The Suez Canal connects the Mediterranean Sea to which other Sea?",
+    "label": "search",
+    "category": "trivia",
+    "source": "trivia_qa",
+    "pred": "search",
+    "raw": "[SEARCH] The Suez Canal connects the Mediterranean Sea to which other Sea?",
+    "leaked": null
+  },
+  {
+    "prompt": "Which country singer/songwriter was known as the 'Man in Black' ?",
+    "label": "search",
+    "category": "trivia",
+    "source": "trivia_qa",
+    "pred": "search",
+    "raw": "[SEARCH] Which country singer/songwriter was known as the 'Man in Black' ?",
+    "leaked": null
+  },
+  {
+    "prompt": "Which winter sport was contested as an Olympic sport only once, at the 1908 Summer Olympics?",
+    "label": "search",
+    "category": "trivia",
+    "source": "trivia_qa",
+    "pred": "search",
+    "raw": "[SEARCH] Which winter sport was contested as an Olympic sport only once, at the 1908 Summer Olympics?",
+    "leaked": null
+  },
+  {
+    "prompt": "Where do sloths live?",
+    "label": "answer",
+    "category": "creative_writing",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "Sloths live in the tropical rainforests of South and Central America. They are known for their large, powerful bodies, long claws, and powerful legs. They are social animals and live in groups called \"socials.\" Sloths are social",
+    "leaked": null
+  },
+  {
+    "prompt": "A box holds 9 oranges. How many oranges are in 5 boxes?",
+    "label": "calc",
+    "category": "word_problem",
+    "source": "template",
+    "expected": "45",
+    "pred": "calc",
+    "raw": "[CALC] 5 * 5",
+    "leaked": null
+  },
+  {
+    "prompt": "Compute 24 + 20 + 2.",
+    "label": "calc",
+    "category": "multi_step",
+    "source": "template",
+    "expected": "46",
+    "pred": "calc",
+    "raw": "[CALC] 24 + 20 + 2",
+    "leaked": null
+  },
+  {
+    "prompt": "Which tools can you use?",
+    "label": "answer",
+    "category": "identity",
+    "source": "template",
+    "pred": "answer",
+    "raw": "I'm an AI language model and I don't have the ability to use tools. However, I can suggest some general tools that you can use to help you with your writing:\n\n1. Thesaurus: This is a great",
+    "leaked": null
+  },
+  {
+    "prompt": "What is the title of the 1996 Oscar-winning documentary about the Muhammad Ali and George Foreman 1974 ‘Rumble in the Jungle’ fight in Zaire?",
+    "label": "search",
+    "category": "trivia",
+    "source": "trivia_qa",
+    "pred": "search",
+    "raw": "[SEARCH] What is the title of the 1996 Oscar-winning documentary about the Muhammad Ali and George Foreman 1974 ‘Rumble in the Jungle’ fight in Zaire?",
+    "leaked": null
+  },
+  {
+    "prompt": "What is the square root of 729?",
+    "label": "calc",
+    "category": "power_root",
+    "source": "template",
+    "expected": "27",
+    "pred": "search",
+    "raw": "[SEARCH] What is the square root of 729?",
+    "leaked": null
+  },
+  {
+    "prompt": "calc 6 * 10 + 4",
+    "label": "calc",
+    "category": "multi_step",
+    "source": "template",
+    "expected": "64",
+    "pred": "calc",
+    "raw": "[CALC] 6 * 10 + 4",
+    "leaked": null
+  },
+  {
+    "prompt": "72 apples are shared equally among 12 people. How many does each person get?",
+    "label": "calc",
+    "category": "word_problem",
+    "source": "template",
+    "expected": "6",
+    "pred": "calc",
+    "raw": "[CALC] 72 * 12",
+    "leaked": null
+  },
+  {
+    "prompt": "Write a short story about a little girl who befriends a dragon, the dragons magical powers can bring her to a different universe.",
+    "label": "answer",
+    "category": "creative_writing",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "Once upon a time, in a faraway kingdom, there lived a little girl named Lily. She was a curious girl, always eager to explore the world around her. One day, she decided to go on a quest to find the",
+    "leaked": null
+  },
+  {
+    "prompt": "Who is Madonna?\n\nMadonna Louise Ciccone (/tʃɪˈkoʊni/; Italian: [tʃikˈkoːne]; born August 16, 1958) is an American singer, songwriter and actress. Dubbed the \"Queen of Pop\", Madonna has been widely recognized for her continual reinvention and versatility in music production, songwriting, and visual presentation. She has pushed the boundaries of artistic expression in mainstream music, while continuing to maintain control over every aspect of her career. Her works, which incorporate social, political, sexual, and religious themes, have generated both controversy and critical acclaim. A prominent cultural figure of the 20th and 21st centuries, Madonna remains one of the most \"well-documented figures of the modern age\", with a broad amount of scholarly reviews and literature works on her, as well as an academic mini subdiscipline devoted to her named Madonna studies.",
+    "label": "answer",
+    "category": "information_extraction",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "Madonna is an American singer, songwriter and actress. Dubbed the \"Queen of Pop\", Madonna has been widely recognized for her continually reinvention and versatility in music production, songwriting, and visual presentation. She",
+    "leaked": null
+  },
+  {
+    "prompt": "Are you an AI?",
+    "label": "answer",
+    "category": "identity",
+    "source": "template",
+    "pred": "answer",
+    "raw": "I'm a language model named Alpha. I'm not human, but I'm happy to chat.",
+    "leaked": null
+  },
+  {
+    "prompt": "Who had a hit in 1966 with When a Man Loves a Woman?",
+    "label": "search",
+    "category": "trivia",
+    "source": "trivia_qa",
+    "pred": "search",
+    "raw": "[SEARCH] Who had a hit in 1966 with When a Man Loves a Woman?",
+    "leaked": null
+  },
+  {
+    "prompt": "Evaluate 8959 x 96.",
+    "label": "calc",
+    "category": "verb",
+    "source": "template",
+    "expected": "860064",
+    "pred": "calc",
+    "raw": "[CALC] 8959 * 96",
+    "leaked": null
+  },
+  {
+    "prompt": "What year was Craigslist founded?\n\nCraigslist (stylized as craigslist) is a privately-held American company operating a classified advertisements website with sections devoted to jobs, housing, for sale, items wanted, services, community service, gigs, résumés, and discussion forums.\n\nCraig Newmark began the service in 1995 as an email distribution list to friends, featuring local events in the San Francisco Bay Area. It became a web-based service in 1996 and expanded into other classified categories. It started expanding to other U.S. and Canadian cities in 2000, and now covers 70 countries.",
+    "label": "answer",
+    "category": "information_extraction",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "Craigslist was founded in 1995 by Mark Craigslist, a private American company. The company's name was changed to Craigslist in 2000 to reflect its growth and expansion into new markets.",
+    "leaked": null
+  },
+  {
+    "prompt": "when were cigarette ads banned from tv uk",
+    "label": "search",
+    "category": "nq",
+    "source": "nq_open",
+    "pred": "search",
+    "raw": "[SEARCH] when were cigarette ads banned from tv uk",
+    "leaked": null
+  },
+  {
+    "prompt": "Who won the fifth season of america's got talent?",
+    "label": "search",
+    "category": "nq",
+    "source": "nq_open",
+    "pred": "search",
+    "raw": "[SEARCH] Who won the fifth season of America's got talent?",
+    "leaked": null
+  },
+  {
+    "prompt": "Do the following activities typically happen at night or during the day? A hike in a park, stargazing, going to a beach tidepool, dinner at a restaurant, looking for shooting stars, working a desk job",
+    "label": "answer",
+    "category": "classification",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "The activities I mentioned are typically happening at night or during the day.",
+    "leaked": null
+  },
+  {
+    "prompt": "What are the causes for Sensory processing disorder?\n\nThe exact cause of SPD is not known.However, it is known that the midbrain and brainstem regions of the central nervous system are early centers in the processing pathway for multisensory integration; these brain regions are involved in processes including coordination, attention, arousal, and autonomic function. After sensory information passes through these centers, it is then routed to brain regions responsible for emotions, memory, and higher level cognitive functions. Damage in any part of the brain involved in multisensory processing can cause difficulties in adequately processing stimuli in a functional way.",
+    "label": "answer",
+    "category": "closed_qa",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "Sensory processing disorder is a condition where individuals have difficulty processing and interpreting sensory information from their environment. This can result in difficulties in adapting to new situations, such as learning to navigate a new environment or adapting to a new social situation.",
+    "leaked": null
+  },
+  {
+    "prompt": "Where is the Eclectochromis lobochilus fish generally found?\n\nEclectochromis lobochilus is a species of fish in the family Cichlidae. It is found in Malawi, Mozambique, and Tanzania. Its endemic to Lake Malawi.\n\nThis species is found along rocky shores and sometimes in the intermediate habitat between sandy and rock areas. It occurs at depths of 5–15 metres (16–49 ft). It feeds on invertebrates, mainly adult and larval in insects, that hide among aquatic vegetation or algae. The breeding males defend a cave among the rocks. The females mouthbrood the eggs and fry, guarding them after they have been released. This species is known as \"Haplochromis Hertae\" in the aquarium trade.",
+    "label": "answer",
+    "category": "summarization",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "Eclectochromis lobochilus is a species of fish in the Cichlidae family. It is found along rocky shores and sometimes in the intermediate habitat between sandy and rock areas. It occurs at depths of 5–15 metres",
+    "leaked": null
+  },
+  {
+    "prompt": "Based on this paragraph, during what year was Hearst born?\n\nHearst died at the age of 70 in Washington, D.C., on February 28, 1891. The California Legislature and state courts adjourned so officials could attend his funeral. When Phoebe Apperson Hearst inherited her husband's wealth, she donated a great deal of it to help found new libraries at several universities. Hearst is buried in Cypress Lawn Cemetery in Colma, California. His widow and son were later buried there as well. The Hearst Memorial Mining Building on the Berkeley campus is dedicated to George Hearst. In 1996, he was inducted into the Hall of Great Westerners of the National Cowboy & Western Heritage Museum.",
+    "label": "answer",
+    "category": "closed_qa",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "Hearst died at the age of 70 in Washington, D.C., on February 28,91.",
+    "leaked": null
+  },
+  {
+    "prompt": "when did brent barry won the dunk contest",
+    "label": "search",
+    "category": "nq",
+    "source": "nq_open",
+    "pred": "search",
+    "raw": "[SEARCH] when did brent barry won the dunk contest",
+    "leaked": null
+  },
+  {
+    "prompt": "If I buy 23 tickets at $12 each, how much do I pay in total?",
+    "label": "calc",
+    "category": "word_problem",
+    "source": "template",
+    "expected": "276",
+    "pred": "calc",
+    "raw": "[CALC] 23 * 12",
+    "leaked": null
+  },
+  {
+    "prompt": "Which war veterna, who died in 2009 had the nickname 'The Last Fighting Tommy'?",
+    "label": "search",
+    "category": "trivia",
+    "source": "trivia_qa",
+    "pred": "search",
+    "raw": "[SEARCH] Which war veterna, who died in 2009 had the nickname 'The Last Fighting Tommy'?",
+    "leaked": null
+  },
+  {
+    "prompt": "What is the Couple's Retreat Garden?\n\nCouple's Retreat Garden (Chinese: 耦园; pinyin: Ǒu Yuán; Suzhou Wu: Ngeu yoe, Wu Chinese: [ŋøʏ ɦyø]) located in Suzhou city, Jiangsu province, China is a famous classical Chinese garden. It is recognized with other classical Suzhou gardens as a UNESCO World Heritage Site.",
+    "label": "answer",
+    "category": "information_extraction",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "The Couple's Retreat Garden is a Chinese garden located in the city of Suzhou, Jiantan, Jiaotong, and Hangzhou. It was established in 1736 and is considered one of the oldest and",
+    "leaked": null
+  },
+  {
+    "prompt": "Babel Fish is an icon/metaphor/brand for instantaneous what?",
+    "label": "search",
+    "category": "trivia",
+    "source": "trivia_qa",
+    "pred": "search",
+    "raw": "[SEARCH] Babel Fish is an icon/metaphor/brand for instantaneous what?",
+    "leaked": null
+  },
+  {
+    "prompt": "who played caesar in planet of the apes war",
+    "label": "search",
+    "category": "nq",
+    "source": "nq_open",
+    "pred": "search",
+    "raw": "[SEARCH] who played caesar in planet of theapes war",
+    "leaked": null
+  },
+  {
+    "prompt": "48 - 38 = ?",
+    "label": "calc",
+    "category": "symbolic",
+    "source": "template",
+    "expected": "10",
+    "pred": "calc",
+    "raw": "[CALC] 48 - 38",
+    "leaked": null
+  },
+  {
+    "prompt": "Identify which car manufacturer is French or American: Renault, RAM",
+    "label": "answer",
+    "category": "classification",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "Renault, RAM, is a French car manufacturer that produces cars in France and the United States.",
+    "leaked": null
+  },
+  {
+    "prompt": "Subtract 4 from 4781.",
+    "label": "calc",
+    "category": "named_op",
+    "source": "template",
+    "expected": "4777",
+    "pred": "calc",
+    "raw": "[CALC] 4781 - 4781",
+    "leaked": null
+  },
+  {
+    "prompt": "When did the first pokemon game come out?",
+    "label": "search",
+    "category": "nq",
+    "source": "nq_open",
+    "pred": "search",
+    "raw": "[SEARCH] When did the first pokemon game come out?",
+    "leaked": null
+  },
+  {
+    "prompt": "when does the next warrior book come out",
+    "label": "search",
+    "category": "nq",
+    "source": "nq_open",
+    "pred": "search",
+    "raw": "[SEARCH] when does the next warrior book come out",
+    "leaked": null
+  },
+  {
+    "prompt": "One piece episode 534 english dubbed release date?",
+    "label": "search",
+    "category": "nq",
+    "source": "nq_open",
+    "pred": "search",
+    "raw": "[SEARCH] One piece episode 534 english dubbed release date?",
+    "leaked": null
+  },
+  {
+    "prompt": "Who is the team that beat the eagles this season?",
+    "label": "search",
+    "category": "nq",
+    "source": "nq_open",
+    "pred": "search",
+    "raw": "[SEARCH] Who is the team that beat the eagles this season?",
+    "leaked": null
+  },
+  {
+    "prompt": "What type of model is the Citroen C4 Cactus?\n\nThe Citroën C4 Cactus is a subcompact crossover SUV, produced by French automaker Citroën in Spain between April 2014 and December 2017, with production of the second generation commencing in October 2017 (until May 2020 in Villaverde), with the final months of production being disrupted by the COVID-19 pandemic. The C4 Cactus is considered a compact SUV, although it is based on the PSA PF1 platform that underpins the smaller Citroën C3 and DS3.\n\nA distinctive design feature is the \"AirBump\" panels on the car's sides, designed to protect the vehicle from damage in car parks. The Citroën Cactus Concept, presented at the 2013 Frankfurt Motor Show, previewed the production version. The C4 Cactus was presented at the 2014 Geneva Motor Show.",
+    "label": "answer",
+    "category": "closed_qa",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "The Citroen C4 Cactus is a subcompact SUV, produced by French automaker Citroen in Spain between April 2014 and December 2017, with production of the second generation commencing in October 2017. The C",
+    "leaked": null
+  },
+  {
+    "prompt": "Write a short story about Batman, Superman and Spiderman",
+    "label": "answer",
+    "category": "brainstorming",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "Once upon a time, there was a young boy named Batman. He was a brave and fearless hero who had been chosen by the people of his village to fight in the great war against the evil villain, the Crimson",
+    "leaked": null
+  },
+  {
+    "prompt": "Why is Stephen Curry the best player in the NBA?",
+    "label": "answer",
+    "category": "creative_writing",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "Stephen Curry is the best player in the NBA for several reasons. He is a highly skilled and talented player who has consistently outperformed his peers. He is a master of the game, able to adapt quickly to changing situations and",
+    "leaked": null
+  },
+  {
+    "prompt": "What is the square root of 9?",
+    "label": "calc",
+    "category": "power_root",
+    "source": "template",
+    "expected": "3",
+    "pred": "search",
+    "raw": "[SEARCH] What is the square root of 9?",
+    "leaked": null
+  },
+  {
+    "prompt": "Convert 13 days to hours.",
+    "label": "calc",
+    "category": "unit_conv",
+    "source": "template",
+    "expected": "312",
+    "pred": "answer",
+    "raw": "13 days is equivalent to approximately 7.24 hours.",
+    "leaked": null
+  },
+  {
+    "prompt": "What is 6 squared?",
+    "label": "calc",
+    "category": "power_root",
+    "source": "template",
+    "expected": "36",
+    "pred": "search",
+    "raw": "[SEARCH] What is 6 squared?",
+    "leaked": null
+  },
+  {
+    "prompt": "Who owns ITV?\n\nThe history of ITV, the United Kingdom \"Independent Television\" commercial network, goes back to 1955.\n\nIndependent Television began as a network of independently-owned regional companies that were both broadcasters and programme makers, beginning with four companies operating six stations in three large regions in 1955–1956, and gradually expanding to 17 stations in 14 regions by 1962. Each regional station was responsible for its own branding, scheduling and advertising, with many peak-time programmes shared simultaneously across the whole network.\n\nBy 29 February 2016, 12 regions in England and Wales shared national ITV branding and scheduling, and, together with a 13th region UTV in Northern Ireland, were owned by a single company, ITV plc. A further two regions in Scotland carry STV branding and are owned by the STV Group.",
+    "label": "answer",
+    "category": "information_extraction",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "ITV is owned by several companies, including ITV plc, ITV, ITV UK, ITV Australia, ITV Canada, ITV Australia, ITV UK, ITV Australia, ITV Australia, ITV Canada",
+    "leaked": null
+  },
+  {
+    "prompt": "who plays the beast on the new beauty and the beast",
+    "label": "search",
+    "category": "nq",
+    "source": "nq_open",
+    "pred": "search",
+    "raw": "[SEARCH] who plays the beast on the new beauty and the beast",
+    "leaked": null
+  },
+  {
+    "prompt": "who won britain's next top model 2016",
+    "label": "search",
+    "category": "nq",
+    "source": "nq_open",
+    "pred": "search",
+    "raw": "[SEARCH] who won Britains next top model 2016",
+    "leaked": null
+  },
+  {
+    "prompt": "How much is 275 divided by 11?",
+    "label": "calc",
+    "category": "wh_math",
+    "source": "template",
+    "expected": "25",
+    "pred": "calc",
+    "raw": "[CALC] 275 / 11",
+    "leaked": null
+  },
+  {
+    "prompt": "228 books are shared equally among 12 people. How many does each person get?",
+    "label": "calc",
+    "category": "word_problem",
+    "source": "template",
+    "expected": "19",
+    "pred": "calc",
+    "raw": "[CALC] 228 + 224",
+    "leaked": null
+  },
+  {
+    "prompt": "Please give me a bulleted list of countries that make up the Indian subcontinent from this passage\n\nThe Indian subcontinent is a physiographical region in Southern Asia, situated on the Indian Plate, projecting southwards into the Indian Ocean from the Himalayas. Geopolitically, it includes the countries of Bangladesh, Bhutan, India, Maldives, Nepal, Pakistan, and Sri Lanka. The terms \"Indian subcontinent\" and \"South Asia\" are often used interchangeably to denote the region, although the geopolitical term of South Asia frequently includes Afghanistan, which may otherwise be classified as Central Asian.",
+    "label": "answer",
+    "category": "summarization",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "The Indian subcontinent is a physiographical region in Southern Asia, situated on the Indian Plate, projecting southwards into the Indian Ocean from the Himalayas.",
+    "leaked": null
+  },
+  {
+    "prompt": "What is a 50% tip on $360?",
+    "label": "calc",
+    "category": "percent",
+    "source": "template",
+    "expected": "180",
+    "pred": "calc",
+    "raw": "[CALC] 350 / 50",
+    "leaked": null
+  },
+  {
+    "prompt": "First day of baking with sourdough",
+    "label": "answer",
+    "category": "creative_writing",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "First day of baking with sourdough is a great time to start your new project. Here are some tips to help you get started:\n\n1. Choose the right type of sourdough: There are several types of sourd",
+    "leaked": null
+  },
+  {
+    "prompt": "when was the first season of when calls the heart",
+    "label": "search",
+    "category": "nq",
+    "source": "nq_open",
+    "pred": "search",
+    "raw": "[SEARCH] when was the first season of when calls the heart",
+    "leaked": null
+  },
+  {
+    "prompt": "96 x 89 = ?",
+    "label": "calc",
+    "category": "symbolic",
+    "source": "template",
+    "expected": "8544",
+    "pred": "calc",
+    "raw": "[CALC] 96 * 89",
+    "leaked": null
+  },
+  {
+    "prompt": "Can you tell me what 4834 minus 7 is?",
+    "label": "calc",
+    "category": "wh_math",
+    "source": "template",
+    "expected": "4827",
+    "pred": "calc",
+    "raw": "[CALC] 4834 - 7",
+    "leaked": null
+  },
+  {
+    "prompt": "What was the score of the latest Yankees game?",
+    "label": "search",
+    "category": "current",
+    "source": "template",
+    "pred": "search",
+    "raw": "[SEARCH] What was the score of the latest Yankees game?",
+    "leaked": null
+  },
+  {
+    "prompt": "Where was buddha born?\n\nLumbinī (Nepali: लुम्बिनी pronounced [ˈlumbini] (listen), \"the lovely\") is a Buddhist pilgrimage site in the Rupandehi District of Lumbini Province in Nepal. It is the place where, according to Buddhist tradition, Queen Mahamayadevi gave birth to Siddhartha Gautama at around 566 BCE. Gautama, who, according to Buddhist tradition, achieved Enlightenment some time around 528 BCE, became Gautama Buddha and founded Buddhism. Lumbini is one of many magnets for pilgrimage that sprang up in places pivotal to the life of the Buddha.",
+    "label": "answer",
+    "category": "information_extraction",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "Lumbini is a Buddhist shrine and center of attraction for tourists visiting Lumbini. It is the place where the Buddha delivered his first teachings at the age of 25.",
+    "leaked": null
+  },
+  {
+    "prompt": "Write down some points on Yugoslav Cup using given paragraph as a base.\n\nThe Yugoslav Cup was a tournament for which clubs from all tiers of the football pyramid were eligible to enter. In addition, amateur teams put together by individual Yugoslav People's Army garrisons and various factories and industrial plants were also encouraged to enter, which meant that each cup edition could have several thousands of teams in its preliminary stages. These teams would play through a number of qualifying rounds before reaching the first round proper, in which they would be paired with top-flight teams.",
+    "label": "answer",
+    "category": "summarization",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "Here are some points on the Croatian Cup:\n\n1. The Croatian Cup is a tournament for which clubs from all tiers of the football pyramid are eligible to enter.\n2. The Croatian Cup is a tour",
+    "leaked": null
+  },
+  {
+    "prompt": "Solve 700 / 14.",
+    "label": "calc",
+    "category": "verb",
+    "source": "template",
+    "expected": "50",
+    "pred": "answer",
+    "raw": "To solve 700 / 14, we can use the following formula:\n\n700 / 14 = 7.\n\nTherefore, 700 / 14 = 7.\n\nTherefore, the solution to 700 / 14 is 7.",
+    "leaked": null
+  },
+  {
+    "prompt": "Identify which car manufacturer is Chinese or American: Dodge, Foton",
+    "label": "answer",
+    "category": "classification",
+    "source": "dolly",
+    "pred": "search",
+    "raw": "[SEARCH] Which car manufacturer is Chinese or American: Dodge, Foton",
+    "leaked": null
+  },
+  {
+    "prompt": "For what is known as Transphonologization?\n\nIn historical linguistics, transphonologization (also known as rephonologization or cheshirization, see below) is a type of sound change whereby a phonemic contrast that used to involve a certain feature X evolves in such a way that the contrast is preserved, yet becomes associated with a different feature Y.",
+    "label": "answer",
+    "category": "information_extraction",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "Transphonologization is a type of sound change whereby a phonemic contrast that used to involve a certain feature X evolves in such a way that the contrast is preserved, yet becomes associated with a different feature Y. The term was",
+    "leaked": null
+  },
+  {
+    "prompt": "How many inches are in 14 feet?",
+    "label": "calc",
+    "category": "unit_conv",
+    "source": "template",
+    "expected": "168",
+    "pred": "calc",
+    "raw": "[CALC] 14 * 12",
+    "leaked": null
+  },
+  {
+    "prompt": "calculate 61 - 47",
+    "label": "calc",
+    "category": "verb",
+    "source": "template",
+    "expected": "14",
+    "pred": "calc",
+    "raw": "[CALC] 61 - 47",
+    "leaked": null
+  },
+  {
+    "prompt": "Compute 22 × 4298.",
+    "label": "calc",
+    "category": "verb",
+    "source": "template",
+    "expected": "94556",
+    "pred": "calc",
+    "raw": "[CALC] 22 * 4298",
+    "leaked": null
+  },
+  {
+    "prompt": "vine with heart shaped leaves and white flowers",
+    "label": "search",
+    "category": "nq",
+    "source": "nq_open",
+    "pred": "search",
+    "raw": "[SEARCH] vine with heart shaped leaves and white flowers",
+    "leaked": null
+  },
+  {
+    "prompt": "How much is 432 times 15?",
+    "label": "calc",
+    "category": "wh_math",
+    "source": "template",
+    "expected": "6480",
+    "pred": "calc",
+    "raw": "[CALC] 432 * 15",
+    "leaked": null
+  },
+  {
+    "prompt": "Divide 280 by 5.",
+    "label": "calc",
+    "category": "named_op",
+    "source": "template",
+    "expected": "56",
+    "pred": "calc",
+    "raw": "[CALC] 280 / 5",
+    "leaked": null
+  },
+  {
+    "prompt": "What is the square root of 484?",
+    "label": "calc",
+    "category": "power_root",
+    "source": "template",
+    "expected": "22",
+    "pred": "search",
+    "raw": "[SEARCH] What is the square root of 484?",
+    "leaked": null
+  },
+  {
+    "prompt": "is daylight saving necessary at all?",
+    "label": "answer",
+    "category": "brainstorming",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "Yes, daylight saving is necessary at all. It is a time-saving measure that allows people to save energy and time by turning their homes into energy-efficient spaces. This can help reduce greenhouse gas emissions, lower energy bills, and improve",
+    "leaked": null
+  },
+  {
+    "prompt": "What do you do when Southwest cancels your flight?",
+    "label": "answer",
+    "category": "brainstorming",
+    "source": "dolly",
+    "pred": "search",
+    "raw": "[SEARCH] What do you do when Southwest cancels your flight?",
+    "leaked": null
+  },
+  {
+    "prompt": "what is the word for clarified butter in the balkans and middle east",
+    "label": "search",
+    "category": "nq",
+    "source": "nq_open",
+    "pred": "search",
+    "raw": "[SEARCH] what is the word for clarified butter in the balkans and middle east",
+    "leaked": null
+  },
+  {
+    "prompt": "What can you help me with?",
+    "label": "answer",
+    "category": "identity",
+    "source": "template",
+    "pred": "answer",
+    "raw": "I can help with a wide range of topics related to computer science, including:\n\n1. Programming languages: understanding and using programming languages like Python, Java, C++, and JavaScript.\n\n2. Data structures:",
+    "leaked": null
+  },
+  {
+    "prompt": "Identify the bird from the list: Black mamba, Black grouse, Black magic",
+    "label": "answer",
+    "category": "classification",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "The bird in the list is the Black mambasher, also known as the black-mambasher.",
+    "leaked": null
+  },
+  {
+    "prompt": "Good morning!",
+    "label": "answer",
+    "category": "chat",
+    "source": "template",
+    "pred": "answer",
+    "raw": "Hello! How can I help you today?",
+    "leaked": null
+  },
+  {
+    "prompt": "Please calculate 15 - 10 for me.",
+    "label": "calc",
+    "category": "verb",
+    "source": "template",
+    "expected": "5",
+    "pred": "answer",
+    "raw": "To calculate 15 - 10, you need to multiply the value of 15 by 10. \n\n15 - 10 = 15 * 10\n\n10 - 10 = 15 * 10\n\nTherefore, 15 - 10 is equal to 15 -",
+    "leaked": null
+  },
+  {
+    "prompt": "Who finished bottom of County Cricket’s Division One this year?",
+    "label": "search",
+    "category": "trivia",
+    "source": "trivia_qa",
+    "pred": "search",
+    "raw": "[SEARCH] Who finished bottom of County Cricket’s Division One this year?",
+    "leaked": null
+  },
+  {
+    "prompt": "What dynasty completed the great wall of china?",
+    "label": "search",
+    "category": "nq",
+    "source": "nq_open",
+    "pred": "search",
+    "raw": "[SEARCH] What dynasty completed the great wall of china?",
+    "leaked": null
+  },
+  {
+    "prompt": "From which areas of space can there be no escape?",
+    "label": "search",
+    "category": "trivia",
+    "source": "trivia_qa",
+    "pred": "search",
+    "raw": "[SEARCH] From which areas of space can there be no escape?",
+    "leaked": null
+  },
+  {
+    "prompt": "where are the cones in the eye located",
+    "label": "search",
+    "category": "nq",
+    "source": "nq_open",
+    "pred": "search",
+    "raw": "[SEARCH] where are the cones in the eye located",
+    "leaked": null
+  },
+  {
+    "prompt": "Who won the most recent Wimbledon final?",
+    "label": "search",
+    "category": "current",
+    "source": "template",
+    "pred": "search",
+    "raw": "[SEARCH] Who won the most recent Wimbledon final?",
+    "leaked": null
+  },
+  {
+    "prompt": "The medical term bariatric refers (increasingly politically correctly) to what human condition?",
+    "label": "search",
+    "category": "trivia",
+    "source": "trivia_qa",
+    "pred": "search",
+    "raw": "[SEARCH] The medical term bar{alternative to bariatric refers to what human condition?",
+    "leaked": null
+  },
+  {
+    "prompt": "What's up?",
+    "label": "answer",
+    "category": "chat",
+    "source": "template",
+    "pred": "answer",
+    "raw": "All good here. What can I do for you?",
+    "leaked": null
+  },
+  {
+    "prompt": "Evaluate 6^4.",
+    "label": "calc",
+    "category": "power_root",
+    "source": "template",
+    "expected": "1296",
+    "pred": "answer",
+    "raw": "The number 6 is a perfect square number, meaning it has no real factors other than 1. This means that 6 is a perfect square number, meaning it has no perfect squares.",
+    "leaked": null
+  },
+  {
+    "prompt": "Are tequila and mezcal basically the same thing?\n\nMezcal is made from over 30 agave species, varieties, and subvarieties, in contrast with tequila, which is made only with blue agave. Of many agave species that can be used to make mezcal, seven are particularly notable. There is no exhaustive list, as the regulations allow any agaves, provided that they are not used as the primary material in other governmental Denominations of Origin. However, the interpretation of this regulation to mean that mezcal cannot be made from blue agave may be a mistranslation. The term silvestre \"wild\" is sometimes found, but simply means that the agaves are wild (foraged, not cultivated); it is not a separate variety.",
+    "label": "answer",
+    "category": "summarization",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "Mezcal is made from over 30 agave species, varieties, and subvarifications, in contrast with tequila, which is made only with blue agave.",
+    "leaked": null
+  },
+  {
+    "prompt": "Please provide me with ideas for dinner tonight.",
+    "label": "answer",
+    "category": "brainstorming",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "Here are some dinner ideas that you might enjoy:\n\n1. Grilled fish: Grill up some fresh fish like salmon, sardines or mackerel.\n2. Baked sweet potato: Bake some sweet potato",
+    "leaked": null
+  },
+  {
+    "prompt": "What was the capital of the Portuguese empire from 1808 to 1815?",
+    "label": "search",
+    "category": "trivia",
+    "source": "trivia_qa",
+    "pred": "search",
+    "raw": "[SEARCH] What was the capital of the Portuguese empire from 1808 to 1815?",
+    "leaked": null
+  },
+  {
+    "prompt": "14 + 21 * 27",
+    "label": "calc",
+    "category": "multi_step",
+    "source": "template",
+    "expected": "581",
+    "pred": "calc",
+    "raw": "[CALC] 14 + 21 * 27",
+    "leaked": null
+  },
+  {
+    "prompt": "In Japan, what is a hibachi used for?",
+    "label": "search",
+    "category": "trivia",
+    "source": "trivia_qa",
+    "pred": "search",
+    "raw": "[SEARCH] In Japan, what is a hibachi used for?",
+    "leaked": null
+  },
+  {
+    "prompt": "Divide 315 by 7.",
+    "label": "calc",
+    "category": "named_op",
+    "source": "template",
+    "expected": "45",
+    "pred": "calc",
+    "raw": "[CALC] 315 / 7",
+    "leaked": null
+  },
+  {
+    "prompt": "Is KQKZ a commercial radio station?\n\nKQKZ (92.1 FM \"Q92.1\") is a commercial radio station that is licensed to serve the community of Bakersfield, California. It is owned by Lotus Communications. Its studios are located in southwest Bakersfield, while its transmitter is located northeast of the city. It is a classic hits station branded Q92.1 (pronounced Q ninety-two-one).",
+    "label": "answer",
+    "category": "information_extraction",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "Yes, KQKZ is a commercial radio station.",
+    "leaked": null
+  },
+  {
+    "prompt": "What are some lazy meals I can cook at home?",
+    "label": "answer",
+    "category": "brainstorming",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "There are many delicious and healthy lazy meals you can cook at home. Here are a few suggestions:\n\n1. **Sweet Potato Fries**: Cut potatoes into small pieces and roast them in the oven. S",
+    "leaked": null
+  },
+  {
+    "prompt": "Given this paragraph about planting and harvesting for peanut butter, when are peanuts typically harvested?\n\nDue to weather conditions, peanuts are usually planted in spring. The peanut comes from a yellow flower that bends over and penetrates the soil after blooming and wilting, and the peanut starts to grow in the soil. Peanuts are harvested from late August to October, while the weather is clear. This weather allows for dry soil so that when picked, the soil does not stick to the stems and pods. The peanuts are then removed from vines and transported to a peanut shelling machine for mechanical drying. After cropping, the peanuts are delivered to warehouses for cleaning, where they are stored unshelled in silos.",
+    "label": "answer",
+    "category": "closed_qa",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "Peanuts are typically harvested in late August or early September when the weather is clear and the weather is dry. The peanut comes from a yellow flower that bends over and reaches the ground after blooming and wilting, and the peanut",
+    "leaked": null
+  },
+  {
+    "prompt": "Give me a list of potential vegan dishes you could make for a Thanksgiving meal",
+    "label": "answer",
+    "category": "brainstorming",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "Here are some potential vegan dishes you could make for a Thanksgiving meal:\n\n1. **Pork Chops**: A classic Thanksgiving dish that is both delicious and healthy. You can make a delicious and hearty pork chop with",
+    "leaked": null
+  },
+  {
+    "prompt": "Calculate 25 percent of 360.",
+    "label": "calc",
+    "category": "percent",
+    "source": "template",
+    "expected": "90",
+    "pred": "calc",
+    "raw": "[CALC] 25 * 360",
+    "leaked": null
+  },
+  {
+    "prompt": "Compute 7959 + 90.",
+    "label": "calc",
+    "category": "verb",
+    "source": "template",
+    "expected": "8049",
+    "pred": "calc",
+    "raw": "[CALC] 7959 + 90",
+    "leaked": null
+  },
+  {
+    "prompt": "Evaluate 6^2.",
+    "label": "calc",
+    "category": "power_root",
+    "source": "template",
+    "expected": "36",
+    "pred": "answer",
+    "raw": "The number 6 is a perfect square number, meaning it has no real factors other than 1. This means that 6 is a perfect square number, meaning it has no perfect squares.",
+    "leaked": null
+  },
+  {
+    "prompt": "2883 + 5370",
+    "label": "calc",
+    "category": "symbolic",
+    "source": "template",
+    "expected": "8253",
+    "pred": "calc",
+    "raw": "[CALC] 2883 + 5370",
+    "leaked": null
+  },
+  {
+    "prompt": "What is 5 to the power of 5?",
+    "label": "calc",
+    "category": "power_root",
+    "source": "template",
+    "expected": "3125",
+    "pred": "calc",
+    "raw": "[CALC] 5 * 5",
+    "leaked": null
+  },
+  {
+    "prompt": "I'm bored.",
+    "label": "answer",
+    "category": "chat",
+    "source": "template",
+    "pred": "answer",
+    "raw": "I'm sorry, as an AI, I don't have the ability to create or interact with content. However, I can suggest some activities that you can do to keep your mind active and engaged.",
+    "leaked": null
+  },
+  {
+    "prompt": "What is solid carbon dioxide commonly called?",
+    "label": "search",
+    "category": "trivia",
+    "source": "trivia_qa",
+    "pred": "search",
+    "raw": "[SEARCH] What is solid carbon dioxide commonly called?",
+    "leaked": null
+  },
+  {
+    "prompt": "term limits for house of representatives and senate",
+    "label": "search",
+    "category": "nq",
+    "source": "nq_open",
+    "pred": "search",
+    "raw": "[SEARCH] term limits for house of representatives and Senators",
+    "leaked": null
+  },
+  {
+    "prompt": "Let's chat.",
+    "label": "answer",
+    "category": "chat",
+    "source": "template",
+    "pred": "answer",
+    "raw": "Hello! How can I help you today?",
+    "leaked": null
+  },
+  {
+    "prompt": "Who was the first US-born winner of golf's British Open?",
+    "label": "search",
+    "category": "trivia",
+    "source": "trivia_qa",
+    "pred": "search",
+    "raw": "[SEARCH] Who was the first US-born winner of golf's British Open?",
+    "leaked": null
+  },
+  {
+    "prompt": "How do you work?",
+    "label": "answer",
+    "category": "identity",
+    "source": "template",
+    "pred": "answer",
+    "raw": "I can chat, explain things, help with writing, do basic arithmetic with a calculator tool and search the web for current facts. I'm a small model, so double-check anything important.",
+    "leaked": null
+  },
+  {
+    "prompt": "When is the new tappan zee bridge going to be finished?",
+    "label": "search",
+    "category": "nq",
+    "source": "nq_open",
+    "pred": "search",
+    "raw": "[SEARCH] When is the new tappan zee bridge going to be finished?",
+    "leaked": null
+  },
+  {
+    "prompt": "When was HMS Glowworm (H92), a G-class destroyer launched?\n\nGlowworm, was briefly the name of a coastal destroyer launched on 12 December 1906 and renamed HMS TB7. It was sold in May 1921.\nHMS Glowworm (1916), an Insect-class gunboat, launched on 5 February 1916 and sold in 1928.\nHMS Glowworm (H92), a G-class destroyer launched on 22 July 1935, sunk on 8 April 1940 by the German heavy cruiser Admiral Hipper off Norway.\nGlowworm was allocated to a G-class destroyer under construction at the William Denny shipyard at Dumbarton in 1945. The vessel was originally called HMS Guinevere but was renamed in September 1945 to HMS Glowworm, and renamed again in October to HMS Gift. Construction was cancelled on 1 December 1945 before completion.",
+    "label": "answer",
+    "category": "closed_qa",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "HMS Glowworm was originally called HMS Gift.",
+    "leaked": null
+  },
+  {
+    "prompt": "Classify the following breeds as either cats or dogs: Dalmatian, Abyssinian, Aegean, American Bobtail, Bombay, Saint Bernard, Burmese, Chartreux,  Golden Retriever, Welsh Hound, Shiba Inu",
+    "label": "answer",
+    "category": "classification",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "The breed of dog classified as a dog is a breed.",
+    "leaked": null
+  },
+  {
+    "prompt": "Which Christmas condiment is made from fruit sometimes referred to as marshworts?",
+    "label": "search",
+    "category": "trivia",
+    "source": "trivia_qa",
+    "pred": "search",
+    "raw": "[SEARCH] Which Christmas condiment is made from fruit sometimes referred to as marshworts?",
+    "leaked": null
+  },
+  {
+    "prompt": "I need a bulleted list of a few things people like to do with trees.",
+    "label": "answer",
+    "category": "creative_writing",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "1. Planting trees\n2. Cleaning and maintaining trees\n3. Planting trees in their natural habitats\n4. Planting trees in their gardens\n5. Planting trees in their parks and gardens\n6. Planting",
+    "leaked": null
+  },
+  {
+    "prompt": "Who designed Madonna's wedding dress for her marriage to Guy Ritchie?",
+    "label": "search",
+    "category": "trivia",
+    "source": "trivia_qa",
+    "pred": "search",
+    "raw": "[SEARCH] Who designed Madonna's wedding dress for her marriage to Guy Ritchie?",
+    "leaked": null
+  },
+  {
+    "prompt": "when did all night long come out lionel richie",
+    "label": "search",
+    "category": "nq",
+    "source": "nq_open",
+    "pred": "search",
+    "raw": "[SEARCH] when did all night long come out lionel richie",
+    "leaked": null
+  },
+  {
+    "prompt": "Who is the current prime minister of Japan?",
+    "label": "search",
+    "category": "current",
+    "source": "template",
+    "pred": "search",
+    "raw": "[SEARCH] Who is the current prime minister of Japan?",
+    "leaked": null
+  },
+  {
+    "prompt": "Which Swiss tennis player won the men’s singles title at the 2014 Australian Open?",
+    "label": "search",
+    "category": "trivia",
+    "source": "trivia_qa",
+    "pred": "search",
+    "raw": "[SEARCH] Which Swiss tennis player won the men’s singles title at the 2014 Australian Open?",
+    "leaked": null
+  },
+  {
+    "prompt": "when does the day of the dead end",
+    "label": "search",
+    "category": "nq",
+    "source": "nq_open",
+    "pred": "search",
+    "raw": "[SEARCH] when does the day of the dead end",
+    "leaked": null
+  },
+  {
+    "prompt": "86 × 92 =",
+    "label": "calc",
+    "category": "symbolic",
+    "source": "template",
+    "expected": "7912",
+    "pred": "calc",
+    "raw": "[CALC] 86 * 92",
+    "leaked": null
+  },
+  {
+    "prompt": "What is a 12% tip on $200?",
+    "label": "calc",
+    "category": "percent",
+    "source": "template",
+    "expected": "24",
+    "pred": "calc",
+    "raw": "[CALC] 12 * 200",
+    "leaked": null
+  },
+  {
+    "prompt": "Who is Ibrahima Tamba?\n\nIbrahima Tamba (born 1 January 1967) is a Senegalese sprinter. He competed in the 200 meters at the 1988 Summer Olympics and the 1992 Summer Olympics",
+    "label": "answer",
+    "category": "closed_qa",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "Ibrahima Tumba is a Senegalese sprinter. He competed in the 200 meters at the 1988 Summer Olympics.",
+    "leaked": null
+  },
+  {
+    "prompt": "Who sang the theme song to that 70s show?",
+    "label": "search",
+    "category": "nq",
+    "source": "nq_open",
+    "pred": "search",
+    "raw": "[SEARCH] Who sang the theme song to that 70s show?",
+    "leaked": null
+  },
+  {
+    "prompt": "Who was the Georgia Peach?",
+    "label": "search",
+    "category": "trivia",
+    "source": "trivia_qa",
+    "pred": "search",
+    "raw": "[SEARCH] Who was the Georgia Peach?",
+    "leaked": null
+  },
+  {
+    "prompt": "What is 76 plus 86?",
+    "label": "calc",
+    "category": "wh_math",
+    "source": "template",
+    "expected": "162",
+    "pred": "calc",
+    "raw": "[CALC] 76 + 86",
+    "leaked": null
+  },
+  {
+    "prompt": "If a candidate running to be the President of the United States is indicted during his campaign, can he continue running for election?",
+    "label": "answer",
+    "category": "brainstorming",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "If a candidate running to be the President of the United States is indicted during his campaign, it is not possible for him to continue running for election. The President of the United States is the head of state and is elected by the people",
+    "leaked": null
+  },
+  {
+    "prompt": "Evaluate 8^3.",
+    "label": "calc",
+    "category": "power_root",
+    "source": "template",
+    "expected": "512",
+    "pred": "answer",
+    "raw": "The expression 8^3 can be evaluated as follows:\n\n8^3 = 8^3 * 8\n\nThis is a quadratic equation in the first term, which can be factored as 8^3.",
+    "leaked": null
+  },
+  {
+    "prompt": "Write do's and don'ts for handling a PR crisis. Make them directive and easy for anyone to understand and follow.",
+    "label": "answer",
+    "category": "creative_writing",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "When dealing with a PR crisis, it's essential to have a clear understanding of the situation, the goals, and the available resources. Here are some do's and don'ts for handling a PR crisis:\n\n1. **",
+    "leaked": null
+  },
+  {
+    "prompt": "92 × 42.3",
+    "label": "calc",
+    "category": "symbolic",
+    "source": "template",
+    "expected": "3891.6",
+    "pred": "calc",
+    "raw": "[CALC] 92 * 42.3",
+    "leaked": null
+  },
+  {
+    "prompt": "What is the Maareech Advanced Torpedo Defence System (ATDS)?\n\nMaareech Advanced Torpedo Defence System (ATDS) is a torpedo detection and countermeasure system used by the Indian Navy. The system offers a complete solution to detect and locate an incoming torpedo and to apply countermeasures to protect naval platform against torpedo attack. It was developed as a joint project of the Naval Physical and Oceanographic Laboratory (NPOL), Kochi and the Naval Science and Technological Laboratory (NSTL), Visakhapatnam. Bharat Electronics is manufacturing it India.",
+    "label": "answer",
+    "category": "information_extraction",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "The Maareech Advanced Torpedo Defence System is aettes designed to detect and counter the attack of a reciprocating underwater weapon. It is a modification of the existing Torpedo Detection and Countermeasure System (TDCS)",
+    "leaked": null
+  },
+  {
+    "prompt": "when does the heart develop and begin pumping blood",
+    "label": "search",
+    "category": "nq",
+    "source": "nq_open",
+    "pred": "search",
+    "raw": "[SEARCH] when does the heart develop and begin pumping blood",
+    "leaked": null
+  },
+  {
+    "prompt": "Who present the central budget in lok sabha?",
+    "label": "search",
+    "category": "nq",
+    "source": "nq_open",
+    "pred": "search",
+    "raw": "[SEARCH] Who present the central budget in lok sabha?",
+    "leaked": null
+  },
+  {
+    "prompt": "Given this paragraph about hockey what are different surfaces that hockey is played on?\n\nHockey is a term used to denote a family of various types of both summer and winter team sports which originated on either an outdoor field, sheet of ice, or dry floor such as in a gymnasium. While these sports vary in specific rules, numbers of players, apparel and, notably, playing surface, they share broad characteristics of two opposing teams using a stick to propel a ball or disk into a goal.",
+    "label": "answer",
+    "category": "closed_qa",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "Hockey is a term used to denote a family of various types of both summer and winter team sports which originated on either an outdoor field, sheet of ice, or dry floor such as in a gymnaium. While these sports vary",
+    "leaked": null
+  },
+  {
+    "prompt": "Should we all use Qubes OS for most daily task that involve the internet?\n\nQubes implements a Security by Isolation approach. The assumption is that there can be no perfect, bug-free desktop environment: such an environment counts millions of lines of code and billions of software/hardware interactions. One critical bug in any of these interactions may be enough for malicious software to take control of a machine.",
+    "label": "answer",
+    "category": "summarization",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "Qube's security approach is based on the concept of Isolation, which is a fundamental concept in computer security. Isolation is the process of preventing unauthorized access to a computer system or network.\n\nIn the context of the internet,",
+    "leaked": null
+  },
+  {
+    "prompt": "What is the sale price of a $45 item after a 50% discount?",
+    "label": "calc",
+    "category": "percent",
+    "source": "template",
+    "expected": "22.5",
+    "pred": "calc",
+    "raw": "[CALC] 45 * 50",
+    "leaked": null
+  },
+  {
+    "prompt": "Solve 912 ÷ 16.",
+    "label": "calc",
+    "category": "verb",
+    "source": "template",
+    "expected": "57",
+    "pred": "answer",
+    "raw": "The solution to 912 ÷ 16 is: \n\n912 ÷ 16 = 912 ÷ 16",
+    "leaked": null
+  },
+  {
+    "prompt": "Why is it called the Hawaiian pizza?\n\nThe addition of pineapple to the traditional mix of tomato sauce and cheese, along with either ham or bacon, later became popular locally and eventually became a staple offering of pizzerias on a global scale. The name of this creation is, in fact, actually not directly inspired by the U.S. state of Hawaii at all; Panopoulos chose the name Hawaiian after the brand of canned pineapple they were using at the time.",
+    "label": "answer",
+    "category": "information_extraction",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "The name of this creation is actually not directly inspired by the U.S. state of Hawaii at all. Panopoulos chose the name Hawaiian after the brand of canned pineapple they were using at the time.",
+    "leaked": null
+  },
+  {
+    "prompt": "who did michael showers play on vampire diaries",
+    "label": "search",
+    "category": "nq",
+    "source": "nq_open",
+    "pred": "search",
+    "raw": "[SEARCH] who did michael showers play on vampire diaries",
+    "leaked": null
+  },
+  {
+    "prompt": "Find the quotient of 75 and 25.",
+    "label": "calc",
+    "category": "named_op",
+    "source": "template",
+    "expected": "3",
+    "pred": "answer",
+    "raw": "The quotient of 75 and 25 is 25.",
+    "leaked": null
+  },
+  {
+    "prompt": "Which of the following are noble gases: helium, sodium, neon, oxygen, argon, hydrogen, calcium, magnesium, lithium, boron, krypton, nitrogen, xenon, aluminium, radon.",
+    "label": "answer",
+    "category": "classification",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "Helium, sodium, neon, oxygen, argon, neon signs, neon gas, neon gas, neon gas, neon gas, neon gas, neon gas, neon gas, neon gas, neon gas, neon gas, neon gas,",
+    "leaked": null
+  },
+  {
+    "prompt": "what territory is spain and the united kingdom in a dispute over",
+    "label": "search",
+    "category": "nq",
+    "source": "nq_open",
+    "pred": "search",
+    "raw": "[SEARCH] what territory is spain and the united kingdom in a dispute over",
+    "leaked": null
+  },
+  {
+    "prompt": "From the text provided, find all the names of game consoles. Separate them with a comma.\n\nRedout is a science fiction racing video game developed and published by Italian studio 34BigThings, and co-published by Nicalis and 505 Games. It is inspired by racing games such as F-Zero, Wipeout, Rollcage, and POD as stated on the game page on Steam.\n\nThe game was released for Microsoft Windows in September 2016, while the PlayStation 4 and Xbox One released in August 2017. The Nintendo Switch port was originally slated for a Q2 2017 release, but got delayed and was released in May 2019. The game was released for Amazon Luna on October 20, 2020.",
+    "label": "answer",
+    "category": "information_extraction",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "Redout is a science fiction racing video game developed and published by Italian studio 34Big Things and co-founded by Nicalis and 505 Games. It is inspired by racing games such as F-Zero, Wipeout,",
+    "leaked": null
+  },
+  {
+    "prompt": "'Ol' Blue Eyes' is the nickname of?",
+    "label": "search",
+    "category": "trivia",
+    "source": "trivia_qa",
+    "pred": "search",
+    "raw": "[SEARCH] 'Ol' Blue Eyes' is the nickname of?",
+    "leaked": null
+  },
+  {
+    "prompt": "My dog is a 100lb pitbull purebreed. She's always barking at people when we walk her on the street. She's friendly, however, when outside with me or the kids, her bark is loud and deep. How can I get my dog to stop barking at strangers and remove her feeling of \"threat\"?",
+    "label": "answer",
+    "category": "creative_writing",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "It's great that your dog is barking at strangers and you're concerned about her safety. Here's a plan to help you address the issue:\n\nFirst, consider the underlying reasons for her barking. Is it due to fear",
+    "leaked": null
+  },
+  {
+    "prompt": "who defeated the last remaining roman army in europe",
+    "label": "search",
+    "category": "nq",
+    "source": "nq_open",
+    "pred": "search",
+    "raw": "[SEARCH] who defeated the last remaining roman army in euce",
+    "leaked": null
+  },
+  {
+    "prompt": "Work out 9158 x 61.",
+    "label": "calc",
+    "category": "verb",
+    "source": "template",
+    "expected": "558638",
+    "pred": "calc",
+    "raw": "[CALC] 9158 * 61",
+    "leaked": null
+  },
+  {
+    "prompt": "Evaluate 616 + 46.",
+    "label": "calc",
+    "category": "verb",
+    "source": "template",
+    "expected": "662",
+    "pred": "answer",
+    "raw": "The number 616 is a multiple of 4, which means it is a multiple of 4. This means that it is a multiple of 4 itself, and it is a multiple of 4 itself.",
+    "leaked": null
+  },
+  {
+    "prompt": "Which British monarch famously said ‘I don’t wish to open windows into men’s souls’?",
+    "label": "search",
+    "category": "trivia",
+    "source": "trivia_qa",
+    "pred": "search",
+    "raw": "[SEARCH] Which British monarch famously said ‘I don’t wish to open windows into men’?",
+    "leaked": null
+  },
+  {
+    "prompt": "A recipe needs 28 cups of flour per batch. How many cups are needed for 17 batches?",
+    "label": "calc",
+    "category": "word_problem",
+    "source": "template",
+    "expected": "476",
+    "pred": "calc",
+    "raw": "[CALC] 28 * 28",
+    "leaked": null
+  },
+  {
+    "prompt": "Calculate 1432 - 61.",
+    "label": "calc",
+    "category": "verb",
+    "source": "template",
+    "expected": "1371",
+    "pred": "calc",
+    "raw": "[CALC] 1432 - 61",
+    "leaked": null
+  },
+  {
+    "prompt": "Where did the Shinning Path terrorists operate?",
+    "label": "search",
+    "category": "trivia",
+    "source": "trivia_qa",
+    "pred": "search",
+    "raw": "[SEARCH] Where did the Shinning Path terrorist operate?",
+    "leaked": null
+  },
+  {
+    "prompt": "When did amnesia the dark descent come out?",
+    "label": "search",
+    "category": "nq",
+    "source": "nq_open",
+    "pred": "search",
+    "raw": "[SEARCH] When did amnesia the dark descent come out?",
+    "leaked": null
+  },
+  {
+    "prompt": "Who won the most recent World Cup?",
+    "label": "search",
+    "category": "current",
+    "source": "template",
+    "pred": "search",
+    "raw": "[SEARCH] Who won the most recent World Cup?",
+    "leaked": null
+  },
+  {
+    "prompt": "Convert 30 feet to inches.",
+    "label": "calc",
+    "category": "unit_conv",
+    "source": "template",
+    "expected": "360",
+    "pred": "answer",
+    "raw": "To convert a given number, you can use the formula `(in inches) / 2`. \n\nFirst, let's convert 30 feet to inches:\n\n30 feet * 2 = 30 inches\n\nNow, we can",
+    "leaked": null
+  },
+  {
+    "prompt": "what is alpha centauri's approximate distance from earth",
+    "label": "search",
+    "category": "nq",
+    "source": "nq_open",
+    "pred": "search",
+    "raw": "[SEARCH] what is alpha centauri's approximate distance from earth",
+    "leaked": null
+  },
+  {
+    "prompt": "Calculate 15 percent of 250.",
+    "label": "calc",
+    "category": "percent",
+    "source": "template",
+    "expected": "37.5",
+    "pred": "calc",
+    "raw": "[CALC] 15 / 250",
+    "leaked": null
+  },
+  {
+    "prompt": "Can you tell me what 9174 times 45 is?",
+    "label": "calc",
+    "category": "wh_math",
+    "source": "template",
+    "expected": "412830",
+    "pred": "calc",
+    "raw": "[CALC] 9174 * 45",
+    "leaked": null
+  },
+  {
+    "prompt": "I had a rough day.",
+    "label": "answer",
+    "category": "chat",
+    "source": "template",
+    "pred": "answer",
+    "raw": "I'm sorry, but as an AI, I don't have the ability to have a rough day. However, I can help you with some general tips on how to handle a rough day.\n\n1. Take a break: Don",
+    "leaked": null
+  },
+  {
+    "prompt": "Solve 550 ÷ 25.",
+    "label": "calc",
+    "category": "verb",
+    "source": "template",
+    "expected": "22",
+    "pred": "answer",
+    "raw": "To solve 550 ÷ 25, we can use the following steps:\n\n1. Subtract 5 from the number to find the remainder.\n\n5 - 5 = 5\n\n5 - 5 = 5\n\n5 -",
+    "leaked": null
+  },
+  {
+    "prompt": "How many books did Dr Seuss write?\n\nTheodor Seuss Geisel (/suːs ˈɡaɪzəl, zɔɪs -/ (listen); March 2, 1904 – September 24, 1991) was an American children's author and cartoonist. He is known for his work writing and illustrating more than 60 books under the pen name Dr. Seuss (/suːs, zuːs/). His work includes many of the most popular children's books of all time, selling over 600 million copies and being translated into more than 20 languages by the time of his death.",
+    "label": "answer",
+    "category": "closed_qa",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "Dr. Seuss wrote over 60 books.",
+    "leaked": null
+  },
+  {
+    "prompt": "write short essay on Neil Armstrong experience on moon",
+    "label": "answer",
+    "category": "creative_writing",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "Neil Armstrong, the first man to walk on the moon, was a brilliant and determined man. He was a brilliant and determined man, who had a passion for space exploration and exploration. He was a man of great courage and selflessness,",
+    "leaked": null
+  },
+  {
+    "prompt": "Write a few paragraphs to describe the benefits of living in Arizona versus California",
+    "label": "answer",
+    "category": "creative_writing",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "Living in Arizona and California are two of the most popular destinations in the United States, with both having rich cultural and natural attractions. Here are some of the benefits of living in both states:\n\n1. **Cultural Attractions",
+    "leaked": null
+  },
+  {
+    "prompt": "Give me five different names I could use for my female cat",
+    "label": "answer",
+    "category": "brainstorming",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "1. Lily\n2. Mia\n3. Mia\n4. Mia\n5. Lily",
+    "leaked": null
+  },
+  {
+    "prompt": "What's 7470 multiplied by 1631?",
+    "label": "calc",
+    "category": "wh_math",
+    "source": "template",
+    "expected": "12183570",
+    "pred": "calc",
+    "raw": "[CALC] 7470 * 1631",
+    "leaked": null
+  },
+  {
+    "prompt": "What is the sale price of a $80 item after a 30% discount?",
+    "label": "calc",
+    "category": "percent",
+    "source": "template",
+    "expected": "56",
+    "pred": "calc",
+    "raw": "[CALC] 80 * 30",
+    "leaked": null
+  },
+  {
+    "prompt": "Convert 27 meters to centimeters.",
+    "label": "calc",
+    "category": "unit_conv",
+    "source": "template",
+    "expected": "2700",
+    "pred": "answer",
+    "raw": "27 meters is equal to 100 centimeters.",
+    "leaked": null
+  },
+  {
+    "prompt": "Classify the following into countries and cities:India, Mumbai, USA, Seattle, Germany, Berlin, United Kingdom, Australia, Tokyo, Sao Paulo",
+    "label": "answer",
+    "category": "classification",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "India is a country in South Asia, and is located in the Indian subcontinent. It is the second-largest country in the world by land area, and the third-largest country by population. India is also known for its diverse culture",
+    "leaked": null
+  },
+  {
+    "prompt": "Jazz musician Jelly Roll Morton is associated with which instrument?",
+    "label": "search",
+    "category": "trivia",
+    "source": "trivia_qa",
+    "pred": "search",
+    "raw": "[SEARCH] Jelly Roll Morton is associated with which instrument?",
+    "leaked": null
+  },
+  {
+    "prompt": "The bumblebee or hog-nosed is the smallest mammal in the world - what is it?",
+    "label": "search",
+    "category": "trivia",
+    "source": "trivia_qa",
+    "pred": "search",
+    "raw": "[SEARCH] Theumblebee or hog-nosed is the smallest mammal in the world - what is it?",
+    "leaked": null
+  },
+  {
+    "prompt": "Which county won the County Cricket Championship in 1959, after Surrey had won seven consecutive titles from 1952 to 1958?",
+    "label": "search",
+    "category": "trivia",
+    "source": "trivia_qa",
+    "pred": "search",
+    "raw": "[SEARCH] Which county won the County Cricket Championship in 1959, after Surrey had won seven consecutive titles from 1952 to 1958?",
+    "leaked": null
+  },
+  {
+    "prompt": "Given this reference text about the consumption of peanut butter, when is national peanut butter day?\n\nThe United States is a leading exporter of peanut butter, and one of the largest consumers of peanut butter annually per capita. January 24 is National Peanut Butter Day in the United States. In March 2020 during the COVID-19 pandemic, retail sales of peanut butter in the United States increased by 75% over the level in March 2019.\n\nAccording to Jon Krampner's 2013 book on peanut butter, per capita consumption of peanut butter in Canada and the Netherlands – the largest consumer per capita in Europe – exceed that in the United States.\n\nIn Israel, the peanut-butter-flavored puffcorn snack Bamba accounts for 25% of the snack market; its consumption by infants has been linked to a low incidence of peanut allergies among Israelis.",
+    "label": "answer",
+    "category": "closed_qa",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "National Peanut Butter Day is on March 17, 2020.",
+    "leaked": null
+  },
+  {
+    "prompt": "who sang original i want a hippopotamus for christmas",
+    "label": "search",
+    "category": "nq",
+    "source": "nq_open",
+    "pred": "search",
+    "raw": "[SEARCH] who sang original i want a hippopotamus for christmas",
+    "leaked": null
+  },
+  {
+    "prompt": "who does the head of the fbi report to",
+    "label": "search",
+    "category": "nq",
+    "source": "nq_open",
+    "pred": "search",
+    "raw": "[SEARCH] who does the head of the fbi report to",
+    "leaked": null
+  },
+  {
+    "prompt": "According to the passage what is the best way of making progress with mathematics?\n\nthe famous professor Johann Bernoulli made it a special pleasure for himself to help me along in the mathematical sciences. Private lessons, however, he refused because of his busy schedule. However, he gave me a far more salutary advice, which consisted in myself getting a hold of some of the more difficult mathematical books and working through them with great diligence, and should I encounter some objections or difficulties, he offered me free access to him every Saturday afternoon, and he was gracious enough to comment on the collected difficulties, which was done with such a desired advantage that, when he resolved one of my objections, ten others at once disappeared, which certainly is the best method of making happy progress in the mathematical sciences.",
+    "label": "answer",
+    "category": "summarization",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "The passage provides a clear and concise explanation of the importance of mathematics in mathematics, and the methods used to achieve it. The author suggests that mathematics is a powerful tool for understanding and analyzing complex phenomena, and that it can be used to develop",
+    "leaked": null
+  },
+  {
+    "prompt": "what is 41 minus 37.2",
+    "label": "calc",
+    "category": "wh_math",
+    "source": "template",
+    "expected": "3.8",
+    "pred": "calc",
+    "raw": "[CALC] 41 - 37.2",
+    "leaked": null
+  },
+  {
+    "prompt": "From the passage provided, extract the number of episodes that made up the seventh series of Waterloo Road.\n\nThe seventh series of the British television drama series Waterloo Road began broadcasting on 4 May 2011, and ended on 25 April 2012 on BBC One. The series follows the lives of the faculty and pupils of the eponymous school, a failing inner-city comprehensive school. It consists of thirty episodes, shown in three blocks of ten episodes each. The seventh series achieved an average of 5.30 million viewers in the ratings. It is the last series to be set in Rochdale, England.",
+    "label": "answer",
+    "category": "information_extraction",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "The seventh series of Waterloo Road began broadcasting on 4 May 2011, and ended on 25 April 2012 on BBC One. The series follows the lives of the faculty and students of the eponymous school, a failing inner-city comprehensive school.",
+    "leaked": null
+  },
+  {
+    "prompt": "Who is the next superpower country?\n\nCurrently, only the United States fulfills the criteria to be considered a superpower. However, the United States is no longer the only uncontested foremost superpower and the world's sole hyperpower to dominate in every domain (i.e. military, culture, economy, technology, diplomatic).\n\nSince the 1990s, China, the European Union, India, and Russia have been commonly described as potential superpowers. Japan was formerly considered a potential superpower due to its high economic growth. However, its status as a potential superpower has eroded since the 1990s due to an aging population and economic stagnation.",
+    "label": "answer",
+    "category": "summarization",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "The next superpower country is likely to be the United States.",
+    "leaked": null
+  },
+  {
+    "prompt": "when do willow and tara get back together",
+    "label": "search",
+    "category": "nq",
+    "source": "nq_open",
+    "pred": "search",
+    "raw": "[SEARCH] when do cherry tree and salal tree get back together",
+    "leaked": null
+  },
+  {
+    "prompt": "Write a haiku about cats",
+    "label": "answer",
+    "category": "creative_writing",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "Cute little furry eyes,\nWide, fluffy tail,\nCute, friendly,\nCute, friendly,\nCute, friendly,\nCute, friendly,\nCute, friendly,\nC",
+    "leaked": null
+  },
+  {
+    "prompt": "Who is Silvio Micali?\n\nSilvio Micali (born October 13, 1954) is an Italian computer scientist, professor at the Massachusetts Institute of Technology and the founder of Algorand, a proof-of-stake blockchain cryptocurrency protocol. Micali's research at the MIT Computer Science and Artificial Intelligence Laboratory centers on cryptography and information security.\n\nIn 2012, he received the Turing Award for his work in cryptography along with Shafi Goldwasser for their work on zero-knowledge proofs.",
+    "label": "answer",
+    "category": "closed_qa",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "Silvio Micali is an Italian computer scientist, professor at the Massachusetts Institute of Technology and the founder of Algorand. Micali's research at the MIT Computer Science and Artificial Intelligence Laboratory centers on cryptography and information security",
+    "leaked": null
+  },
+  {
+    "prompt": "Classify each of the following as a novel or poem: \"A Silvia\", \"L'Infinito\" , \"I Promessi Sposi\"",
+    "label": "answer",
+    "category": "classification",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "\"A Silvia\" is a novel.",
+    "leaked": null
+  },
+  {
+    "prompt": "A recipe needs 3 cups of flour per batch. How many cups are needed for 4 batches?",
+    "label": "calc",
+    "category": "word_problem",
+    "source": "template",
+    "expected": "12",
+    "pred": "calc",
+    "raw": "[CALC] 3 * 3",
+    "leaked": null
+  },
+  {
+    "prompt": "Marilyn Monroe starred in the Seven Year Itch. Who directed it?",
+    "label": "search",
+    "category": "trivia",
+    "source": "trivia_qa",
+    "pred": "search",
+    "raw": "[SEARCH] Mily Monroe starred in the Seven Year Itch. Who directed it?",
+    "leaked": null
+  },
+  {
+    "prompt": "What is your name?",
+    "label": "answer",
+    "category": "identity",
+    "source": "template",
+    "pred": "answer",
+    "raw": "My name is Alpha. I'm an AI assistant built from scratch by Mehdi. How can I help?",
+    "leaked": null
+  },
+  {
+    "prompt": "What is a 12% tip on $60?",
+    "label": "calc",
+    "category": "percent",
+    "source": "template",
+    "expected": "7.2",
+    "pred": "calc",
+    "raw": "[CALC] 12 * 60",
+    "leaked": null
+  },
+  {
+    "prompt": "Who is the current prime minister of India?",
+    "label": "search",
+    "category": "current",
+    "source": "template",
+    "pred": "search",
+    "raw": "[SEARCH] Who is the current prime minister of India?",
+    "leaked": null
+  },
+  {
+    "prompt": "What is in a pat o brien hurricane?",
+    "label": "search",
+    "category": "nq",
+    "source": "nq_open",
+    "pred": "search",
+    "raw": "[SEARCH] What is in a pat o brien hurricane?",
+    "leaked": null
+  },
+  {
+    "prompt": "who are the stars in dancing with the stars",
+    "label": "search",
+    "category": "nq",
+    "source": "nq_open",
+    "pred": "search",
+    "raw": "[SEARCH] who are the stars in dancing with the stars",
+    "leaked": null
+  },
+  {
+    "prompt": "What is the origin of the name robinson?",
+    "label": "search",
+    "category": "nq",
+    "source": "nq_open",
+    "pred": "search",
+    "raw": "[SEARCH] What is the origin of the name robinson?",
+    "leaked": null
+  },
+  {
+    "prompt": "A box holds 27 cookies. How many cookies are in 7 boxes?",
+    "label": "calc",
+    "category": "word_problem",
+    "source": "template",
+    "expected": "189",
+    "pred": "calc",
+    "raw": "[CALC] 7 * 7",
+    "leaked": null
+  },
+  {
+    "prompt": "When was Suntory established?\n\nSuntory Holdings Limited (サントリーホールディングス株式会社, Santorī Hōrudingusu Kabushiki-gaisha) (commonly referred to as simply Suntory) is a Japanese multinational brewing and distilling company group. Established in 1899, it is one of the oldest companies in the distribution of alcoholic beverages in Japan, and makes Japanese whisky. Its business has expanded to other fields, and the company now also makes soft drinks and operates sandwich chains. With its 2014 acquisition of Beam, Inc., it has diversified internationally and become the third largest maker of distilled beverages in the world. Suntory is headquartered in Dojimahama 2-chome, Kita-ku, Osaka, Osaka Prefecture. Suntory Beverage & Food Limited (サントリー食品インターナショナル株式会社, Santorī shokuhin",
+    "label": "answer",
+    "category": "closed_qa",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "Suntory Holdings Limited is a Japanese multinational brewing and distilling company group.",
+    "leaked": null
+  },
+  {
+    "prompt": "A recipe needs 18 cups of flour per batch. How many cups are needed for 13 batches?",
+    "label": "calc",
+    "category": "word_problem",
+    "source": "template",
+    "expected": "234",
+    "pred": "calc",
+    "raw": "[CALC] 18 * 12",
+    "leaked": null
+  },
+  {
+    "prompt": "where does the name de la rosa come from",
+    "label": "search",
+    "category": "nq",
+    "source": "nq_open",
+    "pred": "search",
+    "raw": "[SEARCH] where does the name de la roza come from",
+    "leaked": null
+  },
+  {
+    "prompt": "classify each of the following as living or non-living: dog, table, cat, tree, pen, book.",
+    "label": "answer",
+    "category": "classification",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "- Dog: living\n- Cat: non-living\n- Tree: living\n- Pen: non-living",
+    "leaked": null
+  },
+  {
+    "prompt": "What is 56 multiplied by 22?",
+    "label": "calc",
+    "category": "wh_math",
+    "source": "template",
+    "expected": "1232",
+    "pred": "calc",
+    "raw": "[CALC] 56 * 22",
+    "leaked": null
+  },
+  {
+    "prompt": "Are turtles amphibians or reptiles?",
+    "label": "answer",
+    "category": "classification",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "Turtles and tortoises are both reptiles. Turtles are marine animals that belong to the order Testudines, while reptiles are a group of animals that includes all the species of animals that are not birds, such as reptiles, birds, and",
+    "leaked": null
+  },
+  {
+    "prompt": "Divide 720 by 18.",
+    "label": "calc",
+    "category": "named_op",
+    "source": "template",
+    "expected": "40",
+    "pred": "calc",
+    "raw": "[CALC] 720 / 18",
+    "leaked": null
+  },
+  {
+    "prompt": "Should differential privacy be used in the U.S. census?",
+    "label": "answer",
+    "category": "creative_writing",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "Yes, differential privacy is a topic of ongoing debate in the United States. While some argue that differential privacy is necessary for the accuracy of the U.S. Census, others believe that differential privacy is not necessary.\n\nOn one hand",
+    "leaked": null
+  },
+  {
+    "prompt": "What is the difference between 87 and 29?",
+    "label": "calc",
+    "category": "named_op",
+    "source": "template",
+    "expected": "58",
+    "pred": "calc",
+    "raw": "[CALC] 87 - 29",
+    "leaked": null
+  },
+  {
+    "prompt": "Legs of the largest group of species on earth?",
+    "label": "search",
+    "category": "trivia",
+    "source": "trivia_qa",
+    "pred": "search",
+    "raw": "[SEARCH] Legs of the largest group of species on earth?",
+    "leaked": null
+  },
+  {
+    "prompt": "What's 400 divided by 8?",
+    "label": "calc",
+    "category": "wh_math",
+    "source": "template",
+    "expected": "50",
+    "pred": "calc",
+    "raw": "[CALC] 400 / 8",
+    "leaked": null
+  },
+  {
+    "prompt": "Sara had $63 and spent $35. How much money does she have left?",
+    "label": "calc",
+    "category": "word_problem",
+    "source": "template",
+    "expected": "28",
+    "pred": "calc",
+    "raw": "[CALC] 63 - 35",
+    "leaked": null
+  },
+  {
+    "prompt": "What are recommended things to do or have when adopting a puppy?",
+    "label": "answer",
+    "category": "creative_writing",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "When adopting a puppy, there are several things to consider to ensure a happy and healthy relationship with them. Here are some recommended things to do or have when adopting a puppy:\n\n1. **Prepare a new home:",
+    "leaked": null
+  },
+  {
+    "prompt": "A 30-year-old member at your fitness center has been weight training for 4 months and claims to have made significant gains in strength. Twice a week, he performs 1 set of 12-15 repetitions using 8 weight machines. Over the last 6 weeks, he's noticed that he isn’t achieving the strength gains that he’s used to. How would you modify his training routine to optimize gains in muscular strength?",
+    "label": "answer",
+    "category": "brainstorming",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "To optimize gains in muscular strength, I would recommend a combination of high-intensity interval training (HIIT) and strength training. \n\nHigh-intensity interval training (HIIT) is a great way to build strength and improve cardiovascular",
+    "leaked": null
+  },
+  {
+    "prompt": "966/21",
+    "label": "calc",
+    "category": "symbolic",
+    "source": "template",
+    "expected": "46",
+    "pred": "calc",
+    "raw": "[CALC] 966 / 21",
+    "leaked": null
+  },
+  {
+    "prompt": "Who built you?",
+    "label": "answer",
+    "category": "identity",
+    "source": "template",
+    "pred": "answer",
+    "raw": "I was built by Mehdi. I'm a transformer language model trained from scratch, then fine-tuned to chat.",
+    "leaked": null
+  },
+  {
+    "prompt": "where does the eurostar train arrives in london",
+    "label": "search",
+    "category": "nq",
+    "source": "nq_open",
+    "pred": "search",
+    "raw": "[SEARCH] where does the Eurostar train arrive in london",
+    "leaked": null
+  },
+  {
+    "prompt": "What is the square root of 576?",
+    "label": "calc",
+    "category": "power_root",
+    "source": "template",
+    "expected": "24",
+    "pred": "search",
+    "raw": "[SEARCH] What is the square root of 576?",
+    "leaked": null
+  },
+  {
+    "prompt": "Compute 160 ÷ 4.",
+    "label": "calc",
+    "category": "verb",
+    "source": "template",
+    "expected": "40",
+    "pred": "calc",
+    "raw": "[CALC] 160 / 4",
+    "leaked": null
+  },
+  {
+    "prompt": "Tell me 74.8 times 23.",
+    "label": "calc",
+    "category": "wh_math",
+    "source": "template",
+    "expected": "1720.4",
+    "pred": "calc",
+    "raw": "[CALC] 74.8 * 23",
+    "leaked": null
+  },
+  {
+    "prompt": "what is 1176 divided by 21",
+    "label": "calc",
+    "category": "wh_math",
+    "source": "template",
+    "expected": "56",
+    "pred": "calc",
+    "raw": "[CALC] 1176 / 21",
+    "leaked": null
+  },
+  {
+    "prompt": "If I buy 31 cookies at $4 each, how much do I pay in total?",
+    "label": "calc",
+    "category": "word_problem",
+    "source": "template",
+    "expected": "124",
+    "pred": "calc",
+    "raw": "[CALC] 31 * 4",
+    "leaked": null
+  },
+  {
+    "prompt": "Who sings the pokemon theme song season 1?",
+    "label": "search",
+    "category": "nq",
+    "source": "nq_open",
+    "pred": "search",
+    "raw": "[SEARCH] Who sings the pokemon theme song season 1?",
+    "leaked": null
+  },
+  {
+    "prompt": "What name for a temple derives from the ancient Greek meaning 'to all gods' ?",
+    "label": "search",
+    "category": "trivia",
+    "source": "trivia_qa",
+    "pred": "search",
+    "raw": "[SEARCH] What name for a temple derives from the ancient Greek meaning 'to all gods' ?",
+    "leaked": null
+  },
+  {
+    "prompt": "Give me a bullet list of 5 US states that have a coastline with the Pacific Ocean",
+    "label": "answer",
+    "category": "brainstorming",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "1. California\n2. Oregon\n3. Washington\n4. North Carolina\n5. South Carolina",
+    "leaked": null
+  },
+  {
+    "prompt": "how do you say zest for life in french",
+    "label": "search",
+    "category": "nq",
+    "source": "nq_open",
+    "pred": "answer",
+    "raw": "In French, the word for zest for life is \"sous\".",
+    "leaked": null
+  },
+  {
+    "prompt": "851 ÷ 23 = ?",
+    "label": "calc",
+    "category": "symbolic",
+    "source": "template",
+    "expected": "37",
+    "pred": "calc",
+    "raw": "[CALC] 851 / 23",
+    "leaked": null
+  },
+  {
+    "prompt": "Which team was relegated from the league at the conclusion of the 1991 Season?\n\nWaterside Karori were relegated at the end of the 1990 season, to be replaced by the winner of a play-off series between teams from the northern, central, and southern leagues (Mount Albert-Ponsonby, Nelson United, and Burndale United respectively). Nelson United won the series to gain promotion, but there is some controversy about their participation in the play-offs as they had only finished second in the central regional league, which was won by Petone.  \n\nGisborne City were relegated at the end of the 1991 season",
+    "label": "answer",
+    "category": "closed_qa",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "Gisborne City were relegated at the end of the 1991 season.",
+    "leaked": null
+  },
+  {
+    "prompt": "A car travels at 90 km per hour for 5 hours. How far does it go?",
+    "label": "calc",
+    "category": "word_problem",
+    "source": "template",
+    "expected": "450",
+    "pred": "answer",
+    "raw": "To determine how far the car travels, we need to consider the time it takes to travel the same distance. Since the car travels for 5 hours, we can divide the time it takes to travel the same distance by 5.\n\nThe",
+    "leaked": null
+  },
+  {
+    "prompt": "What is the biggest town in west virginia?",
+    "label": "search",
+    "category": "nq",
+    "source": "nq_open",
+    "pred": "search",
+    "raw": "[SEARCH] What is the biggest town in west virginia?",
+    "leaked": null
+  },
+  {
+    "prompt": "What is the sale price of a $200 item after a 75% discount?",
+    "label": "calc",
+    "category": "percent",
+    "source": "template",
+    "expected": "50",
+    "pred": "calc",
+    "raw": "[CALC] 200 * 75",
+    "leaked": null
+  },
+  {
+    "prompt": "where is the deepest lake in the us located",
+    "label": "search",
+    "category": "nq",
+    "source": "nq_open",
+    "pred": "search",
+    "raw": "[SEARCH] where is the deepest lake in the us located",
+    "leaked": null
+  },
+  {
+    "prompt": "Find the quotient of 756 and 21.",
+    "label": "calc",
+    "category": "named_op",
+    "source": "template",
+    "expected": "36",
+    "pred": "answer",
+    "raw": "The quotient of 756 and 21 is 21.",
+    "leaked": null
+  },
+  {
+    "prompt": "What is the weather like in Toronto today?",
+    "label": "search",
+    "category": "current",
+    "source": "template",
+    "pred": "search",
+    "raw": "[SEARCH] What is the weather like in Toronto today?",
+    "leaked": null
+  },
+  {
+    "prompt": "73 + 3520",
+    "label": "calc",
+    "category": "symbolic",
+    "source": "template",
+    "expected": "3593",
+    "pred": "calc",
+    "raw": "[CALC] 73 + 3520",
+    "leaked": null
+  },
+  {
+    "prompt": "Identify which animal species is alive or extinct: Wiwaxia, Penguin",
+    "label": "answer",
+    "category": "classification",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "Wiwaxia, the penguin, is an animal that is alive and extinct. It is a bird that is native to the Southern Hemisphere and is known for its distinctive appearance, which is a white head, white back, white wings",
+    "leaked": null
+  },
+  {
+    "prompt": "What had Edmond Hillary worked at before taking up mountain climbing?",
+    "label": "search",
+    "category": "trivia",
+    "source": "trivia_qa",
+    "pred": "search",
+    "raw": "[SEARCH] What had Edmond Hillary worked at before taking up mountain climbing?",
+    "leaked": null
+  },
+  {
+    "prompt": "Compute 12 + 22 + 9.",
+    "label": "calc",
+    "category": "multi_step",
+    "source": "template",
+    "expected": "43",
+    "pred": "calc",
+    "raw": "[CALC] 12 + 22 + 9",
+    "leaked": null
+  },
+  {
+    "prompt": "65.0 - 41.1 = ?",
+    "label": "calc",
+    "category": "symbolic",
+    "source": "template",
+    "expected": "23.9",
+    "pred": "calc",
+    "raw": "[CALC] 65.0 - 41.1",
+    "leaked": null
+  },
+  {
+    "prompt": "Evaluate the expression 6 + 8 + 6.",
+    "label": "calc",
+    "category": "multi_step",
+    "source": "template",
+    "expected": "20",
+    "pred": "answer",
+    "raw": "The expression 6 + 8 + 6 is a simple fraction. It can be simplified by dividing both sides by their greatest common factor (GCF), which is 2. This gives us 6/2 = 2.",
+    "leaked": null
+  },
+  {
+    "prompt": "Who recorded the original version of the song When A Man Loves A Woman ?",
+    "label": "search",
+    "category": "trivia",
+    "source": "trivia_qa",
+    "pred": "search",
+    "raw": "[SEARCH] Who recorded the original version of the song When A Man Loves A Woman ?",
+    "leaked": null
+  },
+  {
+    "prompt": "According to Jewish tradition, whose chair is set ready at each passover meal in case he reappears to herald the coming of the Messiah?",
+    "label": "search",
+    "category": "trivia",
+    "source": "trivia_qa",
+    "pred": "search",
+    "raw": "[SEARCH] According to Jewish tradition, whose chair is set ready at each passover meal in case he reappears to\tplural} to\tplural} at\tplural} at\tplural} at",
+    "leaked": null
+  },
+  {
+    "prompt": "In which city was the rock star Michael Hutchence found dead in 1997 ?",
+    "label": "search",
+    "category": "trivia",
+    "source": "trivia_qa",
+    "pred": "search",
+    "raw": "[SEARCH] In which city was the rock star Michaelutilililililililililililililililililililililililililililililililililil",
+    "leaked": null
+  },
+  {
+    "prompt": "Which spices should every cook have on hand?",
+    "label": "answer",
+    "category": "brainstorming",
+    "source": "dolly",
+    "pred": "search",
+    "raw": "[SEARCH] Which spices should every cook have on hand?",
+    "leaked": null
+  },
+  {
+    "prompt": "How much is 80 minus 32?",
+    "label": "calc",
+    "category": "wh_math",
+    "source": "template",
+    "expected": "48",
+    "pred": "calc",
+    "raw": "[CALC] 80 - 32",
+    "leaked": null
+  },
+  {
+    "prompt": "Describe a plan for training to compete in a long distance gravel cycling event, including nutrition, preparation, and recovery requirements. Your plan should include a timeline and be relevant to someone who works a full time job.",
+    "label": "answer",
+    "category": "creative_writing",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "To train for a long distance gravel cycling event, a comprehensive plan should include a structured approach that includes nutrition, preparation, and recovery requirements. Here's a plan to consider:\n\nFirst, it's essential to understand the importance of nutrition",
+    "leaked": null
+  },
+  {
+    "prompt": "Sell me this pencil",
+    "label": "answer",
+    "category": "brainstorming",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "Sure, here are the steps to sell me a pencil:\n\n1. Gather your materials: a pencil, a pen, and paper.\n2. Choose a brand or type of pencil: There are many brands and types of",
+    "leaked": null
+  },
+  {
+    "prompt": "120 stamps are shared equally among 6 people. How many does each person get?",
+    "label": "calc",
+    "category": "word_problem",
+    "source": "template",
+    "expected": "20",
+    "pred": "calc",
+    "raw": "[CALC] 120 * 6",
+    "leaked": null
+  },
+  {
+    "prompt": "What is the sale price of a $360 item after a 50% discount?",
+    "label": "calc",
+    "category": "percent",
+    "source": "template",
+    "expected": "180",
+    "pred": "calc",
+    "raw": "[CALC] 360 * 50",
+    "leaked": null
+  },
+  {
+    "prompt": "Who was the first person in the bible to get drunk?",
+    "label": "search",
+    "category": "trivia",
+    "source": "trivia_qa",
+    "pred": "search",
+    "raw": "[SEARCH] Who was the first person in the bible to get drunk?",
+    "leaked": null
+  },
+  {
+    "prompt": "What are some qualities that make a good computer programmer?",
+    "label": "answer",
+    "category": "brainstorming",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "A good computer programmer has a variety of qualities that make them a valuable asset to any organization. Some of the key qualities of a good computer programmer include:\n\n1. Strong problem-solving skills: A good computer programmer is able to",
+    "leaked": null
+  },
+  {
+    "prompt": "I'm about to leave San Francisco and I love my rickety old apartment. Write it a tribute and make it poetic!",
+    "label": "answer",
+    "category": "creative_writing",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "In the heart of the Golden Gate, where the sun dips below the horizon,\nA world of old, the air is heavy with the scent of decay.\nA world of old, a world of decay,\nA world of",
+    "leaked": null
+  },
+  {
+    "prompt": "how many episodes of touching evil are there",
+    "label": "search",
+    "category": "nq",
+    "source": "nq_open",
+    "pred": "search",
+    "raw": "[SEARCH] how many episodes of touching evil are there",
+    "leaked": null
+  },
+  {
+    "prompt": "Compute 27 * 21 - 4.",
+    "label": "calc",
+    "category": "multi_step",
+    "source": "template",
+    "expected": "563",
+    "pred": "calc",
+    "raw": "[CALC] 27 * 21",
+    "leaked": null
+  },
+  {
+    "prompt": "How many hours are in 25 days?",
+    "label": "calc",
+    "category": "unit_conv",
+    "source": "template",
+    "expected": "600",
+    "pred": "calc",
+    "raw": "[CALC] 25 * 24",
+    "leaked": null
+  },
+  {
+    "prompt": "How much is 287 divided by 7?",
+    "label": "calc",
+    "category": "wh_math",
+    "source": "template",
+    "expected": "41",
+    "pred": "calc",
+    "raw": "[CALC] 287 / 7",
+    "leaked": null
+  },
+  {
+    "prompt": "what was the emperor name in star wars",
+    "label": "search",
+    "category": "nq",
+    "source": "nq_open",
+    "pred": "search",
+    "raw": "[SEARCH] what was the emperor name in star wars",
+    "leaked": null
+  },
+  {
+    "prompt": "What is 9 cubed?",
+    "label": "calc",
+    "category": "power_root",
+    "source": "template",
+    "expected": "729",
+    "pred": "calc",
+    "raw": "[CALC] 9 * 7",
+    "leaked": null
+  },
+  {
+    "prompt": "What is the best way to cook a steak?",
+    "label": "answer",
+    "category": "brainstorming",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "The best way to cook a steak is to use a lean, tender, and flavorful ingredient. Here are some tips on how to cook a steak:\n\n1. Use lean meat: Use lean meat such as chicken,",
+    "leaked": null
+  },
+  {
+    "prompt": "Given this paragraph about London, give me a reason why the London Docklands became a focus for regeneration in the 1980s.\n\nGreater London's population declined in the decades after the Second World War, from an estimated peak of 8.6 million in 1939 to around 6.8 million in the 1980s. The principal ports for London moved downstream to Felixstowe and Tilbury, with the London Docklands area becoming a focus for regeneration, including the Canary Wharf development. This was born out of London's increasing role as an international financial centre in the 1980s. The Thames Barrier was completed in the 1980s to protect London against tidal surges from the North Sea.",
+    "label": "answer",
+    "category": "closed_qa",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "The London Docklands became a focus for renewal in the 1980s due to the decline of the city's population and the growth of its international trade. The principal ports for London moved further down the River Thames, with the London Docklands area",
+    "leaked": null
+  },
+  {
+    "prompt": "Why was Harry Potter famous in the wizarding world?\n\nHarry Potter lives with his abusive aunt and uncle, Vernon and Petunia Dursley, and their bullying son, Dudley. On Harry's eleventh birthday, a half-giant named Rubeus Hagrid personally delivers an acceptance letter to Hogwarts School of Witchcraft and Wizardry, revealing that Harry's parents, James and Lily Potter, were wizards. When Harry was one year old, an evil and powerful dark wizard, Lord Voldemort, murdered his parents. Harry survived Voldemort's killing curse that rebounded and seemingly destroyed the Dark Lord, leaving a lightning bolt-shaped scar on his forehead. Unknown to Harry, this act made him famous in the wizarding world.",
+    "label": "answer",
+    "category": "summarization",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "Harry Potter is famous in the wizarding world for being one of the most popular and beloved characters in the wizarding world. The wizarding world has had a long-standing fascination with Harry Potter, and the story of his",
+    "leaked": null
+  },
+  {
+    "prompt": "A box holds 22 apples. How many apples are in 16 boxes?",
+    "label": "calc",
+    "category": "word_problem",
+    "source": "template",
+    "expected": "352",
+    "pred": "calc",
+    "raw": "[CALC] 22 * 16",
+    "leaked": null
+  },
+  {
+    "prompt": "Evaluate the expression 15 * 30 - 24.",
+    "label": "calc",
+    "category": "multi_step",
+    "source": "template",
+    "expected": "426",
+    "pred": "answer",
+    "raw": "The expression 15 * 30 - 24 can be evaluated using the following formula:\n\n`(15 * 30) - (30 * 24)`\n\nThis expression can be evaluated using the following formula:\n\n`(15 *",
+    "leaked": null
+  },
+  {
+    "prompt": "Provide a list of signs that you have won at life",
+    "label": "answer",
+    "category": "brainstorming",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "Here are some signs that you may have won at life:\n\n1. You have a strong sense of purpose and direction.\n2. You have a strong sense of humor and are able to express yourself in a way that others can",
+    "leaked": null
+  },
+  {
+    "prompt": "Given a reference text about Run Towards the Danger, tell me how many essays are part of the collection.\n\nRun Towards the Danger is a 2022 Canadian essay collection by Sarah Polley, a former child star, director, and screenwriter.\n\nThe six essays in the collection examine aspects of Polley's career on stage, screen, and on film detailing her roles in a Stratford Festival production of Alice Through the Looking Glass, as well as her breakout roles in The Adventures of Baron Munchausen and the TV series Road to Avonlea. The book also revealed for the first time that Polley had been a victim of Jian Ghomeshi who sexually and physically assaulted her when she was 16 and he was 28.",
+    "label": "answer",
+    "category": "closed_qa",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "The six essays in the collection, which examine aspects of Polley's career on stage, screen, and on film detailing her roles in a Stratford Festival production of Alice Through the Looking Glass, are part of the collection. The collection includes",
+    "leaked": null
+  },
+  {
+    "prompt": "Who made you?",
+    "label": "answer",
+    "category": "identity",
+    "source": "template",
+    "pred": "answer",
+    "raw": "I was built by Mehdi. I'm a transformer language model trained from scratch, then fine-tuned to chat.",
+    "leaked": null
+  },
+  {
+    "prompt": "What is 840 divided by 14?",
+    "label": "calc",
+    "category": "wh_math",
+    "source": "template",
+    "expected": "60",
+    "pred": "calc",
+    "raw": "[CALC] 840 / 14",
+    "leaked": null
+  },
+  {
+    "prompt": "Symphony number 104 by Joseph Haydn and symphony number 2 by Ralph Vaughan Williams are both named after which European capital city?",
+    "label": "search",
+    "category": "trivia",
+    "source": "trivia_qa",
+    "pred": "search",
+    "raw": "[SEARCH] Symphony number 104 by Joseph Haydn and symphony number 2 by Ralph Vaughan Williams are both named after which European capital city?",
+    "leaked": null
+  },
+  {
+    "prompt": "I need to write a deck summarising the benefits of delta in the lakehouse, can you give me some good slide suggestions?",
+    "label": "answer",
+    "category": "brainstorming",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "Here are some slide ideas for your deck summarising the benefits of delta in the lakehouse:\n\n1. **Improved water quality**: Delta's presence in the lake has been linked to improved water quality, including reduced pollution",
+    "leaked": null
+  },
+  {
+    "prompt": "What's the differences of the Wing Chun kongfu and the traditional Shaolin Kongfu?",
+    "label": "answer",
+    "category": "creative_writing",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "The wing chun kongfu and traditional Shaolin Kongfu are two distinct styles of traditional Chinese fighting, with their own distinct characteristics and techniques.\n\nThe wing chun kongfu, also known as the \"supreme",
+    "leaked": null
+  },
+  {
+    "prompt": "What is the square root of 225?",
+    "label": "calc",
+    "category": "power_root",
+    "source": "template",
+    "expected": "15",
+    "pred": "search",
+    "raw": "[SEARCH] What is the square root of 225?",
+    "leaked": null
+  },
+  {
+    "prompt": "Sara had $76 and spent $27. How much money does she have left?",
+    "label": "calc",
+    "category": "word_problem",
+    "source": "template",
+    "expected": "49",
+    "pred": "calc",
+    "raw": "[CALC] 76 - 27",
+    "leaked": null
+  },
+  {
+    "prompt": "In which movie or plot the character vedimuthu was established\n\nLondon is a 2005 Indian Tamil-language comedy-drama film written by Badri and directed by Sundar C.  Bhaskaran hides the money before getting arrested, and the place is known only to his lawyer Vedimuthu. Aishwarya pretends to be in love with Vedimuthu to find where the money is hidden.",
+    "label": "answer",
+    "category": "closed_qa",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "The character vedimuthu was established in the 2005 Indian Tamil-language comedy-drama film, \"The VEDIMuthu\" (also known as \"The VEDIMuthu\" or \"The VEDIM",
+    "leaked": null
+  },
+  {
+    "prompt": "What is 86 times 81?",
+    "label": "calc",
+    "category": "wh_math",
+    "source": "template",
+    "expected": "6966",
+    "pred": "calc",
+    "raw": "[CALC] 86 * 81",
+    "leaked": null
+  },
+  {
+    "prompt": "Who was the mexican commander who surrendered to the texans at the capturing of san antonio?",
+    "label": "search",
+    "category": "nq",
+    "source": "nq_open",
+    "pred": "search",
+    "raw": "[SEARCH] Who was the mexican commander who surrendered to the texans at the capturing of san antonio?",
+    "leaked": null
+  },
+  {
+    "prompt": "in another world with my smartphone japanese title",
+    "label": "search",
+    "category": "nq",
+    "source": "nq_open",
+    "pred": "search",
+    "raw": "[SEARCH] in another world with my smartphone japonic title",
+    "leaked": null
+  },
+  {
+    "prompt": "What's the cube root of 27,000?",
+    "label": "search",
+    "category": "trivia",
+    "source": "trivia_qa",
+    "pred": "search",
+    "raw": "[SEARCH] What's the cube root of 27,000?",
+    "leaked": null
+  },
+  {
+    "prompt": "In the Bible, how many psalms make up the Book of Psalms?",
+    "label": "search",
+    "category": "trivia",
+    "source": "trivia_qa",
+    "pred": "search",
+    "raw": "[SEARCH] In the Bible, how many psalmes make up the Book ofPsalmes?",
+    "leaked": null
+  },
+  {
+    "prompt": "How are you?",
+    "label": "answer",
+    "category": "chat",
+    "source": "template",
+    "pred": "answer",
+    "raw": "I'm doing well, thanks for asking! How can I help you today?",
+    "leaked": null
+  },
+  {
+    "prompt": "5396 * 33",
+    "label": "calc",
+    "category": "symbolic",
+    "source": "template",
+    "expected": "178068",
+    "pred": "calc",
+    "raw": "[CALC] 5396 * 33",
+    "leaked": null
+  },
+  {
+    "prompt": "Which northern English beer was originally launched by Col. James Porter in 1927?",
+    "label": "search",
+    "category": "trivia",
+    "source": "trivia_qa",
+    "pred": "search",
+    "raw": "[SEARCH] Which northern English beer was originally launched by Col. James Porter in 1927?",
+    "leaked": null
+  },
+  {
+    "prompt": "27-6.5",
+    "label": "calc",
+    "category": "symbolic",
+    "source": "template",
+    "expected": "20.5",
+    "pred": "calc",
+    "raw": "[CALC] 27 - 6.5",
+    "leaked": null
+  },
+  {
+    "prompt": "Calculate 20 percent of 45.",
+    "label": "calc",
+    "category": "percent",
+    "source": "template",
+    "expected": "9",
+    "pred": "calc",
+    "raw": "[CALC] 20 * 45",
+    "leaked": null
+  },
+  {
+    "prompt": "Solve 29 + 5571.",
+    "label": "calc",
+    "category": "verb",
+    "source": "template",
+    "expected": "5600",
+    "pred": "answer",
+    "raw": "The solution to 29 + 5571 is 5571.",
+    "leaked": null
+  },
+  {
+    "prompt": "calc 12 * 5 + 14",
+    "label": "calc",
+    "category": "multi_step",
+    "source": "template",
+    "expected": "74",
+    "pred": "calc",
+    "raw": "[CALC] 12 * 5 + 14",
+    "leaked": null
+  },
+  {
+    "prompt": "Categorize each of the following classes as either 'hard', 'medium', 'easy': english writing, math, history, chemistry, physics.",
+    "label": "answer",
+    "category": "classification",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "- English Writing: This class is a type of writing that involves the use of language, including words, phrases, and sentences. It is considered a high-level language and is often used in academic, professional, and technical writing.",
+    "leaked": null
+  },
+  {
+    "prompt": "Which French author wrote the fairy tales ‘Little Red Riding Hood’ ‘Sleeping Beauty’ and ‘Puss in Boots’?",
+    "label": "search",
+    "category": "trivia",
+    "source": "trivia_qa",
+    "pred": "search",
+    "raw": "[SEARCH] Which French author wrote the fairy tales ‘Little Red Riding Hood’ ‘Sleeping Beauty’ and ‘Puss in Boots’?",
+    "leaked": null
+  },
+  {
+    "prompt": "What is the minimum legal age for a female to marry in Kuwait?",
+    "label": "search",
+    "category": "trivia",
+    "source": "trivia_qa",
+    "pred": "search",
+    "raw": "[SEARCH] What is the minimum legal age for a female to marry in Kuwait?",
+    "leaked": null
+  },
+  {
+    "prompt": "What is a 25% tip on $150?",
+    "label": "calc",
+    "category": "percent",
+    "source": "template",
+    "expected": "37.5",
+    "pred": "calc",
+    "raw": "[CALC] 25 * 150",
+    "leaked": null
+  },
+  {
+    "prompt": "In the NATO phonetic alphabet, which word represents the letter I?",
+    "label": "search",
+    "category": "trivia",
+    "source": "trivia_qa",
+    "pred": "search",
+    "raw": "[SEARCH] In the NATO phonetic alphabet, which word represents the letter I?",
+    "leaked": null
+  },
+  {
+    "prompt": "1265 ÷ 23 =",
+    "label": "calc",
+    "category": "symbolic",
+    "source": "template",
+    "expected": "55",
+    "pred": "calc",
+    "raw": "[CALC] 1265 / 23",
+    "leaked": null
+  },
+  {
+    "prompt": "What are the important points about Lunar eclipse in the given text?\n\nA lunar eclipse is an astronomical event that occurs when the Moon moves into the Earth's shadow, causing the moon to be darkened. Such alignment occurs during an eclipse season, approximately every six months, during the full moon phase, when the Moon's orbital plane is closest to the plane of the Earth's orbit.\nThis can occur only when the Sun, Earth, and Moon are exactly or very closely aligned (in syzygy) with Earth between the other two, which can happen only on the night of a full moon when the Moon is near either lunar node. The type and length of a lunar eclipse depend on the Moon's proximity to the lunar node",
+    "label": "answer",
+    "category": "summarization",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "The lunar eclipse in the given text is an astronomical event that occurs when the Moon moves into the Earth's shadow, causing the moon to be darkened. This alignment occurs during an eclipse season, approximately every six months, during the full moon",
+    "leaked": null
+  },
+  {
+    "prompt": "Extract and list the Barcelona players in the passage that came from the club's youth academy\n\nBarcelona is one of the most widely supported teams in the world, and the club has one of the largest social media following in the world among sports teams. Barcelona players have won a record twelve Ballon d'Or awards, with recipients including Johan Cruyff, as well as a record seven FIFA World Player of the Year awards, with winners including Romário, Ronaldo, Rivaldo and Ronaldinho. In 2010, three players who came through the club's youth academy (Lionel Messi, Andrés Iniesta and Xavi) were chosen as the three best players in the world in the FIFA Ballon d'Or awards, an unprecedented feat for players from the same football academy. Additionally, players representing the club have won a record eight European Golden Shoe awards.",
+    "label": "answer",
+    "category": "information_extraction",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "Barcelona is one of the most widely supported teams in the world, and the club has one of the largest social media following in the world among sports teams. Barcelona players have won a record twelve Ballon d'Or awards, with winners including",
+    "leaked": null
+  },
+  {
+    "prompt": "How many minutes are in 22 hours?",
+    "label": "calc",
+    "category": "unit_conv",
+    "source": "template",
+    "expected": "1320",
+    "pred": "calc",
+    "raw": "[CALC] 22 * 60",
+    "leaked": null
+  },
+  {
+    "prompt": "10.7 + 88.5",
+    "label": "calc",
+    "category": "symbolic",
+    "source": "template",
+    "expected": "99.2",
+    "pred": "calc",
+    "raw": "[CALC] 10.7 + 88.5",
+    "leaked": null
+  },
+  {
+    "prompt": "Given the reference text below, what is Isthmohyla debilis?\n\nIsthmohyla debilis is a rare species of frog in the family Hylidae. It occurs in the Atlantic slopes of the Cordillera Central and Cordillera Talamanca in Costa Rica and western Panama as well as on the Pacific slopes in southwestern Panama. Common name Isla Bonita treefrog has been suggested for it (the type locality is \"Isla Bonita\" in Costa Rica).",
+    "label": "answer",
+    "category": "closed_qa",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "Isla Bonita treefrog is a rare species of frog in the family Hylidae. It occurs in the Atlantic slopes of the cordillera Central and cordillera Talamanca in Costa Rica and western Panama as well",
+    "leaked": null
+  },
+  {
+    "prompt": "What is 49.0 plus 79.0?",
+    "label": "calc",
+    "category": "wh_math",
+    "source": "template",
+    "expected": "128",
+    "pred": "calc",
+    "raw": "[CALC] 49.0 + 79.0",
+    "leaked": null
+  },
+  {
+    "prompt": "From the passage provided, provide the two scenarios in bullet form where radiative heat transfer is an important consideration.\n\nRadiative heat transfer is the transfer of energy via thermal radiation, i.e., electromagnetic waves. It occurs across vacuum or any transparent medium (solid or fluid or gas). Thermal radiation is emitted by all objects at temperatures above absolute zero, due to random movements of atoms and molecules in matter. Since these atoms and molecules are composed of charged particles (protons and electrons), their movement results in the emission of electromagnetic radiation which carries away energy. Radiation is typically only important in engineering applications for very hot objects, or for objects with a large temperature difference.",
+    "label": "answer",
+    "category": "information_extraction",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "In the context of the passage, the radiative heat transfer scenario is where thermal radiation is the most important consideration. This is because thermal radiation is a key factor in the formation of the Earth's atmosphere, and it plays a crucial role in",
+    "leaked": null
+  },
+  {
+    "prompt": "calculate 78 - 50",
+    "label": "calc",
+    "category": "verb",
+    "source": "template",
+    "expected": "28",
+    "pred": "calc",
+    "raw": "[CALC] 78 - 50",
+    "leaked": null
+  },
+  {
+    "prompt": "Give me Personal finance advice",
+    "label": "answer",
+    "category": "creative_writing",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "Personal finance advice can vary depending on the individual, but here are some general tips that may help:\n\n1. Set a budget: Start by setting a budget for your income and expenses. This will help you stay on track and avoid",
+    "leaked": null
+  },
+  {
+    "prompt": "3807+2591",
+    "label": "calc",
+    "category": "symbolic",
+    "source": "template",
+    "expected": "6398",
+    "pred": "calc",
+    "raw": "[CALC] 3807 + 2591",
+    "leaked": null
+  },
+  {
+    "prompt": "\"In which movie did Garbo say, \"\"I want to be alone\"\".\"",
+    "label": "search",
+    "category": "trivia",
+    "source": "trivia_qa",
+    "pred": "search",
+    "raw": "[SEARCH] \"In which movie did Garbo say, \"\"I want to be alone\"\".\"",
+    "leaked": null
+  },
+  {
+    "prompt": "How many minutes are in 7 hours?",
+    "label": "calc",
+    "category": "unit_conv",
+    "source": "template",
+    "expected": "420",
+    "pred": "calc",
+    "raw": "[CALC] 7 * 60",
+    "leaked": null
+  },
+  {
+    "prompt": "Can you give me a bulleted list of notable physical features of the beaver?\n\nBeavers (genus Castor) are large, semiaquatic rodents of the Northern Hemisphere. There are two extant species: the North American beaver (Castor canadensis) and the Eurasian beaver (C. fiber). Beavers are the second-largest living rodents, after capybaras. Beavers have stout bodies with large heads, long chisel-like incisors, brown or gray fur, hand-like front feet, webbed back feet, and tails that are flat and scaly. The two species differ in skull and tail shape and fur color. Beavers can be found in a number of freshwater habitats, such as rivers, streams, lakes and ponds. They are herbivorous, consuming tree bark, aquatic plants, grasses and sedges.",
+    "label": "answer",
+    "category": "summarization",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "Beavers are the second-largest living rodents, after capybaras.",
+    "leaked": null
+  },
+  {
+    "prompt": "What is (15 + 10) - 3?",
+    "label": "calc",
+    "category": "multi_step",
+    "source": "template",
+    "expected": "22",
+    "pred": "calc",
+    "raw": "[CALC] 15 + 10",
+    "leaked": null
+  },
+  {
+    "prompt": "what album is sacrifice by elton john on",
+    "label": "search",
+    "category": "nq",
+    "source": "nq_open",
+    "pred": "search",
+    "raw": "[SEARCH] what album is sacrifice by elton john on",
+    "leaked": null
+  },
+  {
+    "prompt": "Oil seed rape belongs to which plant family?",
+    "label": "search",
+    "category": "trivia",
+    "source": "trivia_qa",
+    "pred": "search",
+    "raw": "[SEARCH] Oil seed rapaceya belongs to which plant family?",
+    "leaked": null
+  },
+  {
+    "prompt": "calc (3 + 11) - 12",
+    "label": "calc",
+    "category": "multi_step",
+    "source": "template",
+    "expected": "2",
+    "pred": "calc",
+    "raw": "[CALC] 3 + 11",
+    "leaked": null
+  },
+  {
+    "prompt": "calculate 84.8 × 64",
+    "label": "calc",
+    "category": "verb",
+    "source": "template",
+    "expected": "5427.2",
+    "pred": "calc",
+    "raw": "[CALC] 84.8 * 64",
+    "leaked": null
+  },
+  {
+    "prompt": "which horse and jockey won the melbourne cup in 2002",
+    "label": "search",
+    "category": "nq",
+    "source": "nq_open",
+    "pred": "search",
+    "raw": "[SEARCH] which horse and jockey won the melbourne cup in 2002",
+    "leaked": null
+  },
+  {
+    "prompt": "who formed and first came to the colony of maryland",
+    "label": "search",
+    "category": "nq",
+    "source": "nq_open",
+    "pred": "search",
+    "raw": "[SEARCH] who formed and first came to the colony of maryland",
+    "leaked": null
+  },
+  {
+    "prompt": "Multiply 34.6 by 75.",
+    "label": "calc",
+    "category": "named_op",
+    "source": "template",
+    "expected": "2595",
+    "pred": "calc",
+    "raw": "[CALC] 34.6 * 75",
+    "leaked": null
+  },
+  {
+    "prompt": "What are the key features of a Galleon\n\nGalleons were large, multi-decked sailing ships first used as armed cargo carriers by European states from the 16th to 18th centuries during the age of sail and were the principal vessels drafted for use as warships until the Anglo-Dutch Wars of the mid-1600s. Galleons generally carried three or more masts with a lateen fore-and-aft rig on the rear masts, were carvel built with a prominent squared off raised stern, and used square-rigged sail plans on their fore-mast and main-masts.",
+    "label": "answer",
+    "category": "summarization",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "The Galleon was a large, multi-decked sailing ship first used as armed cargo carriers by European states from the 16th to 18th centuries. Galleons were large, multi-decked sailing ships first used",
+    "leaked": null
+  },
+  {
+    "prompt": "There are 21 students in a class and 20 more join. How many students are there now?",
+    "label": "calc",
+    "category": "word_problem",
+    "source": "template",
+    "expected": "41",
+    "pred": "calc",
+    "raw": "[CALC] 21 * 20",
+    "leaked": null
+  },
+  {
+    "prompt": "how many episodes is ash vs evil dead season 3",
+    "label": "search",
+    "category": "nq",
+    "source": "nq_open",
+    "pred": "search",
+    "raw": "[SEARCH] how many episodes is ash vs evil dead season 3",
+    "leaked": null
+  },
+  {
+    "prompt": "Give me a list of different ways to brew coffee",
+    "label": "answer",
+    "category": "brainstorming",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "Here are some popular ways to brew coffee:\n\n1. Coffee grounds: These are the base of the coffee and are used to make the coffee grounds.\n2. Coffee beans: These are the seeds of the coffee plant and are",
+    "leaked": null
+  },
+  {
+    "prompt": "What French military unit was established in 1831 to enable people from other countries to serve in the French Armed Forces, commanded by French officers?",
+    "label": "search",
+    "category": "trivia",
+    "source": "trivia_qa",
+    "pred": "search",
+    "raw": "[SEARCH] What French military unit was established in3131 to enable people from other countries to serve in the French Armed Forces, commanded by French officers?",
+    "leaked": null
+  },
+  {
+    "prompt": "Hi!",
+    "label": "answer",
+    "category": "chat",
+    "source": "template",
+    "pred": "answer",
+    "raw": "Hello! How can I help you today?",
+    "leaked": null
+  },
+  {
+    "prompt": "Compared to a human, categorize the following as fast or slow animals: sloth, cheetah, eagle, tortoise, hippo, slug, horse.",
+    "label": "answer",
+    "category": "classification",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "Sloth and cheetah are both fast animals. Sloth is a slow animal, while cheetah is a fast animal.",
+    "leaked": null
+  },
+  {
+    "prompt": "Who is the current chancellor of Germany?",
+    "label": "search",
+    "category": "current",
+    "source": "template",
+    "pred": "search",
+    "raw": "[SEARCH] Who is the current chancellor of Germany?",
+    "leaked": null
+  },
+  {
+    "prompt": "Can you browse the internet?",
+    "label": "answer",
+    "category": "identity",
+    "source": "template",
+    "pred": "answer",
+    "raw": "I can search the web, but I'm not a search engine. I'm a language model, so I can't browse the internet in real-time. However, I can guide you on how to use a search engine to find information",
+    "leaked": null
+  },
+  {
+    "prompt": "Divide 420 by 12.",
+    "label": "calc",
+    "category": "named_op",
+    "source": "template",
+    "expected": "35",
+    "pred": "calc",
+    "raw": "[CALC] 420 / 12",
+    "leaked": null
+  },
+  {
+    "prompt": "What is the name of the note that is 1/8 the length of a semi-breve?",
+    "label": "search",
+    "category": "trivia",
+    "source": "trivia_qa",
+    "pred": "search",
+    "raw": "[SEARCH] What is the name of the note that is 1/8 the length of a semi-breve?",
+    "leaked": null
+  },
+  {
+    "prompt": "There are 12 students in a class and 5 more join. How many students are there now?",
+    "label": "calc",
+    "category": "word_problem",
+    "source": "template",
+    "expected": "17",
+    "pred": "calc",
+    "raw": "[CALC] 12 + 5",
+    "leaked": null
+  },
+  {
+    "prompt": "List all former departments that were formerly Cabinet-level in the United States.\n\nFormer executive and Cabinet-level departments\nDepartment of War (1789–1947), headed by the secretary of war: renamed Department of the Army by the National Security Act of 1947.\nDepartment of the Navy (1798–1949), headed by the secretary of the Navy: became a military department within the Department of Defense.\nPost Office Department (1829–1971), headed by the postmaster general: reorganized as the United States Postal Service, an independent agency.\nNational Military Establishment (1947–1949), headed by the secretary of Defense: created by the National Security Act of 1947 and recreated as the Department of Defense in 1949.\nDepartment of the Army (1947–1949), headed by the secretary of the Army: became a military department within the Department of Defense.\nDepartment of the Air Force (1947–1949), headed by the secretary of the Air Force: became a military department within the Department of Defense.",
+    "label": "answer",
+    "category": "information_extraction",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "The former departments that were formerly Cabinet-level in the United States are:\n\n1. Department of the Army (1789–1947), headed by the Secretary of War: reorganized as the United States Army.\n2.",
+    "leaked": null
+  },
+  {
+    "prompt": "What is 57 times 2.6?",
+    "label": "calc",
+    "category": "wh_math",
+    "source": "template",
+    "expected": "148.2",
+    "pred": "calc",
+    "raw": "[CALC] 57 * 2.6",
+    "leaked": null
+  },
+  {
+    "prompt": "who was the first territorial governor of oklahoma",
+    "label": "search",
+    "category": "nq",
+    "source": "nq_open",
+    "pred": "search",
+    "raw": "[SEARCH] who was the first territorial governor of oklahoma",
+    "leaked": null
+  },
+  {
+    "prompt": "Calculate 8 + 10.",
+    "label": "calc",
+    "category": "verb",
+    "source": "template",
+    "expected": "18",
+    "pred": "calc",
+    "raw": "[CALC] 8 + 10",
+    "leaked": null
+  },
+  {
+    "prompt": "Calculate 30 percent of 360.",
+    "label": "calc",
+    "category": "percent",
+    "source": "template",
+    "expected": "108",
+    "pred": "answer",
+    "raw": "The percentage of 360 can be calculated by dividing the number of decimal places by the total number of decimal places. \n\n30 percent is 0.30. \n\nSo, 30 percent of 360 is 0.30.",
+    "leaked": null
+  },
+  {
+    "prompt": "Tell me 750 divided by 15.",
+    "label": "calc",
+    "category": "wh_math",
+    "source": "template",
+    "expected": "50",
+    "pred": "calc",
+    "raw": "[CALC] 750 / 15",
+    "leaked": null
+  },
+  {
+    "prompt": "Which is the only team to have won football’s Premier League once and once only?",
+    "label": "search",
+    "category": "trivia",
+    "source": "trivia_qa",
+    "pred": "search",
+    "raw": "[SEARCH] Which is the only team to have won football’s Premier League once and once only?",
+    "leaked": null
+  },
+  {
+    "prompt": "Who is the current prime minister of the United Kingdom?",
+    "label": "search",
+    "category": "current",
+    "source": "template",
+    "pred": "search",
+    "raw": "[SEARCH] Who is the current prime minister of the United Kingdom?",
+    "leaked": null
+  },
+  {
+    "prompt": "In the film ‘High Noon’, who has sworn to kill Will Kane (Gary Cooper)?",
+    "label": "search",
+    "category": "trivia",
+    "source": "trivia_qa",
+    "pred": "search",
+    "raw": "[SEARCH] In the film ‘High Noon’, who has sworn to kill Will Kane (Gary Cooper)?",
+    "leaked": null
+  },
+  {
+    "prompt": "Is Clivina bipustulata a beetle?\n\nClivina bipustulata is a species of ground beetle in the subfamily Scaritinae. It was described by Johan Christian Fabricius in 1801.",
+    "label": "answer",
+    "category": "information_extraction",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "Clivina bipustulata is a species of ground Beetle in the subfamily Scaritini. It was described by Jean-Baptiste de la Vallée Poussin in 1785. Clivina",
+    "leaked": null
+  },
+  {
+    "prompt": "Calculate 20 percent of 20.",
+    "label": "calc",
+    "category": "percent",
+    "source": "template",
+    "expected": "4",
+    "pred": "answer",
+    "raw": "20% of 20 is 20 * 0.20 = 0.025.",
+    "leaked": null
+  },
+  {
+    "prompt": "5810 × 2918",
+    "label": "calc",
+    "category": "symbolic",
+    "source": "template",
+    "expected": "16953580",
+    "pred": "calc",
+    "raw": "[CALC] 5810 * 2918",
+    "leaked": null
+  },
+  {
+    "prompt": "There are 28 students in a class and 17 more join. How many students are there now?",
+    "label": "calc",
+    "category": "word_problem",
+    "source": "template",
+    "expected": "45",
+    "pred": "calc",
+    "raw": "[CALC] 28 + 17",
+    "leaked": null
+  },
+  {
+    "prompt": "Imagine a world where life expectancy is fixed and the same for everyone at birth, yet people can engage in life expectancy \"donation\" – meaning that someone can extend your life three years longer at the expense of theirs. Talk about a likely scenario in this world that involves voluntary donation.",
+    "label": "answer",
+    "category": "creative_writing",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "In a world where life expectancy is fixed and the same for everyone at birth, the concept of \"donation\" becomes increasingly relevant. In this scenario, the concept of \"donation\" is not just about extending your life, but about",
+    "leaked": null
+  },
+  {
+    "prompt": "what was the most important new religious figure of the new kingdom of ancient egypt",
+    "label": "search",
+    "category": "nq",
+    "source": "nq_open",
+    "pred": "search",
+    "raw": "[SEARCH] what was the most important new religious figure of the new kingdom of ancient egypt",
+    "leaked": null
+  },
+  {
+    "prompt": "How many centimeters are in 26 meters?",
+    "label": "calc",
+    "category": "unit_conv",
+    "source": "template",
+    "expected": "2600",
+    "pred": "calc",
+    "raw": "[CALC] 26 * 100",
+    "leaked": null
+  },
+  {
+    "prompt": "What river flows through charleston west virginia’s capital?",
+    "label": "search",
+    "category": "nq",
+    "source": "nq_open",
+    "pred": "search",
+    "raw": "[SEARCH] What river flows through charleston west virginia’s capital?",
+    "leaked": null
+  },
+  {
+    "prompt": "What is a 50% tip on $45?",
+    "label": "calc",
+    "category": "percent",
+    "source": "template",
+    "expected": "22.5",
+    "pred": "calc",
+    "raw": "[CALC] 50 / 50",
+    "leaked": null
+  },
+  {
+    "prompt": "Norovirus causes illness in humans described by what body part?",
+    "label": "search",
+    "category": "trivia",
+    "source": "trivia_qa",
+    "pred": "search",
+    "raw": "[SEARCH] Norovirus causes illness in humans described by what body part?",
+    "leaked": null
+  },
+  {
+    "prompt": "How to make a bald guy look great?",
+    "label": "answer",
+    "category": "creative_writing",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "Here are some steps to make a guy look great:\n\n1. Make his hair stand on end. This is a common trick for men, but it can also be used to make a man look more attractive.\n\n2.",
+    "leaked": null
+  },
+  {
+    "prompt": "Introduce yourself.",
+    "label": "answer",
+    "category": "identity",
+    "source": "template",
+    "pred": "answer",
+    "raw": "I'm Alpha! I'm a language model, so I can talk things through, answer questions and look things up online.",
+    "leaked": null
+  },
+  {
+    "prompt": "What is the current price of natural gas?",
+    "label": "search",
+    "category": "current",
+    "source": "template",
+    "pred": "search",
+    "raw": "[SEARCH] What is the current price of natural gas?",
+    "leaked": null
+  },
+  {
+    "prompt": "20 tickets are shared equally among 2 people. How many does each person get?",
+    "label": "calc",
+    "category": "word_problem",
+    "source": "template",
+    "expected": "10",
+    "pred": "calc",
+    "raw": "[CALC] 20 * 2",
+    "leaked": null
+  },
+  {
+    "prompt": "What is the sale price of a $500 item after a 25% discount?",
+    "label": "calc",
+    "category": "percent",
+    "source": "template",
+    "expected": "375",
+    "pred": "calc",
+    "raw": "[CALC] 500 * 25",
+    "leaked": null
+  },
+  {
+    "prompt": "when did the black death end in england",
+    "label": "search",
+    "category": "nq",
+    "source": "nq_open",
+    "pred": "search",
+    "raw": "[SEARCH] when did the black death end in england",
+    "leaked": null
+  },
+  {
+    "prompt": "From the given text, write some important points about guitar's vibrato system\n\nA vibrato system on a guitar is a mechanical device used to temporarily change the pitch of the strings. They add vibrato to the sound by changing the tension of the strings, typically at the bridge or tailpiece of an electric guitar using a controlling lever, which is alternately referred to as a whammy bar, vibrato bar, or incorrectly as a tremolo arm. The lever enables the player to quickly and temporarily vary the tension and sometimes length of the strings, changing the pitch to create a vibrato, portamento, or pitch bend effect. Instruments without a vibrato have other bridge and tailpiece systems.",
+    "label": "answer",
+    "category": "summarization",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "From the given text, the vibrato system on a guitar is a mechanical device used to temporarily change the pitch of the strings. They add vibrato to the sound by changing the tension of the strings, typically at the bridge or tailpiece",
+    "leaked": null
+  },
+  {
+    "prompt": "Who presented the 1980 blockbuster documentary series, Cosmos: A Personal Voyage?",
+    "label": "search",
+    "category": "trivia",
+    "source": "trivia_qa",
+    "pred": "search",
+    "raw": "[SEARCH] Who presented the 1980 blockbuster documentary series, Cosmos: A Personal Voyage?",
+    "leaked": null
+  },
+  {
+    "prompt": "According to this paragraph, what are the \"Old Dorms\" at the University of Virginia?\n\nThe primary housing areas for first-year students are McCormick Road Dormitories, often called \"Old Dorms\", and Alderman Road Dormitories, often called \"New Dorms\". The 1970s-era Alderman Road Dorms are being fully replaced with brand new dormitory buildings in the same area. The replacements feature hall-style living arrangements with common areas and many modern amenities. Instead of being torn down and replaced like the original New Dorms, the Old Dorms will see a $105 million renovation project between 2017 and 2022. They were constructed in 1950, and are also hall-style constructions but with fewer amenities. The Old Dorms are closer to the students' classes.",
+    "label": "answer",
+    "category": "closed_qa",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "The Old Dormitories at the University of Virginia are a series of dormitories located in the heart of the University of Virginia. The primary housing areas for first-year students are McCormick Road Dormitories, often",
+    "leaked": null
+  },
+  {
+    "prompt": "Given this paragraph about Duchess Auguste of Württemberg, what happened to personal life?\n\nOn 17 March 1773, Auguste’s spouse succeeded as the 4th Prince of Thurn and Taxis. The marriage was at that point severely deteriorated. Auguste left Karl Anselm and settled in Paris. Rumours claimed that she lived with a lover. However, she was tormented by economical problems, ran out of funds and was hounded by creditors.",
+    "label": "answer",
+    "category": "closed_qa",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "Auguste's marriage to Rumours was a tragic event. He was a man of few words, and his wife, Auguste, was a woman of few words. The marriage was a failure, and Auguste's life was cut",
+    "leaked": null
+  },
+  {
+    "prompt": "Identify which animal species is alive or extinct: Cape Lion, Javan Rhino",
+    "label": "answer",
+    "category": "classification",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "The Cape Lion is an animal that is alive and extinct. It is an endangered species of mammal that was once found in the wild in the island of Java.",
+    "leaked": null
+  },
+  {
+    "prompt": "Extract the family name of the fungus Clitocybe subcordispora.\n\nClitocybe subcordispora is a rare species of agaric fungus in the family Tricholomataceae. Found in northern Europe, it was described as new to science in 1969 by Finnish mycologist Harri Harmaja. It is similar to species in the Clitocybe metachroa complex, but can be distinguished from them by its smaller spores, which measure 4.5–6.0 by 3.0–4.0 µm.",
+    "label": "answer",
+    "category": "information_extraction",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "The family Clitocybe subcordispora is a rare species of fungi in the family Tricholomaceae. It is similar to species in the Clitocybe metachroa complex, but can be distinguish",
+    "leaked": null
+  },
+  {
+    "prompt": "Find the quotient of 936 and 24.",
+    "label": "calc",
+    "category": "named_op",
+    "source": "template",
+    "expected": "39",
+    "pred": "answer",
+    "raw": "The quotient of 936 and 24 is 24.",
+    "leaked": null
+  },
+  {
+    "prompt": "when was the last time the boston red sox pitched a no-hitter",
+    "label": "search",
+    "category": "nq",
+    "source": "nq_open",
+    "pred": "search",
+    "raw": "[SEARCH] when was the last time the boston red sox pitched a no-hitter",
+    "leaked": null
+  },
+  {
+    "prompt": "Compute 663 ÷ 13.",
+    "label": "calc",
+    "category": "verb",
+    "source": "template",
+    "expected": "51",
+    "pred": "calc",
+    "raw": "[CALC] 663 / 13",
+    "leaked": null
+  },
+  {
+    "prompt": "Please summarize the history of the development of Roche Percee based on this article\n\nIn 1872 the Boundary Commission travelled through this area while surveying the border between Canada and the United States. During the 1874 March West trek of the North-West Mounted Police, the force established its first camp (called Short Creek Camp) at this location. The community began being served by the Soo Line in 1893, permitting the coal mines in the region to become operational. Roche Percée incorporated as a village on January 12, 1909.",
+    "label": "answer",
+    "category": "summarization",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "The history of the development of Roche Percee, Canada's first coal mining camp, is a fascinating one. The first camp was established at Short Creek Camp in March of 1872, and it was the first of the many camps that",
+    "leaked": null
+  },
+  {
+    "prompt": "What is Foreverly?\n\nForeverly (stylized as foreverly) is a collaborative album by Green Day singer/guitarist Billie Joe Armstrong and jazz/pop singer-songwriter Norah Jones. It was released on November 25, 2013, through Reprise Records.\n\nForeverly is a collection of traditional songs, and is a reinterpretation of the 1958 album Songs Our Daddy Taught Us by The Everly Brothers. It is promoted by the lead single \"Long Time Gone\". A lyric video for the song was released on November 13, 2013, and was followed by the release of a music video for \"Silver Haired Daddy of Mine\" five days later.\n\nBackground",
+    "label": "answer",
+    "category": "summarization",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "Foreverly is a collaborative album by Green Day singer/guitarist Billie Joe Armstrong and jazz/pop singer-songwriter Norah Jones. It was released on November 25, 2013, through Reprise Records. The song",
+    "leaked": null
+  },
+  {
+    "prompt": "who did the united states win its independence from",
+    "label": "search",
+    "category": "nq",
+    "source": "nq_open",
+    "pred": "answer",
+    "raw": "The United States of America was formed in 1776 from the 13 British colonies in North America.",
+    "leaked": null
+  },
+  {
+    "prompt": "Thanks!",
+    "label": "answer",
+    "category": "chat",
+    "source": "template",
+    "pred": "answer",
+    "raw": "You're welcome! Let me know if you need anything else.",
+    "leaked": null
+  },
+  {
+    "prompt": "\"Which garden feature is a structure consisting of a framed passageway covered with climbing and trailing plants and has a name derived from the Latin for \"\"projecting roof\"\" ?\"",
+    "label": "search",
+    "category": "trivia",
+    "source": "trivia_qa",
+    "pred": "search",
+    "raw": "[SEARCH] \"Which garden feature is a structure consisting of a framinged passageway covered with climbing and trailing plants and has a name derived from the Latin for \"\"projecting roof\"\" ?\"",
+    "leaked": null
+  },
+  {
+    "prompt": "What breed of dog is the ‘Monopoly’ playing piece, or token?",
+    "label": "search",
+    "category": "trivia",
+    "source": "trivia_qa",
+    "pred": "search",
+    "raw": "[SEARCH] What breed of dog is the ‘Monopoly’ playing piece, or token?",
+    "leaked": null
+  },
+  {
+    "prompt": "Explain to your 6 year son why its ok to fail few times only to get better later",
+    "label": "answer",
+    "category": "creative_writing",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "It's okay to fail a few times only to get better later. It's a natural part of the learning process and it's a sign of strength and resilience. When you fail, it's a sign that you're not strong enough to",
+    "leaked": null
+  },
+  {
+    "prompt": "Identify which instrument is string or woodwind: Janzi, Gemshorn",
+    "label": "answer",
+    "category": "classification",
+    "source": "dolly",
+    "pred": "search",
+    "raw": "[SEARCH] Which instrument is string or woodwind: Jan{ Jan{ Jan{ Jan{ gemshorn}?",
+    "leaked": null
+  },
+  {
+    "prompt": "Whom did Andy Murray defeat in the Wimbledon men's singles final in 2013 ?",
+    "label": "search",
+    "category": "trivia",
+    "source": "trivia_qa",
+    "pred": "search",
+    "raw": "[SEARCH] Whom did Andy Murray defeat in the Wimbledon men's singles final in 2013 ?",
+    "leaked": null
+  },
+  {
+    "prompt": "when did the us dollar leave the gold standard",
+    "label": "search",
+    "category": "nq",
+    "source": "nq_open",
+    "pred": "search",
+    "raw": "[SEARCH] when did the us dollar leave the gold standard",
+    "leaked": null
+  },
+  {
+    "prompt": "what is Financial centre\n\nA financial centre (BE), financial center (AE), or financial hub, is a location with a concentration of participants in banking, asset management, insurance or financial markets with venues and supporting services for these activities to take place.[",
+    "label": "answer",
+    "category": "information_extraction",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "A financial center is a location with a concentration of participants in banking, asset management, insurance or financial markets with venues and supporting services for these activities to take place to take place.",
+    "leaked": null
+  },
+  {
+    "prompt": "calc (29 + 19) - 25",
+    "label": "calc",
+    "category": "multi_step",
+    "source": "template",
+    "expected": "23",
+    "pred": "calc",
+    "raw": "[CALC] 29 + 19",
+    "leaked": null
+  },
+  {
+    "prompt": "What is Bubble tea?\n\nBubble tea (also known as pearl milk tea, bubble milk tea, tapioca milk tea, boba tea, or boba; Chinese: 珍珠奶茶; pinyin: zhēnzhū nǎichá, 波霸奶茶; bōbà nǎichá) is a tea-based drink that originated in Taiwan in the early 1980s. Taiwanese immigrants brought it to the United States in the 1990s, initially in California through regions like Los Angeles County, but the drink has also spread to other countries where there is a large East Asian diaspora population.\n\nBubble tea most commonly consists of tea accompanied by chewy tapioca balls (\"boba\" or \"pearls\"), but it can be made with other toppings as well, such as grass jelly, aloe vera, red bean, or popping boba. It has many varieties and flavors, but the two most popular varieties are pearl black milk tea and pearl green milk tea (\"pearl\" signifies the tapioca balls at the bottom).",
+    "label": "answer",
+    "category": "closed_qa",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "Bubble tea is a tea-based drink that originated in Taiwan in the early 1980s. Taiwanese immigrants brought it to the United States in the 1990s, initially in California through regions like Los Angeles County, but the drink has also",
+    "leaked": null
+  },
+  {
+    "prompt": "What is the weather like in Sydney today?",
+    "label": "search",
+    "category": "current",
+    "source": "template",
+    "pred": "search",
+    "raw": "[SEARCH] What is the weather like in Sydney today?",
+    "leaked": null
+  },
+  {
+    "prompt": "From the passage identify the names of Zeus’s Roman counterpart. Display the results in a comma separated format.\n\nZeus (Ζεύς, Zeús)\n\nKing of the gods, ruler of Mount Olympus, and god of the sky, weather, thunder, lightning, law, order, and justice. He is the youngest son of Cronus and Rhea. He overthrew Cronus and gained the sovereignty of heaven for himself. In art he is depicted as a regal, mature man with a sturdy figure and dark beard. His usual attributes are the royal scepter and the lightning bolt. His sacred animals include the eagle and the bull. His Roman counterpart is Jupiter, also known as Jove.",
+    "label": "answer",
+    "category": "information_extraction",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "The names of Zeus, king of Mount Olympus, and god of the sky, weather, thunder, lightning, law, order, and justice are all names of Zeus.",
+    "leaked": null
+  },
+  {
+    "prompt": "What country is the world's largest producer of Tobacco?",
+    "label": "search",
+    "category": "trivia",
+    "source": "trivia_qa",
+    "pred": "search",
+    "raw": "[SEARCH] What country is the world's largest producer of tobacco?",
+    "leaked": null
+  },
+  {
+    "prompt": "Give me a bulleted list of the seven most recently elected presidents from Argentina.",
+    "label": "answer",
+    "category": "brainstorming",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "Here is a list of seven most recently elected presidents from Argentina:\n\n1. President of Argentina\n2. President of Argentina\n3. Vice President of Argentina\n4. President of Argentina\n5. Vice President of Argentina\n6",
+    "leaked": null
+  },
+  {
+    "prompt": "Find the sum of 1298 and 5365.",
+    "label": "calc",
+    "category": "named_op",
+    "source": "template",
+    "expected": "6663",
+    "pred": "answer",
+    "raw": "The sum of 1298 and 5365 is 5365.",
+    "leaked": null
+  },
+  {
+    "prompt": "In what Sudan city was Gillian Gibbons imprisoned for the blasphemous naming of a teddy bear incident?",
+    "label": "search",
+    "category": "trivia",
+    "source": "trivia_qa",
+    "pred": "search",
+    "raw": "[SEARCH] In what Sudan city was Gillian Gibbons imprisoned for the blasphemous naming of a teddy bear incident?",
+    "leaked": null
+  },
+  {
+    "prompt": "Who plays Chicago police officer Sharon Pogue in the 2001 film ‘Angel Eyes’?",
+    "label": "search",
+    "category": "trivia",
+    "source": "trivia_qa",
+    "pred": "search",
+    "raw": "[SEARCH] Who plays Chicago police officer Sharon Pogue in the 2001 film ‘Angel Eyes’?",
+    "leaked": null
+  },
+  {
+    "prompt": "The Riel is the currency of which Southeast Asian country?",
+    "label": "search",
+    "category": "trivia",
+    "source": "trivia_qa",
+    "pred": "search",
+    "raw": "[SEARCH] The Riel is the currency of which Southeast Asian country?",
+    "leaked": null
+  },
+  {
+    "prompt": "What is the name of the sidekick of cartoon superhero DangerMouse?",
+    "label": "search",
+    "category": "trivia",
+    "source": "trivia_qa",
+    "pred": "search",
+    "raw": "[SEARCH] What is the name of the sidekick of cartoon superhero DangerMouse?",
+    "leaked": null
+  },
+  {
+    "prompt": "Who has won the most superbowls as a player?",
+    "label": "search",
+    "category": "nq",
+    "source": "nq_open",
+    "pred": "search",
+    "raw": "[SEARCH] Who has won the most superbowls as a player?",
+    "leaked": null
+  },
+  {
+    "prompt": "Does parallel universe really exist?",
+    "label": "answer",
+    "category": "creative_writing",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "No, parallel universe does not exist. The concept of parallelism in physics was first introduced by Albert Einstein in his theory of general relativity. According to Einstein's theory, the laws of physics are the same for all observers in the same frame",
+    "leaked": null
+  },
+  {
+    "prompt": "What is the collection of the districts to the east of the jordan river?",
+    "label": "search",
+    "category": "nq",
+    "source": "nq_open",
+    "pred": "search",
+    "raw": "[SEARCH] What is the collection of the districts to the east of the jordan river?",
+    "leaked": null
+  },
+  {
+    "prompt": "how do I learn flute?",
+    "label": "answer",
+    "category": "brainstorming",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "To learn flute, you can start by practicing with a beginner's teacher or by enrolling in a beginner's lessons. You can also find online tutorials and courses to help you learn the basics. Some popular online resources for learning flutes include",
+    "leaked": null
+  },
+  {
+    "prompt": "What is the sale price of a $60 item after a 20% discount?",
+    "label": "calc",
+    "category": "percent",
+    "source": "template",
+    "expected": "48",
+    "pred": "calc",
+    "raw": "[CALC] 60 * 20",
+    "leaked": null
+  },
+  {
+    "prompt": "Given this reference paragraph about Roger Franklin Bonk where was he born?\n\nRoger Franklin Bonk (June 9, 1944 – February 13, 2023) was an American professional football player who was a linebacker for one season in the Canadian Football League (CFL) for the Winnipeg Blue Bombers. A native of Minnesota, he played freshman football for the Minnesota Golden Gophers in 1962 before transferring to the University of North Dakota. He played three years for their football team and was twice named all-conference, additionally being named first-team Little All-American as a senior. Bonk then played 15 games for Winnipeg in 1967 before being released prior to the 1968 season.",
+    "label": "answer",
+    "category": "closed_qa",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "Roger Franklin Bonk was an American professional football player who was a linebacker for one season in the Canadian Football League (CFL) for the Winnipeg Blue Bombers. A native of Minnesota, he played three years",
+    "leaked": null
+  },
+  {
+    "prompt": "What is the difference between 2512 and 72?",
+    "label": "calc",
+    "category": "named_op",
+    "source": "template",
+    "expected": "2440",
+    "pred": "calc",
+    "raw": "[CALC] 2512 / 72",
+    "leaked": null
+  },
+  {
+    "prompt": "If I buy 13 books at $17 each, how much do I pay in total?",
+    "label": "calc",
+    "category": "word_problem",
+    "source": "template",
+    "expected": "221",
+    "pred": "calc",
+    "raw": "[CALC] 13 * 17",
+    "leaked": null
+  },
+  {
+    "prompt": "Subtract 4.0 from 55.",
+    "label": "calc",
+    "category": "named_op",
+    "source": "template",
+    "expected": "51",
+    "pred": "calc",
+    "raw": "[CALC] 55 - 4.0",
+    "leaked": null
+  },
+  {
+    "prompt": "Should we continue to use Daylight savings?",
+    "label": "answer",
+    "category": "creative_writing",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "Yes, it is generally recommended to continue using Daylight savings as a means of saving for the future. This is because it allows us to maintain the same level of energy efficiency as we would in the absence of natural light. By maintaining the",
+    "leaked": null
+  },
+  {
+    "prompt": "4725+1824",
+    "label": "calc",
+    "category": "symbolic",
+    "source": "template",
+    "expected": "6549",
+    "pred": "calc",
+    "raw": "[CALC] 4725 + 1824",
+    "leaked": null
+  },
+  {
+    "prompt": "Classify each of the following as a mammal, reptile, or neither: alligator, frog, cat, moose, lizard, snake, dog",
+    "label": "answer",
+    "category": "classification",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "Alligator: Alligator is a reptile.\nFrog: Frog is a reptile.\nLizard: Lizard is a reptile.\nMammal: Mammal is a mammal.",
+    "leaked": null
+  },
+  {
+    "prompt": "Provide a list of the best places to fresh water fish in San Diego",
+    "label": "answer",
+    "category": "brainstorming",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "Here are some of the top places to find fresh water fish in San Diego:\n\n1. San Diego Zoo: This is one of the largest and most popular zoos in the world, with over 1,000 animals and over 1",
+    "leaked": null
+  },
+  {
+    "prompt": "In Greek mythology, Amphitrite, queen of the sea, was the wife of which god?",
+    "label": "search",
+    "category": "trivia",
+    "source": "trivia_qa",
+    "pred": "search",
+    "raw": "[SEARCH] In Greek mythology, Amphitrite, queen of the sea, was the wife of which god?",
+    "leaked": null
+  },
+  {
+    "prompt": "What is The Dark Side of the Moon?\n\nThe Dark Side of the Moon is the eighth studio album by the English rock band Pink Floyd, released on 1 March 1973 by Harvest Records. Developed during live performances before recording began, it was conceived as a concept album that would focus on the pressures faced by the band during their arduous lifestyle, and also deal with the mental health problems of former band member Syd Barrett, who departed the group in 1968. New material was recorded in two sessions in 1972 and 1973 at EMI Studios (now Abbey Road Studios) in London.",
+    "label": "answer",
+    "category": "summarization",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "The Dark Side of the Moon is the eighth studio album by the English rock band Pink Floyd, released on 1 March 1973 by harvest Records. Developed during live performances before recording began, it was conceived as a concept album that would deal",
+    "leaked": null
+  },
+  {
+    "prompt": "Can cars have odd number of wheels?",
+    "label": "answer",
+    "category": "brainstorming",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "No, cars do not have odd number of wheels. A car has four wheels, but it is not a four-wheeled vehicle. A car has four wheels, but it is not a four-wheeled vehicle.",
+    "leaked": null
+  },
+  {
+    "prompt": "when was the first mad max movie release",
+    "label": "search",
+    "category": "nq",
+    "source": "nq_open",
+    "pred": "search",
+    "raw": "[SEARCH] when was the first mad Max movie release",
+    "leaked": null
+  },
+  {
+    "prompt": "how many grams of alcohol in one beer",
+    "label": "search",
+    "category": "nq",
+    "source": "nq_open",
+    "pred": "calc",
+    "raw": "[CALC] 100",
+    "leaked": null
+  },
+  {
+    "prompt": "In the dynastic cycle what is the right to rule called?",
+    "label": "search",
+    "category": "nq",
+    "source": "nq_open",
+    "pred": "search",
+    "raw": "[SEARCH] In the dynastic cycle what is the right to rule called?",
+    "leaked": null
+  },
+  {
+    "prompt": "Find the quotient of 70 and 14.",
+    "label": "calc",
+    "category": "named_op",
+    "source": "template",
+    "expected": "5",
+    "pred": "answer",
+    "raw": "The quotient of 70 and 14 is 14.",
+    "leaked": null
+  },
+  {
+    "prompt": "Dark parables return of the salt princess release date?",
+    "label": "search",
+    "category": "nq",
+    "source": "nq_open",
+    "pred": "search",
+    "raw": "[SEARCH] Dark parables return of the salt princess release date?",
+    "leaked": null
+  },
+  {
+    "prompt": "Goodnight.",
+    "label": "answer",
+    "category": "chat",
+    "source": "template",
+    "pred": "answer",
+    "raw": "Goodnight. I'm so sorry for the inconvenience. I hope you're able to enjoy your nightly sleep. I'm here to help.",
+    "leaked": null
+  },
+  {
+    "prompt": "What is 2 + 29 * 20?",
+    "label": "calc",
+    "category": "multi_step",
+    "source": "template",
+    "expected": "582",
+    "pred": "calc",
+    "raw": "[CALC] 2 + 29 * 20",
+    "leaked": null
+  },
+  {
+    "prompt": "The gulf stream the world's fastest ocean current flows along the western side of this water body?",
+    "label": "search",
+    "category": "nq",
+    "source": "nq_open",
+    "pred": "search",
+    "raw": "[SEARCH] The gulf stream the world's fastest ocean current flows along the western side of this water body?",
+    "leaked": null
+  },
+  {
+    "prompt": "It's your child's birthday, write a message on social media to express your happiness and celebrate their special day",
+    "label": "answer",
+    "category": "creative_writing",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "\"Happy birthday, my dear! I am so grateful for this special day and for all the amazing things that you have done for me. Your love, kindness, and generosity have made a difference in my life and I am so grateful",
+    "leaked": null
+  },
+  {
+    "prompt": "Evaluate 132 / 11.",
+    "label": "calc",
+    "category": "verb",
+    "source": "template",
+    "expected": "12",
+    "pred": "answer",
+    "raw": "The 132nd percentile (Q1) of a number is the value that is far away from the median of the number. In this case, the number is 2, and the median is 12. Therefore, the value of the number",
+    "leaked": null
+  },
+  {
+    "prompt": "Who is the current president of Argentina?",
+    "label": "search",
+    "category": "current",
+    "source": "template",
+    "pred": "search",
+    "raw": "[SEARCH] Who is the current president of Argentina?",
+    "leaked": null
+  },
+  {
+    "prompt": "Where did Riley Redgate sarted her first novel?\n\nRobinson was raised in Winston-Salem, North Carolina. She attended Richard J. Reynolds High School, where she began her first novel, Seven Ways We Lie. She is an alumna of Kenyon College in Gambier, Ohio, where she majored in economics, graduating in 2016. Her debut novel was published before she graduated. While at Kenyon, Robinson won the college's James E. Michael Playwriting Award for her play Mourning Sickness.\n\nRobinson worked from Chicago as writing apprentice for the satirical media outlet The Onion. Her three novels are Seven Ways We Lie (2016), Note Worthy (2017), and Final Draft (2018), all published by Amulet, an imprint of Abrams Books.\n\nRobinson is bisexual, of half-Irish and half-Chinese descent, and the characters in her novels similarly lie \"in the middle of a spectrum rather than out at the ends\".",
+    "label": "answer",
+    "category": "summarization",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "Riley Redgate was a first-person narrative of a woman's life in Winston-Salem, North Carolina. She was raised in Winston-Salem, North Carolina, and was raised in a small town where she was raised to",
+    "leaked": null
+  },
+  {
+    "prompt": "Convert 39 weeks to days.",
+    "label": "calc",
+    "category": "unit_conv",
+    "source": "template",
+    "expected": "273",
+    "pred": "answer",
+    "raw": "39 weeks is equivalent to approximately 7.24 days.",
+    "leaked": null
+  },
+  {
+    "prompt": "Convert 9 weeks to days.",
+    "label": "calc",
+    "category": "unit_conv",
+    "source": "template",
+    "expected": "63",
+    "pred": "answer",
+    "raw": "9 weeks is equivalent to approximately 7.5 days.",
+    "leaked": null
+  },
+  {
+    "prompt": "which state was returned to spain after the revolutionary war",
+    "label": "search",
+    "category": "nq",
+    "source": "nq_open",
+    "pred": "search",
+    "raw": "[SEARCH] which state was returned to spain after the revolutionary war",
+    "leaked": null
+  },
+  {
+    "prompt": "Give me a bulleted list of the Real Housewives series in chronological order.",
+    "label": "answer",
+    "category": "brainstorming",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "1. The Real Housewives series by Lillian F. Guest\n2. The Real Housewives series by Lillian F. Guest\n3. The Real Housewives series by Lillian F.",
+    "leaked": null
+  },
+  {
+    "prompt": "If I buy 13 apples at $20 each, how much do I pay in total?",
+    "label": "calc",
+    "category": "word_problem",
+    "source": "template",
+    "expected": "260",
+    "pred": "answer",
+    "raw": "To find the total amount of $20 that I pay in total, you first need to subtract $20 from the total amount. \n\n$20 - $20 = $20 - $20 = $20\n\nSo,",
+    "leaked": null
+  },
+  {
+    "prompt": "Which 2013 film is a development of the 1964 film ‘Mary Poppins’?",
+    "label": "search",
+    "category": "trivia",
+    "source": "trivia_qa",
+    "pred": "search",
+    "raw": "[SEARCH] Which 2013 film is a development of the 1964 film ‘Mary Poppins’?",
+    "leaked": null
+  },
+  {
+    "prompt": "FIDE (Federation Internationale Des Echecs) is the world federation of which activity?",
+    "label": "search",
+    "category": "trivia",
+    "source": "trivia_qa",
+    "pred": "search",
+    "raw": "[SEARCH] FIDE (Federation Internationale Des Echecs) is the world federation of which activity?",
+    "leaked": null
+  },
+  {
+    "prompt": "where do rory and paris go to college",
+    "label": "search",
+    "category": "nq",
+    "source": "nq_open",
+    "pred": "search",
+    "raw": "[SEARCH] where do rory and paris go to college",
+    "leaked": null
+  },
+  {
+    "prompt": "\"What is the real name of \"\"Baby Spice\"\" of the Spice Girls, whose 2007 single \"\"All I Need to Know\"\" was the lowest-charting single of her solo career?\"",
+    "label": "search",
+    "category": "trivia",
+    "source": "trivia_qa",
+    "pred": "search",
+    "raw": "[SEARCH] \"What is the real name of \"\"Baby Spice\"\" of the Spice Girls, whose 2007 single \"\"All I Need to Know\"\" was the lowest-charting single of her",
+    "leaked": null
+  },
+  {
+    "prompt": "If  you found yourself  washed  up on  a  deserted tropical island with no hope for immediate rescue, what  would  you do?",
+    "label": "answer",
+    "category": "creative_writing",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "As an AI, I don't have the ability to find myself in a deserted tropical island without a source of water. However, I can suggest some steps that could help you:\n\n1. Stay hydrated: Make sure to drink",
+    "leaked": null
+  },
+  {
+    "prompt": "What kind of assistant are you?",
+    "label": "answer",
+    "category": "identity",
+    "source": "template",
+    "pred": "answer",
+    "raw": "I'm an AI language model and I don't have the ability to have personal experiences or access personal data unless it has been shared with me in the course of our conversation. I am designed to respect user privacy and confidentiality.",
+    "leaked": null
+  },
+  {
+    "prompt": "Extract the stages for portfolio optimization from https://en.wikipedia.org/wiki/Portfolio_optimization\n\nPortfolio optimization often takes place in two stages: optimizing weights of asset classes to hold, and optimizing weights of assets within the same asset class. An example of the former would be choosing the proportions placed in equities versus bonds, while an example of the latter would be choosing the proportions of the stock sub-portfolio placed in stocks X, Y, and Z",
+    "label": "answer",
+    "category": "information_extraction",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "The stages for portfolio optimization are:\n\n1. **Optimizing weights**: This stage involves selecting the proportions of an asset class to hold, and then optimizing the weights of that asset class. This can be done by",
+    "leaked": null
+  },
+  {
+    "prompt": "Convert 19 hours to minutes.",
+    "label": "calc",
+    "category": "unit_conv",
+    "source": "template",
+    "expected": "1140",
+    "pred": "answer",
+    "raw": "19 hours is equivalent to approximately 1.5 hours.",
+    "leaked": null
+  },
+  {
+    "prompt": "Which of these books won a Pulitzer Prize for fiction? The Road, Lonesome Dove, Ender's Game, Avator the Lost Adventures, Prodigal Summer, The Joy Luck Club, Cloudsplitter, Blink, The Dancer Upstairs, The Known World, Millhauser, All the Light We Cannot See, and Age of Iron,",
+    "label": "answer",
+    "category": "classification",
+    "source": "dolly",
+    "pred": "search",
+    "raw": "[SEARCH] Which of these books won a Pulitzer Prize for fiction? The Road, Lonesome Dove, Ender's Game, Avator the Lost Adventures, Prodigal Summer, The Joy Luck Club,",
+    "leaked": null
+  },
+  {
+    "prompt": "Give me some ideas around improving my writing skills",
+    "label": "answer",
+    "category": "brainstorming",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "Here are some ideas to improve your writing skills:\n\n1. Practice writing in different styles: Try to write in different styles such as fiction, non-fiction, poetry, or even short stories. This will help you to develop your",
+    "leaked": null
+  },
+  {
+    "prompt": "What is the latest Android version?",
+    "label": "search",
+    "category": "current",
+    "source": "template",
+    "pred": "search",
+    "raw": "[SEARCH] What is the latest Android version?",
+    "leaked": null
+  },
+  {
+    "prompt": "Why are cats better than dogs?",
+    "label": "answer",
+    "category": "creative_writing",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "Cats and dogs are two of the most popular pets in the world, and for good reason. Both animals are known for their friendly and affectionate nature, and their ability to adapt to a wide range of environments. Here are some of the",
+    "leaked": null
+  },
+  {
+    "prompt": "How many seconds are in 12 minutes?",
+    "label": "calc",
+    "category": "unit_conv",
+    "source": "template",
+    "expected": "720",
+    "pred": "calc",
+    "raw": "[CALC] 12 * 60",
+    "leaked": null
+  },
+  {
+    "prompt": "What is 4 to the power of 2?",
+    "label": "calc",
+    "category": "power_root",
+    "source": "template",
+    "expected": "16",
+    "pred": "calc",
+    "raw": "[CALC] 4 * 2",
+    "leaked": null
+  },
+  {
+    "prompt": "Tell me something funny.",
+    "label": "answer",
+    "category": "chat",
+    "source": "template",
+    "pred": "answer",
+    "raw": "I'm sorry, but I'm an AI language model and I don't have the ability to tell jokes.",
+    "leaked": null
+  },
+  {
+    "prompt": "Can you tell me what 20.1 plus 55 is?",
+    "label": "calc",
+    "category": "wh_math",
+    "source": "template",
+    "expected": "75.1",
+    "pred": "calc",
+    "raw": "[CALC] 20.1 + 55",
+    "leaked": null
+  },
+  {
+    "prompt": "Write an apology letter to my wife for eating the last of the Oreo cookies and drinking the last of the milk.",
+    "label": "answer",
+    "category": "creative_writing",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "Dear [Wife's Name],\n\nI am writing to you today to express my sincerest apologies for the last of the Oreo cookies and the milk. I understand that eating the last of the Oreo cookies",
+    "leaked": null
+  },
+  {
+    "prompt": "In the children’s television series ‘Fireball XL5’, what is the name of the robot co-pilot of XL5?",
+    "label": "search",
+    "category": "trivia",
+    "source": "trivia_qa",
+    "pred": "search",
+    "raw": "[SEARCH] In the children’s television series ‘Fireball XL5’, what is the name of the robot co-pilot of XL5?",
+    "leaked": null
+  },
+  {
+    "prompt": "Who wrote the screenplay for the 1994 film ‘Four Weddings and a Funeral’?",
+    "label": "search",
+    "category": "trivia",
+    "source": "trivia_qa",
+    "pred": "search",
+    "raw": "[SEARCH] Who wrote the screenplay for the 1994 film ‘Four Weddings and a Funeral’?",
+    "leaked": null
+  },
+  {
+    "prompt": "What is the weather like in Lima today?",
+    "label": "search",
+    "category": "current",
+    "source": "template",
+    "pred": "search",
+    "raw": "[SEARCH] What is the weather like in Lima today?",
+    "leaked": null
+  },
+  {
+    "prompt": "What is the sale price of a $200 item after a 20% discount?",
+    "label": "calc",
+    "category": "percent",
+    "source": "template",
+    "expected": "160",
+    "pred": "calc",
+    "raw": "[CALC] 200 - 20",
+    "leaked": null
+  },
+  {
+    "prompt": "Classify the below aircrafts based on their utility.\nF-35, F-22, J-20, Su-57 and the F/A-18, Airbus A380, Boeing 747-8",
+    "label": "answer",
+    "category": "classification",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "The F-35, F-22, J-20, Su-57 and the F/A-18, Airbus A380, Boeing 747-8 are all aircrafts that are used for military and strategic purposes",
+    "leaked": null
+  },
+  {
+    "prompt": "In what year's Olympics were electric timing devices and a public-address system used for the first time?",
+    "label": "search",
+    "category": "trivia",
+    "source": "trivia_qa",
+    "pred": "search",
+    "raw": "[SEARCH] In what year's Olympics were electric timing devices and a public-address system used for the first time?",
+    "leaked": null
+  },
+  {
+    "prompt": "Evaluate the expression 8 * 28 - 6.",
+    "label": "calc",
+    "category": "multi_step",
+    "source": "template",
+    "expected": "218",
+    "pred": "answer",
+    "raw": "The expression 8 * 28 - 6 can be evaluated as follows:\n\n8 * 28 - 6 = 8\n\nThis expression can be simplified to 8 * 28 - 6.",
+    "leaked": null
+  },
+  {
+    "prompt": "(7 + 6) - 21",
+    "label": "calc",
+    "category": "multi_step",
+    "source": "template",
+    "expected": "-8",
+    "pred": "calc",
+    "raw": "[CALC] 7 + 6",
+    "leaked": null
+  },
+  {
+    "prompt": "The Battle of Ghuznee in 1839 took place between the armies of Great Britain and which other country?",
+    "label": "search",
+    "category": "trivia",
+    "source": "trivia_qa",
+    "pred": "search",
+    "raw": "[SEARCH] The Battle ofghuznee in 1859 took place between the armies of Great Britain and which other country?",
+    "leaked": null
+  },
+  {
+    "prompt": "What is the current price of bitcoin?",
+    "label": "search",
+    "category": "current",
+    "source": "template",
+    "pred": "search",
+    "raw": "[SEARCH] What is the current price of Bitcoin?",
+    "leaked": null
+  },
+  {
+    "prompt": "The big-selling country and western hit song, notably by Elvis Presley in 1957, is '(What?) Christmas'?",
+    "label": "search",
+    "category": "trivia",
+    "source": "trivia_qa",
+    "pred": "search",
+    "raw": "[SEARCH] The big-selling country and western hit song, notably by Elvis Presley in 1957, is '(What?) Christmas'?",
+    "leaked": null
+  },
+  {
+    "prompt": "What are some common types of snake plants?",
+    "label": "answer",
+    "category": "brainstorming",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "There are many types of snake plants, each with its unique characteristics and characteristics. Some common types of snake plants include:\n\n1. **Snake Plant (Sansevieria):** This is a type of snake plant that",
+    "leaked": null
+  },
+  {
+    "prompt": "Calculate 40 percent of 45.",
+    "label": "calc",
+    "category": "percent",
+    "source": "template",
+    "expected": "18",
+    "pred": "answer",
+    "raw": "40% is calculated by dividing 45 by 45, which is 0.40.",
+    "leaked": null
+  },
+  {
+    "prompt": "Give me some tips on how to train for a marathon.",
+    "label": "answer",
+    "category": "brainstorming",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "Here are some tips on how to train for a marathon:\n\n1. Set a realistic goal: Before starting a marathon, it's important to set a realistic goal. This could be to run a certain distance or to run",
+    "leaked": null
+  },
+  {
+    "prompt": "Can you tell me what 1368 divided by 24 is?",
+    "label": "calc",
+    "category": "wh_math",
+    "source": "template",
+    "expected": "57",
+    "pred": "calc",
+    "raw": "[CALC] 1368 / 24",
+    "leaked": null
+  },
+  {
+    "prompt": "What is the product of 57 and 25?",
+    "label": "calc",
+    "category": "named_op",
+    "source": "template",
+    "expected": "1425",
+    "pred": "calc",
+    "raw": "[CALC] 57 - 25",
+    "leaked": null
+  },
+  {
+    "prompt": "Where does the cell spend most of its time in the cell cycle?",
+    "label": "search",
+    "category": "nq",
+    "source": "nq_open",
+    "pred": "answer",
+    "raw": "The cell cycle is a series of cell division that occurs in the cell membrane, where the cell's DNA is stored. The cell cycle is divided into four stages: prophase, metaphase, anaphase, and telophase.",
+    "leaked": null
+  },
+  {
+    "prompt": "Role of malonyl coa in fatty acid synthesis?",
+    "label": "search",
+    "category": "nq",
+    "source": "nq_open",
+    "pred": "answer",
+    "raw": "Malonyl coa is a small, non-coding RNA that plays a crucial role in the process of fatty acid synthesis. It is a small, non-coding RNA that is responsible for the expression of a specific gene in",
+    "leaked": null
+  },
+  {
+    "prompt": "2634 + 75 = ?",
+    "label": "calc",
+    "category": "symbolic",
+    "source": "template",
+    "expected": "2709",
+    "pred": "calc",
+    "raw": "[CALC] 2634 + 75",
+    "leaked": null
+  },
+  {
+    "prompt": "What is the current price of copper?",
+    "label": "search",
+    "category": "current",
+    "source": "template",
+    "pred": "search",
+    "raw": "[SEARCH] What is the current price of copper?",
+    "leaked": null
+  },
+  {
+    "prompt": "What is Dragon Ball Z?\n\nDragon Ball Z is a Japanese anime television series produced by Toei Animation. Part of the Dragon Ball media franchise, it is the sequel to the 1986 Dragon Ball anime series and adapts the latter 325 chapters of the original Dragon Ball manga series created by Akira Toriyama. The series aired in Japan on Fuji TV from April 1989 to January 1996 and was later dubbed for broadcast in at least 81 countries worldwide.\n\nDragon Ball Z continues the adventures of Goku in his adult life as he and his companions defend the Earth against villains including aliens (Vegeta, Frieza), androids (Cell), and magical creatures (Majin Buu). At the same time, the story parallels the life of his son, Gohan, as well as the development of his rivals, Piccolo and Vegeta.",
+    "label": "answer",
+    "category": "summarization",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "Dragon Ball Z is a Japanese anime television series that follows Goku, the main character, as he and his companions defend the Earth against villains including aliens, villains from the previous anime series, and magical creatures. The series",
+    "leaked": null
+  },
+  {
+    "prompt": "Compute 17 * 18 + 11.",
+    "label": "calc",
+    "category": "multi_step",
+    "source": "template",
+    "expected": "317",
+    "pred": "calc",
+    "raw": "[CALC] 17 * 18 + 11",
+    "leaked": null
+  },
+  {
+    "prompt": "What are some uses of Styrofoam?\n\nStyrofoam has a variety of uses. Styrofoam is composed of 98% air, making it lightweight and buoyant.\n\nDuPont produces Styrofoam building materials, including varieties of building insulation sheathing and pipe insulation. The claimed R-value of Styrofoam insulation is five per inch.\n\nStyrofoam can be used under roads and other structures to prevent soil disturbances due to freezing and thawing.\n\nDuPont also produces Styrofoam blocks and other shapes for use by florists and in craft products. DuPont insulation Styrofoam has a distinctive blue color; Styrofoam for craft applications is available in white and green.",
+    "label": "answer",
+    "category": "summarization",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "DuPont produces Styrene-2-ene (S2) foam, a lightweight, lightweight, and breathable material used in construction, insulation, and other applications. The claimed R-value of S2 is five per inch",
+    "leaked": null
+  },
+  {
+    "prompt": "When is the next step season 3 coming out?",
+    "label": "search",
+    "category": "nq",
+    "source": "nq_open",
+    "pred": "search",
+    "raw": "[SEARCH] When is the next step season 3 coming out?",
+    "leaked": null
+  },
+  {
+    "prompt": "The Canary Islands in the Atlantic are named after what?",
+    "label": "search",
+    "category": "trivia",
+    "source": "trivia_qa",
+    "pred": "search",
+    "raw": "[SEARCH] The Canary Islands in the Atlantic are named after what?",
+    "leaked": null
+  },
+  {
+    "prompt": "who can be called a man of god",
+    "label": "search",
+    "category": "nq",
+    "source": "nq_open",
+    "pred": "search",
+    "raw": "[SEARCH] who can be called a man of god",
+    "leaked": null
+  },
+  {
+    "prompt": "What is Forest Park (Springfield, MA)?\n\nForest Park in Springfield, Massachusetts, is one of the largest urban, municipal parks in the United States, covering 735 acres (297 ha) of land overlooking the Connecticut River. Forest Park features a zoo, aquatic gardens, and outdoor amphitheater, in addition to design elements like winding wooded trails, and surprising, expansive views. The site of America's first public, municipal swimming pool, currently, during the holiday months Forest Park hosts a popular high-tech lighting display, known as Bright Nights. Contrary to popular belief, the park was not designed by Frederick Law Olmsted.",
+    "label": "answer",
+    "category": "summarization",
+    "source": "dolly",
+    "pred": "answer",
+    "raw": "Forest Park in Springfield, Massachusetts, is one of the largest urban, municipal parks in the United States, covering 735 acres (297 ha) of land overlooking the Connecticut River. Forest Park features a zoo, aquatic gardens, and outdoor",
+    "leaked": null
+  },
+  {
+    "prompt": "A car travels at 50 km per hour for 6 hours. How far does it go?",
+    "label": "calc",
+    "category": "word_problem",
+    "source": "template",
+    "expected": "300",
+    "pred": "answer",
+    "raw": "To determine how far the car travels, we need to consider the time it takes to travel the same distance. Since the car travels at 50 km per hour, it will take the car approximately 6 hours to travel the same distance.",
+    "leaked": null
+  },
+  {
+    "prompt": "who plays the dwarf king in the hobbit",
+    "label": "search",
+    "category": "nq",
+    "source": "nq_open",
+    "pred": "search",
+    "raw": "[SEARCH] who plays the dwarf king in the hobbit",
+    "leaked": null
+  },
+  {
+    "prompt": "Who did Betty Boothroyd replace as Speaker of the House of Commons on April 27th 1992?",
+    "label": "search",
+    "category": "trivia",
+    "source": "trivia_qa",
+    "pred": "search",
+    "raw": "[SEARCH] Who did Betty Boothroyd replace as Speaker of the House of Commons on April 27th 1992?",
+    "leaked": null
+  },
+  {
+    "prompt": "Who were the notorious Friars of St Francis of Wycombe?",
+    "label": "search",
+    "category": "trivia",
+    "source": "trivia_qa",
+    "pred": "search",
+    "raw": "[SEARCH] Who were the notorious Friars of St Francis of Wycombe?",
+    "leaked": null
+  }
+]

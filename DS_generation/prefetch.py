@@ -26,7 +26,7 @@ def save(cache, path):
 def main():
     from tqdm import tqdm
 
-    from evals.eval_trivia_rag import load_questions
+    from evals.eval_trivia import load_questions
     from search import web_retrieve
 
     ap = argparse.ArgumentParser()
