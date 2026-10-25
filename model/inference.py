@@ -180,7 +180,11 @@ if __name__ == "__main__":
 
     else:
         while True:
-            s = input("prompt> ").strip()
+            try:
+                s = input("prompt> ").strip()
+            except (EOFError, KeyboardInterrupt):
+                print()
+                break
             if s in ("quit", "exit"): break
             if s == "": continue
             if s == "/reset": hist.clear(); print("(history cleared)"); continue

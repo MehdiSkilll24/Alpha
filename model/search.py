@@ -39,7 +39,7 @@ def web_retrieve(q, n_pages=1, max_retries=3):
     res = None
     for attempt in range(max_retries):
         try:
-            res = list(DDGS(timeout=8).text(q, max_results=n_pages, backend="bing,brave,yahoo") or [])
+            res = list(DDGS(timeout=8).text(q, max_results=n_pages, backend="duckduckgo,yahoo,brave") or [])
             if res:
                 break
             time.sleep(1)                           # empty result: retry quickly
